@@ -1,0 +1,11 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  background: #f3f5f7;
+}
+.App {
+  font-size: 14px;
+  color: #515a6e;
+}
