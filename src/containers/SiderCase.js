@@ -14,62 +14,106 @@ export class SiderCase extends Component {
   state = {
     menuList: [
       {
-        subId: 'react',
-        subName: 'react',
-        subIcon: 'icon-react',
+        id: 'console',
+        subName: '控制台',
+        subIcon: 'icon-kongzhitai',
+        menus:[]
+      },
+      {
+        subId: 'emergency',
+        subName: '应急处置',
+        subIcon: 'icon-yingjichuli',
         menus: [
           {
-            id: 'react_basic',
-            name: 'react基本语法',
+            id: 'telegram',
+            name: '来电记录',
           },
           {
-            id: 'react_lifeCycle',
-            name: 'react生命周期',
-          }
+            id: 'handle',
+            name: '处置记录'
+          },
+          {
+            id: 'evaluation',
+            name: '分析评价'
+          },
+          {
+            id: 'classic',
+            name: '经典案例'
+          },
+          
         ]
       },
       {
-        subId: 'redux',
-        subName: 'redux',
-        subIcon: 'icon-redux',
+        subId: 'attendance',
+        subName: '值班签到',
+        subIcon: 'icon-Sign',
         menus: [
           {
-            id: 'redux_basic',
-            name: 'redux基础用法',
+            id: 'plan',
+            name: '值班计划',
           },
           {
-            id: 'redux_syncAction',
-            name: 'redux异步方法',
+            id: 'management',
+            name: '值班管理',
           },
         ]
       },
       {
-        subId: 'router',
-        subName: 'router',
-        subIcon: 'icon-routers',
+        subId: 'communication',
+        subName: '应急通讯录',
+        subIcon: 'icon-tongxunlu',
         menus: [
           {
-            id: 'router_basic',
-            name: 'router基本用法',
-          },
-          {
-            id: 'router_guard',
-            name: 'router路由拦截',
+            id: 'communicationGroup',
+            name: '通讯群组',
           },
         ]
       },
       {
-        subId: 'webpack',
-        subName: 'webpack',
-        subIcon: 'icon-webpack',
+        subId: 'rules',
+        subName: '规章制度',
+        subIcon: 'icon-cz-gzzd',
+        menus:[]
+      },
+      {
+        subId: 'count',
+        subName: '统计查询',
+        subIcon: 'icon-tongji1',
         menus: [
           {
-            id: 'webpack_config',
-            name: 'webpack环境配置',
+            id: 'signCount',
+            name: '签到查询',
           },
           {
-            id: 'webpack_package',
-            name: 'package包的介绍',
+            id: 'assessCount',
+            name: '评价查询',
+          },
+          {
+            id: 'handleCount',
+            name: '应急处置分析',
+          },
+        ]
+      },
+      {
+        subId: 'setting',
+        subName: '系统设置',
+        subIcon: 'icon-xitongshezhi1',
+        menus: [
+          {
+            id: 'userManage',
+            name: '角色管理',
+          },
+          {
+            id: 'accountManage',
+            name: '账号管理',
+          },
+          {
+            id: 'operationLog',
+            name: '操作日志',
+          },
+          {
+            id: 'kanBanUpdate',
+            name: '看板维护',
           },
         ]
       },
@@ -81,7 +125,7 @@ export class SiderCase extends Component {
       // 防止刷新页面时重新渲染,因为路径菜单一样，就没必要再执行这个了
       if(getRouterParams(this.props.location.search, 'menu') === state.menu) return 
       const {match} = this.props
-      this.props.history.push({pathname:`${match.path}/${state.menu.replace('_','/')}`,search:`menu=${state.menu}`})
+      // this.props.history.push({pathname:`${match.path}/${state.menu.replace('_','/')}`,search:`menu=${state.menu}`})
     }
   }
   componentDidMount(){
@@ -92,7 +136,7 @@ export class SiderCase extends Component {
   // 如果有参数，将其中的选中的item为当前路由指定的菜单
   setRouterParams(routerParams, type) {
     const {menuList} = this.state
-    const defaultmenuId = menuList[0].menus[0].id
+    const defaultmenuId = menuList[1].menus[0].id
     if(!routerParams){
       this.setState({
         [type]: defaultmenuId,

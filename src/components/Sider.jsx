@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Menu, Icon } from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_824133_5nkbucjjgq4.js', // 在 iconfont.cn 上生成
+  scriptUrl: '//at.alicdn.com/t/font_1185107_h0dd94yrxum.js', // 在 iconfont.cn 上生成
 });
 const SubMenu = Menu.SubMenu;
 function Sider({openKey, handleClick, menu, menuList, onOpenChange}) {
