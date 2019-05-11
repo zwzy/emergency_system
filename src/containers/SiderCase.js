@@ -81,7 +81,7 @@ export class SiderCase extends Component {
       // 防止刷新页面时重新渲染,因为路径菜单一样，就没必要再执行这个了
       if(getRouterParams(this.props.location.search, 'menu') === state.menu) return 
       const {match} = this.props
-      this.props.history.push({pathname:`${match.path}/${state.menu.replace('_','/')}`,search:`menu=${state.menu}`})
+      // this.props.history.push({pathname:`${match.path}/${state.menu.replace('_','/')}`,search:`menu=${state.menu}`})
     }
   }
   componentDidMount(){
