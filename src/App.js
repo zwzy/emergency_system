@@ -20,10 +20,9 @@ function App({userInformation}) {
   const Section = styled.section `
     display: flex;
     position: fixed;
-    width: 80%;
-    left: 10%;
+    left:  ${config.DIVIDER_HEIGHT}px;
     border-radius: 5px;
-    right: 10%;
+    right: ${config.DIVIDER_HEIGHT}px;
     margin: 0 auto;
     top: ${config.HEADER_HEIGHT+config.DIVIDER_HEIGHT}px;
     bottom: ${config.DIVIDER_HEIGHT}px;
@@ -40,7 +39,6 @@ function App({userInformation}) {
     <div className="App">
       <ThemeContext.Provider value={userInformation.theme}>
         <PowerContext.Provider value={userInformation.power}>
-
           {/* 头部 */}
           <HeaderCase></HeaderCase>
           <Section>
