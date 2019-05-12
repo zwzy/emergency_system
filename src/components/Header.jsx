@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import { Icon, Button } from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1185107_e0edz74b1th.js', // 在 iconfont.cn 上生成
+  scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
 });
 
 const logoImg = require('../images/avatar.png')
