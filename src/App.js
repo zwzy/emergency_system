@@ -11,7 +11,8 @@ import SiderCase from './containers/SiderCase'
 // 控制台
 import ConsoleCase from './containers/menu/ConsoleCase'
 // 规章制度
-import RulesCase from './containers/menu/RulesCase'
+import RulesGroupCase from './containers/rules/RulesGroupCase'
+import RulesBuiltCase from './containers/rules/RulesBuiltCase'
 // 通讯分组
 import GroupCase from './containers/communication/GroupCase'
 // 统计
@@ -70,7 +71,8 @@ function App({userInformation}) {
               <Content>
                 {/* 内容模块组件 */}
                 <Switch>
-                  <Route path='/rules' component={RulesCase}></Route>
+                  <Route path='/rules_group' component={RulesGroupCase}></Route>
+                  <Route path='/rules_built' component={RulesBuiltCase}></Route>
                   <Route path='/emergency_telegram' component={TelgramCase}></Route>
                   <Route path='/emergency_handle' component={HandleCase}></Route>
                   <Route path='/emergency_evaluation' component={EvaluationCase}></Route>

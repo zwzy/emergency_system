@@ -75,7 +75,16 @@ export class SiderCase extends Component {
         path: 'rules',
         subName: '规章制度',
         subIcon: 'icon-cz-gzzd',
-        menus:[]
+        menus:[
+          {
+            id:'rules_group',
+            name: '规章制度',
+          },
+          {
+            id:'rules_built',
+            name: '新建规章制度'
+          }
+        ]
       },
       {
         subId: 'count',
