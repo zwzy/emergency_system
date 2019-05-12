@@ -3,15 +3,22 @@ import styled from 'styled-components'
 import color from '../utils/color'
 import config from '../utils/config'
 import PropTypes from 'prop-types'
-import { Button } from 'antd';
-const logoImg = require('../images/account_logo.png')
+
+import { Icon, Button } from 'antd';
+
+const MyIcon = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
+});
+
+const logoImg = require('../images/avatar.png')
+
 const btnlist = [
-  {src: require('../images/account_logo.png'),tit: '接听'},
-  {src: require('../images/account_logo.png'),tit: '挂断'},
-  {src: require('../images/account_logo.png'),tit: '拨打'},
-  {src: require('../images/account_logo.png'),tit: '保持'},
-  {src: require('../images/account_logo.png'),tit: '转接'},
-  {src: require('../images/account_logo.png'),tit: '队列'}
+  {cla:'icon-dianhua1', tit: '接听'},
+  {cla:'icon-guaduan', tit: '挂断'},
+  {cla:'icon-mobile', tit: '拨打'},
+  {cla:'icon-Hold-TheLine', tit: '保持'},
+  {cla:'icon-zhuanjie', tit: '转接'},
+  {cla:'icon-bhjpaidui', tit: '队列'}
 ]
 function Header({userName, isLogin, theme, updateUserInformation}) {
   const Header = styled.header `
@@ -20,75 +27,72 @@ function Header({userName, isLogin, theme, updateUserInformation}) {
     justify-content: space-between;
     padding: 0 50px;
     align-items: center;
-    background-color: rgba(42, 130, 228, 1);
-    /* color: ${color.baseColor} */
+    background: ${color.$darkPrimary};
+    color: ${color.baseColor}
+  `
+  const CArea = styled.div `
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    .item{
+      padding: 0 15px;
+      cursor: pointer;
+    }
+    .icon{
+      width: 28px;
+      height: 28px;
+      color: ${color.$primary};
+      border-radius: 100%;
+      background: ${color.baseColor};
+      font-size: 19px;
+    }
+    div{
+      margin-top: 2px;
+      text-align:center;
+      color: ${color.baseColor};
+    }
   `
   const LArea = styled.div `
     display: flex;
     height: 60px;
     align-items: center;
+    .logo-info{
+      margin-left: 10px;
+      .btn-wrap{
+        margin-top: 3px;
+        line-height: 1.5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .btn-icon{
+          font-size: 13px;
+        }
+      }
+    }
     .logo{
       background: url(${logoImg}) no-repeat center;
       background-size: 100% 100%;
-      height: 45px;
-      width: 45px;
-      border-radius: 50%;
-      margin-right: 19px;
-    }
-    .login-info {
-      color: #ffffff;
-      .btn-wrap{
-        margin-top: 4px;
-      }
-      .btn-wrap .btn-left {
-        margin-right: 23px;
-      }
-    }
-  `
-  const CArea = styled.div `
-    display:flex;
-    align-items: center;
-    width: 293px;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #ffffff;
-    img {
-      display:block;
-      width: 31px;
-      height: 31px;
-      border-radius:50%;
-    }
-    div {
-      text-align:center;
+      height: 48px;
+      width: 48px;
     }
   `
   const RArea = styled.div `
     display: flex;
     height: 60px;
+    margin-left: 110px;
     line-height: 1;
     align-items: center;
-    .menu-item{
-      margin-left: 10px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      &:hover {
-        color: #2e90e5;
-      }
-      .iconfont{
-        margin-right: 4px;
-      }
-    }
   `
   return (
     <Header>
       <LArea>
-        <div className='logo'></div>
-        <div className='login-info'>
-          <div>应急处置值守人员：王五</div>
+      <div className='logo'></div>
+        <div className='logo-info'>
+          <div>应急处置值守人员：<strong>王五</strong></div>
           <div className='btn-wrap'>
-            <Button className='btn-left' size="small">签到</Button>
-            <Button size="small">退出</Button>
+            <Button className='btn-icon' icon='calendar' size="small">签到</Button>
+            <Button className='btn-icon'  size="small"  icon='logout' type='danger'>退出</Button>
           </div>
         </div>
       </LArea>
@@ -96,8 +100,10 @@ function Header({userName, isLogin, theme, updateUserInformation}) {
         {
           btnlist.map((btn,index)=>{
             return (
-              <div key={index}>
-                <img src={btn.src} alt=""/>
+              <div className='item' key={index}>
+                <div className='icon'>
+                  <MyIcon type={btn.cla}/>
+                </div>
                 <div>{btn.tit}</div>
               </div>
             )
@@ -105,7 +111,7 @@ function Header({userName, isLogin, theme, updateUserInformation}) {
         }
       </CArea>
       <RArea>
-        <Button>填写台账</Button>
+        <Button icon='edit'>填写台账</Button>
       </RArea>
     </Header>
   );
