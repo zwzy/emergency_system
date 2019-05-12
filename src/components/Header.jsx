@@ -18,7 +18,7 @@ const btnlist = [
   {cla:'icon-mobile', tit: '拨打'},
   {cla:'icon-Hold-TheLine', tit: '保持'},
   {cla:'icon-zhuanjie', tit: '转接'},
-  {cla:'icon-bhjpaidui', tit: '队列'}
+  {cla:'icon-bhjpaidui', tit: '队列z'}
 ]
 function Header({userName, isLogin, theme, updateUserInformation}) {
   const Header = styled.header `
