@@ -5,22 +5,14 @@ import config from '../utils/config'
 import PropTypes from 'prop-types'
 
 import { Icon, Button } from 'antd';
-
+import { btnlist } from '../utils/config'
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
 });
 
 const logoImg = require('../images/avatar.png')
 
-const btnlist = [
-  {cla:'icon-dianhua1', tit: '接听'},
-  {cla:'icon-guaduan', tit: '挂断'},
-  {cla:'icon-mobile', tit: '拨打'},
-  {cla:'icon-Hold-TheLine', tit: '保持'},
-  {cla:'icon-zhuanjie', tit: '转接'},
-  {cla:'icon-bhjpaidui', tit: '队列'}
-]
-function Header({userName, isLogin, theme, updateUserInformation}) {
+function Header({logOutEvent, isLogin, signEvent}) {
   const Header = styled.header `
     height: ${config.HEADER_HEIGHT}px;
     display: flex;
@@ -91,8 +83,8 @@ function Header({userName, isLogin, theme, updateUserInformation}) {
         <div className='logo-info'>
           <div>应急处置值守人员：<strong>王五</strong></div>
           <div className='btn-wrap'>
-            <Button className='btn-icon' icon='calendar' size="small">签到</Button>
-            <Button className='btn-icon'  size="small"  icon='logout' type='danger'>退出</Button>
+            <Button className='btn-icon' icon='calendar' size="small" onClick={()=>signEvent()}>签到</Button>
+            <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>logOutEvent()}>退出</Button>
           </div>
         </div>
       </LArea>
