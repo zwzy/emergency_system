@@ -4,7 +4,7 @@ import color from '../utils/color'
 import config from '../utils/config'
 import PropTypes from 'prop-types'
 
-import { Icon, Button, Modal } from 'antd';
+import { Icon, Button } from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
@@ -20,7 +20,7 @@ const btnlist = [
   {cla:'icon-zhuanjie', tit: '转接'},
   {cla:'icon-bhjpaidui', tit: '队列z'}
 ]
-function Header({logOutEvent, isLogin}) {
+function Header({logOutEvent, isLogin, signEvent}) {
   const Header = styled.header `
     height: ${config.HEADER_HEIGHT}px;
     display: flex;
@@ -84,14 +84,6 @@ function Header({logOutEvent, isLogin}) {
     line-height: 1;
     align-items: center;
   `
-  function toLogoutEvent () {
-    Modal.confirm({
-      title: '你确定要退出此系统么？',
-      okText: '确认',
-      cancelText: '取消',
-      onOk:()=>{logOutEvent()}
-    });
-  }
   return (
     <Header>
       <LArea>
@@ -99,8 +91,8 @@ function Header({logOutEvent, isLogin}) {
         <div className='logo-info'>
           <div>应急处置值守人员：<strong>王五</strong></div>
           <div className='btn-wrap'>
-            <Button className='btn-icon' icon='calendar' size="small">签到</Button>
-            <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>toLogoutEvent()}>退出</Button>
+            <Button className='btn-icon' icon='calendar' size="small" onClick={()=>signEvent()}>签到</Button>
+            <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>logOutEvent()}>退出</Button>
           </div>
         </div>
       </LArea>
