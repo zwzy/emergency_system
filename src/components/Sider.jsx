@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-
 import { Menu, Icon } from 'antd';
+
+import config from '../utils/config'
 
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
@@ -12,7 +13,7 @@ function Sider({openKey, handleClick, menu, menuList, onOpenChange}) {
   return (
     <Menu
     onClick={handleClick}
-    style={{ width: 256, overflowY: 'auto',overflowX: 'hidden', borderRadius: '5px', padding: '5px 0', border: 'none'}}
+    style={{ width: config.SIDER_WIDTH, overflowY: 'auto',overflowX: 'hidden', borderRadius: '5px', padding: '5px 0', border: 'none'}}
     // defaultOpenKeys={[openKey]}
     openKeys={[openKey]}
     selectedKeys={[menu]}
