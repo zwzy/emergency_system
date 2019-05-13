@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 
-import { Button } from 'antd' 
+import { Button,Input } from 'antd' 
 
 import styled from 'styled-components'
 import color from '../../utils/color'
@@ -10,10 +10,16 @@ import color from '../../utils/color'
 
 function DutyPlan({username, userphone, handeleClick}) {
   const DutyPlanBox = styled.div `
+    .input-wrap {
+      
+    }
   `
   return (
     <DutyPlanBox>
-       <Button type='primary'>DutyPlanBox</Button>
+      <div className='input-wrap'>
+        <div></div>
+      </div>
+      <Input placeholder="Basic usage" />
     </DutyPlanBox>
   );
 }
