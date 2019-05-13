@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import Header from '../components/Header'
 
@@ -24,26 +25,19 @@ export class HeaderCase extends Component {
       updateUserInformation({theme: 'white', power: 2})
     }
   }
+  logOutEvent = () => {
+    sessionStorage.clear()
+    localStorage.clear()
+    this.props.history.push('login')
+  }
   render() {
     const {isLogin} = this.state
-    const {userInformation} = this.props
     return (
-      <Header userName={userInformation.name} theme={userInformation.theme} isLogin={isLogin} updateUserInformation={this._updateUserInformation}></Header>  
+      <Header isLogin={isLogin} logOutEvent={() => this.logOutEvent()}></Header>  
     )
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    userInformation: state.userInformation
-  }
-}
-
-const mapDispatchToProps = (display)=>{
-  return {
-    updateUserInformation: (userInformation)=> display(updateUserInformation(userInformation))
-  }
-}
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderCase)
+export default withRouter(HeaderCase)
