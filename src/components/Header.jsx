@@ -12,19 +12,7 @@ const MyIcon = Icon.createFromIconfontCN({
 
 const logoImg = require('../images/avatar.png')
 
-<<<<<<< HEAD
-const btnlist = [
-  {cla:'icon-dianhua1', tit: '接听'},
-  {cla:'icon-guaduan', tit: '挂断'},
-  {cla:'icon-mobile', tit: '拨打'},
-  {cla:'icon-Hold-TheLine', tit: '保持'},
-  {cla:'icon-zhuanjie', tit: '转接'},
-  {cla:'icon-bhjpaidui', tit: '队列'}
-]
-function Header({userName, isLogin, theme, updateUserInformation}) {
-=======
 function Header({logOutEvent, isLogin, signEvent}) {
->>>>>>> fa79c7919b4295b0b239c60ed9141bc65d0b3fc6
   const Header = styled.header `
     height: ${config.HEADER_HEIGHT}px;
     display: flex;
