@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-
+import { Divider, Button } from 'antd'
 import Group from '../../components/communication/Group'                 // 引用的ui组件
 
 export class GroupCase extends Component {
@@ -19,6 +19,19 @@ export class GroupCase extends Component {
         {
           title: '群组成员',
           dataIndex: 'address',
+        },
+        {
+          title: '操作',
+          dataIndex: 'operate',
+          render: (text, record) => (
+            <span>
+              <Button type='primary'>修改</Button>
+              <Divider type="vertical" />
+              <Button type='danger'>删除</Button>
+              <Divider type="vertical" />
+              <Button type='primary'>拨打</Button>
+            </span>
+          )
         }
       ],
       tableData:[]
@@ -37,27 +50,13 @@ export class GroupCase extends Component {
       tableData: tempData
     })
   }
-  onChange(selectedRowKeys, selectedRows) {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  }
-  getCheckboxProps(record){
-    return ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
-      name: record.name,
-    })
-  } 
   render() {
     let {tableColumns,tableData} = this.state
-    let rowSelection = {
-      onChange : this.onChange,
-      getCheckboxProps: this.getCheckboxProps
-    }
     return (
       <div>
         <Group 
           tableData = {tableData}
           tableColumns = {tableColumns}
-          rowSelection= {rowSelection}
         />
       </div>
     )

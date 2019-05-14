@@ -6,7 +6,7 @@ import { Button,Input,Table } from 'antd'
 import styled from 'styled-components'
 import color from '../../utils/color'
 
-function Group({tableColumns,tableData,rowSelection}) {
+function Group({tableColumns,tableData}) {
   const GroupBox = styled.div `
     .search-wrap {
       width: 100%;
@@ -34,13 +34,10 @@ function Group({tableColumns,tableData,rowSelection}) {
         <Button type="primary">搜索</Button>
       </div>
       <div className='btn-wrap'>
-        <Button type='primary'>新增</Button>
-        <Button type='primary'>修改</Button>
-        <Button type='primary'>一键拨打</Button>
-        <Button type='danger'>删除</Button>
+        <Button type='primary'>新增群组</Button>
       </div>
       <div>
-        <Table bordered rowSelection= {rowSelection} columns={tableColumns} dataSource={tableData} />
+        <Table bordered columns={tableColumns} dataSource={tableData} />
       </div>
     </GroupBox>
   );

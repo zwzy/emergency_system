@@ -51,6 +51,7 @@ function App({userInformation}) {
     bottom: ${config.DIVIDER_HEIGHT}px;
  `
   const Content = styled.div `
+    overflow: auto;
     flex:1;
     flex-direction: column;
     padding: 20px;
