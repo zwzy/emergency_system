@@ -67,7 +67,7 @@ function Console({username, userphone, handeleClick}) {
         <Timer>挂断时间：-------------------</Timer>  
         <Timer>通话时长：05：04： 31</Timer>  
       </Card>
-      <Card className='train-info'>
+      <Card hoverable className='train-info'>
       </Card>  
     </ConsoleBox>
   );
