@@ -75,7 +75,6 @@ export class SiderCase extends Component {
     })
     // 当然，若他们相等我们将再次打开这个subMenu,不改变路由
     if(subMenu === selSubMenu) {
-      // this.handleClick({key: array[0].subId })
       this.setState({
         openKey: array[0].subId
       });
