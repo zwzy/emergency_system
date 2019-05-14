@@ -21,6 +21,6 @@ export default  {
   $border: '#dcdee2',
   $divider: '#e8eaec',
   $bg: '#f8f8f9',
-
+  $desc: '#999999',
   baseColor: '#fff'
 }

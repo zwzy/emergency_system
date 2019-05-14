@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Route, Switch } from "react-router-dom";
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
@@ -52,8 +53,10 @@ function App({userInformation}) {
  `
   const Content = styled.div `
     flex:1;
+    overflow: auto;
     flex-direction: column;
-    padding: 20px;
+    min-width: 960px;
+    padding: ${config.CONTENT_PADDING}px;
     border-radius: 5px;
     margin-left: ${config.DIVIDER_HEIGHT}px;
     background: ${color.$base_white_bg};
@@ -64,7 +67,7 @@ function App({userInformation}) {
         <PowerContext.Provider value={userInformation.power}>
           {/* 头部 */}
           <HeaderCase></HeaderCase>
-          <Section>
+          <Section style={{minWidth: '1200px'}}>
             {/* 侧边栏 */}
             <SiderCase></SiderCase>
             {/* 主体内容区域 */}

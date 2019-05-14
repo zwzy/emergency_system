@@ -15,9 +15,7 @@ export class ConsoleCase extends Component {
   }
   render() {
     return (
-      <div>
-         <Console />
-      </div>
+      <Console />
     )
   }
 }

@@ -118,16 +118,17 @@ export const menuList = [
 ]
 // header btn config
 export const btnlist = [
-  {cla:'icon-dianhua1', tit: '接听'},
-  {cla:'icon-guaduan', tit: '挂断'},
-  {cla:'icon-mobile', tit: '拨打'},
-  {cla:'icon-Hold-TheLine', tit: '保持'},
-  {cla:'icon-zhuanjie', tit: '转接'},
-  {cla:'icon-bhjpaidui', tit: '队列'}
+  {cla:'icon-dianhua1', tit: '接听', eventName: 'callInEvent'},
+  {cla:'icon-guaduan', tit: '挂断', eventName: 'hangUpEvent'},
+  {cla:'icon-mobile', tit: '拨打', eventName: 'callOutEvent'},
+  {cla:'icon-Hold-TheLine', tit: '保持', eventName: 'callKeepEvent'},
+  {cla:'icon-zhuanjie', tit: '转接', eventName: 'callOtherEvent'},
+  {cla:'icon-bhjpaidui', tit: '队列', eventName: 'callQueueEvent'}
 ]
 // config
 export default  {
   HEADER_HEIGHT: 65,            // 头部高度
   DIVIDER_HEIGHT: 10,           // 分隔距离
+  CONTENT_PADDING: 15,          // 内容内边距
   SIDER_WIDTH: 222,             // 侧边栏宽度
 }
