@@ -11,12 +11,54 @@ export class GroupCase extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      tableColumns: [
+        {
+          title: '群组名',
+          dataIndex: 'age',
+        },
+        {
+          title: '群组成员',
+          dataIndex: 'address',
+        }
+      ],
+      tableData:[]
     }
   }
+  componentDidMount(){
+    let tempData = []
+    for (let i = 0; i < 46; i++) {
+      tempData.push({
+        key: i,
+        age: 32,
+        address: `London, Park Lane no. ${i}`
+      })
+    }
+    this.setState({
+      tableData: tempData
+    })
+  }
+  onChange(selectedRowKeys, selectedRows) {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  }
+  getCheckboxProps(record){
+    return ({
+      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      name: record.name,
+    })
+  } 
   render() {
+    let {tableColumns,tableData} = this.state
+    let rowSelection = {
+      onChange : this.onChange,
+      getCheckboxProps: this.getCheckboxProps
+    }
     return (
       <div>
-         <Group />
+        <Group 
+          tableData = {tableData}
+          tableColumns = {tableColumns}
+          rowSelection= {rowSelection}
+        />
       </div>
     )
   }
