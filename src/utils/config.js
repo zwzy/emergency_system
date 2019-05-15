@@ -36,14 +36,14 @@ export const menuList = [
     subName: '值班签到',
     subIcon: 'icon-Sign',
     menus: [
-      {
-        id: 'attendance_plan',
-        name: '值班计划',
-      },
-      {
-        id: 'attendance_management',
-        name: '值班管理',
-      },
+      // {
+      //   id: 'attendance_plan',
+      //   name: '值班计划',
+      // },
+      // {
+      //   id: 'attendance_management',
+      //   name: '值班管理',
+      // },
     ]
   },
   {

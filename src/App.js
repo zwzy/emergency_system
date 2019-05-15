@@ -21,8 +21,9 @@ import CountAssessCase from './containers/count/CountAssessCase'
 import CountHandleCase from './containers/count/CountHandleCase'
 import CountSignCase from './containers/count/CountSignCase'
 // 值班
-import DutyManagementCase from './containers/duty/DutyManagementCase'
-import DutyPlanCase from './containers/duty/DutyPlanCase'
+import DutyCase from './containers/menu/DutyCase'
+// import DutyManagementCase from './containers/duty/DutyManagementCase'
+// import DutyPlanCase from './containers/duty/DutyPlanCase'
 // 应急处置
 import ClassicCase from './containers/emergency/ClassicCase'
 import EvaluationCase from './containers/emergency/EvaluationCase'
@@ -81,8 +82,9 @@ function App({userInformation}) {
                   <Route path='/emergency_handle' component={HandleCase}></Route>
                   <Route path='/emergency_evaluation' component={EvaluationCase}></Route>
                   <Route path='/emergency_classic' component={ClassicCase}></Route>
-                  <Route path='/attendance_plan' component={DutyPlanCase}></Route>
-                  <Route path='/attendance_management' component={DutyManagementCase}></Route>
+                  {/* <Route path='/attendance_plan' component={DutyPlanCase}></Route>
+                  <Route path='/attendance_management' component={DutyManagementCase}></Route> */}
+                  <Route path='/attendance' component={DutyCase}></Route>
                   <Route path='/communication_group' component={GroupCase}></Route>
                   <Route path='/count_sign' component={CountSignCase}></Route>
                   <Route path='/count_assess' component={CountAssessCase}></Route>
