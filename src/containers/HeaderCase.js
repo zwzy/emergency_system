@@ -6,7 +6,7 @@ import Header from '../components/Header'
 import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
-
+const modalItemStyle = {margin: '8px 0'}
 export class HeaderCase extends Component {
   static propTypes = {
     userInformation: PropTypes.object
@@ -43,10 +43,10 @@ export class HeaderCase extends Component {
       title: '签到',
       content:(
         <div>
-            <div>工号： {userInfo.userNum}</div>
-            <div>姓名： {userInfo.userName}</div>
-            <div>职位： {userInfo.userPost}</div>
-            <div>时间： {userInfo.time}</div>
+          <div style={modalItemStyle}>工号： <strong>{userInfo.userNum}</strong></div>
+          <div style={modalItemStyle}>姓名： <strong>{userInfo.userName}</strong></div>
+          <div style={modalItemStyle}>职位： <strong>{userInfo.userPost}</strong></div>
+          <div style={modalItemStyle}>时间： <strong>{userInfo.time}</strong></div>
         </div>
       ),
       okText: '确认',
@@ -65,7 +65,32 @@ export class HeaderCase extends Component {
   // {cla:'icon-bhjpaidui', tit: '队列', eventName: 'callQueueEvent'}
 
   callInEvent = () => {
-    console.log('接听')
+    const callinInfo = {
+      trainPhone: '18755489161',
+      trainDirverName: '左旺',
+      trainDirverNames: '张三，老四',
+      trainByGroup: '江苏机车三组',
+      trainNum: 'A8878fdfdfd',
+      trainPosition: '江苏苏州园林',
+      trainBreakRuleInfo: '底盘损坏'
+    }
+    Modal.info({
+      title: '来电信息',
+      mask: false,
+      maskClosable: true,
+      content: (
+        <div>
+          <div style={modalItemStyle}>来电号码： <strong>{callinInfo.trainPhone}</strong></div>
+          <div style={modalItemStyle}>司机姓名： <strong>{callinInfo.trainDirverName}</strong></div>
+          <div style={modalItemStyle}>机班人员： <strong>{callinInfo.trainDirverNames}</strong></div>
+          <div style={modalItemStyle}>车间班组： <strong>{callinInfo.trainByGroup}</strong></div>
+          <div style={modalItemStyle}>机型车号： <strong>{callinInfo.trainNum}</strong></div>
+          <div style={modalItemStyle}>所在位置： <strong>{callinInfo.trainPosition}</strong></div>
+          <div style={modalItemStyle}>机车最近故障记录： <strong>{callinInfo.trainBreakRuleInfo}</strong></div>
+        </div>
+      ),
+      onOk() {},
+    });
   }
   hangUpEvent = () => {
     Modal.confirm({

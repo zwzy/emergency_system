@@ -52,7 +52,6 @@ function App({userInformation}) {
     bottom: ${config.DIVIDER_HEIGHT}px;
  `
   const Content = styled.div `
-    overflow: auto;
     flex:1;
     overflow: auto;
     flex-direction: column;
@@ -61,6 +60,7 @@ function App({userInformation}) {
     border-radius: 5px;
     margin-left: ${config.DIVIDER_HEIGHT}px;
     background: ${color.$base_white_bg};
+    min-height: 600px;
   `
   return (
     <div className="App">
