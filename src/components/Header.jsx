@@ -12,7 +12,7 @@ const MyIcon = Icon.createFromIconfontCN({
 
 const logoImg = require('../images/avatar.png')
 
-function Header({isLogin, eventArr, btnlist}) {
+function Header({event, data}) {
   const Header = styled.header `
     height: ${config.HEADER_HEIGHT}px;
     display: flex;
@@ -76,37 +76,79 @@ function Header({isLogin, eventArr, btnlist}) {
     line-height: 1;
     align-items: center;
   `
+  const CallInModal = styled.div`
+    position: fixed;
+    z-index: 999;
+    bottom: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #000;
+    background: #fff;
+    right: 30px;
+    width: 260px;
+    overflow: auto;
+    height: 320px;
+    border: 1px solid ${color.$border};
+    padding: 10px;
+    text-align: center;
+    .title{
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: ${color.$desc};
+    }
+    .content{
+      width: 80%;
+      display: inline-block;
+      text-align: left;
+    }
+  `
   return (
-    <Header>
-      <LArea>
-      <div className='logo'></div>
-        <div className='logo-info'>
-          <div>应急处置值守人员：<strong>王五</strong></div>
-          <div className='btn-wrap'>
-            <Button className='btn-icon' icon='calendar' size="small" onClick={()=>eventArr.signEvent()}>签到</Button>
-            <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>eventArr.logOutEvent()}>退出</Button>
+    <div>
+      <Header>
+        <LArea>
+        <div className='logo'></div>
+          <div className='logo-info'>
+            <div>应急处置值守人员：<strong>王五</strong></div>
+            <div className='btn-wrap'>
+              <Button className='btn-icon' icon='calendar' size="small" onClick={()=>event.signEvent()}>签到</Button>
+              <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>event.logOutEvent()}>退出</Button>
+            </div>
           </div>
-        </div>
-      </LArea>
-      <CArea>
-        {
-          btnlist.map((btn,index)=>{
-            return (
-              <div className='item' key={index} onClick={() => { eventArr[btn.eventName]() }}>
-                <div className='icon'>
-                  <MyIcon type={btn.cla}/>
+        </LArea>
+        <CArea>
+          {
+            data.btnlist.map((btn,index)=>{
+              return (
+                <div className='item' key={index} onClick={() => { event[btn.eventName]() }}>
+                  <div className='icon'>
+                    <MyIcon type={btn.cla}/>
+                  </div>
+                  <div>{btn.tit}</div>
                 </div>
-                <div>{btn.tit}</div>
-              </div>
-            )
-          })
-        }
-      </CArea>
-      <RArea>
+              )
+            })
+          }
+        </CArea>
+        <RArea>
         <Button icon='edit'>填写台账</Button>
       </RArea>
-    </Header>
-  );
+      </Header>
+      {
+        data.callInIsShow && <CallInModal>
+          <div className='title'> <Icon type="phone" /> 来电信息</div>
+          <div className='content'>
+            <div style={data.modalItemStyle}>来电号码： <strong>{data.callinInfo.trainPhone}</strong></div>
+            <div style={data.modalItemStyle}>司机姓名： <strong>{data.callinInfo.trainDirverName}</strong></div>
+            <div style={data.modalItemStyle}>机班人员： <strong>{data.callinInfo.trainDirverNames}</strong></div>
+            <div style={data.modalItemStyle}>车间班组： <strong>{data.callinInfo.trainByGroup}</strong></div>
+            <div style={data.modalItemStyle}>机型车号： <strong>{data.callinInfo.trainNum}</strong></div>
+            <div style={data.modalItemStyle}>所在位置： <strong>{data.callinInfo.trainPosition}</strong></div>
+            <div style={data.modalItemStyle}>机车最近故障记录： <strong>{data.callinInfo.trainBreakRuleInfo}</strong></div>
+          </div>
+        </CallInModal>
+      }
+    </div>
+   );
 }
 Header.propTypes = {
   // userInformation: PropTypes.array.isRequired,

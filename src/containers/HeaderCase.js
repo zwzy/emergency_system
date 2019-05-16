@@ -14,8 +14,16 @@ export class HeaderCase extends Component {
   constructor(props) {
     super(props)
     this.state = {
-       isLogin: false
+       isLogin: false,
+       callInIsShow: false,         // 来电通知modal
     }
+  }
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+       callInIsShow: true,
+      })
+    }, 3000);
   }
   // 登出
   logOutEvent = () => {
@@ -57,40 +65,11 @@ export class HeaderCase extends Component {
     });
   }
 
-  // {cla:'icon-dianhua1', tit: '接听', eventName: 'callInEvent'},
-  // {cla:'icon-guaduan', tit: '挂断', eventName: 'hangUpEvent'},
-  // {cla:'icon-mobile', tit: '拨打', eventName: 'callOutEvent'},
-  // {cla:'icon-Hold-TheLine', tit: '保持', eventName: 'callKeepEvent'},
-  // {cla:'icon-zhuanjie', tit: '转接', eventName: 'callOtherEvent'},
-  // {cla:'icon-bhjpaidui', tit: '队列', eventName: 'callQueueEvent'}
-
   callInEvent = () => {
-    const callinInfo = {
-      trainPhone: '18755489161',
-      trainDirverName: '左旺',
-      trainDirverNames: '张三，老四',
-      trainByGroup: '江苏机车三组',
-      trainNum: 'A8878fdfdfd',
-      trainPosition: '江苏苏州园林',
-      trainBreakRuleInfo: '底盘损坏'
-    }
-    Modal.info({
-      title: '来电信息',
-      mask: false,
-      maskClosable: true,
-      content: (
-        <div>
-          <div style={modalItemStyle}>来电号码： <strong>{callinInfo.trainPhone}</strong></div>
-          <div style={modalItemStyle}>司机姓名： <strong>{callinInfo.trainDirverName}</strong></div>
-          <div style={modalItemStyle}>机班人员： <strong>{callinInfo.trainDirverNames}</strong></div>
-          <div style={modalItemStyle}>车间班组： <strong>{callinInfo.trainByGroup}</strong></div>
-          <div style={modalItemStyle}>机型车号： <strong>{callinInfo.trainNum}</strong></div>
-          <div style={modalItemStyle}>所在位置： <strong>{callinInfo.trainPosition}</strong></div>
-          <div style={modalItemStyle}>机车最近故障记录： <strong>{callinInfo.trainBreakRuleInfo}</strong></div>
-        </div>
-      ),
-      onOk() {},
-    });
+    this.setState({
+      callInIsShow: false,
+     })
+     message.success('操作成功')
   }
   hangUpEvent = () => {
     Modal.confirm({
@@ -116,11 +95,19 @@ export class HeaderCase extends Component {
     console.log('队列')
   }
   render() {
-    const {isLogin} = this.state
+    const callinInfo = {
+      trainPhone: '18755489161',
+      trainDirverName: '左旺',
+      trainDirverNames: '张三，老四',
+      trainByGroup: '江苏机车三组',
+      trainNum: 'A8878fdfdfd',
+      trainPosition: '江苏苏州园林',
+      trainBreakRuleInfo: '底盘损坏底盘损坏底盘损坏坏底盘损坏底盘损坏底盘损坏'
+    }
+    const {callInIsShow} = this.state
     return (
       <Header 
-       isLogin={isLogin} 
-       eventArr = {
+       event = {
         {
           logOutEvent: this.logOutEvent,
           signEvent: this.signEvent,
@@ -132,7 +119,7 @@ export class HeaderCase extends Component {
           callQueueEvent: this.callQueueEvent,
         }
        } 
-       btnlist = {btnlist} 
+       data = { {btnlist, callinInfo, modalItemStyle, callInIsShow} } 
        ></Header>  
     )
   }
