@@ -60,7 +60,7 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        this.props.history.push('/attendance_management')
+        this.props.history.push('/attendance')
       }
     });
   }
