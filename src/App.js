@@ -30,7 +30,7 @@ import DutyCase from './containers/menu/DutyCase'
 import ClassicCase from './containers/emergency/ClassicCase'
 import EvaluationCase from './containers/emergency/EvaluationCase'
 import HandleCase from './containers/emergency/HandleCase'
-import TelgramCase from './containers/emergency/TelgramCase'
+import CallRecordsCase from './containers/emergency/CallRecordsCase'
 // 系统设置
 import ManageAccountCase from './containers/manage/ManageAccountCase'
 import ManagekanBanUpdateCase from './containers/manage/ManagekanBanUpdateCase'
@@ -147,7 +147,7 @@ function App({history}) {
                 <Switch>
                   <Route path='/rules_group' component={RulesGroupCase}></Route>
                   <Route path='/rules_built' component={RulesBuiltCase}></Route>
-                  <Route path='/emergency_telegram' component={TelgramCase}></Route>
+                  <Route path='/emergency_telegram' component={CallRecordsCase}></Route>
                   <Route path='/emergency_handle' component={HandleCase}></Route>
                   <Route path='/emergency_evaluation' component={EvaluationCase}></Route>
                   <Route path='/emergency_classic' component={ClassicCase}></Route>
