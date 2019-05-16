@@ -1,7 +1,9 @@
 import React from 'react'
 
 import { Route, Switch } from "react-router-dom";
-import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
+import { connect } from 'react-redux'  
+                         // 用来连接redux中reducer中全局数据的
+import { Breadcrumb } from 'antd';
 
 import styled from 'styled-components'
 import config from './utils/config'
@@ -38,10 +40,60 @@ import ManageUserCase from './containers/manage/ManageUserCase'
 
 import {ThemeContext, PowerContext} from './utils/context'
 
+import { menuList } from './utils/config'
+
+
 import './styles/App.css';
 import './styles/common.css';
 
-function App({userInformation}) {
+
+function getBreadCrumdArray (history) {
+  // 1、获取当前路径
+  // 如果没有父菜单： 即没有 pathname.split('_')[1] = undefined
+  const pathname = history.location.pathname  // 当前路径
+  if(pathname === '/') return
+  const parentMenu =  pathname.split('_')[0]  // 父菜单名称
+  const childMenu =  pathname.split('_')[1]   // 判断是不是有父菜单
+  const breadCrumdArr = []                    // 面包屑的数据{name, path}
+  // 有父菜单逻辑
+  // 找到父组件菜单所在的数组  获取到他的名字  并赋到面包屑中
+  if(childMenu) {
+    const array = menuList.filter((item) => {
+      return item.subId === parentMenu.slice(1)
+    })
+    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+    const childArray = array[0].menus.filter((item)=>{
+      return item.id === pathname.slice(1)
+    })
+    breadCrumdArr.push({name: childArray[0].name, path: '/' + childArray[0].id})
+  } else {
+    const array = menuList.filter((item) => {
+      return item.subId === parentMenu.slice(1)
+    })
+    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+  }
+  return breadCrumdArr
+} 
+function App({history}) {
+  
+  const breadCrumdArr = getBreadCrumdArray(history)
+  console.log(2222, breadCrumdArr)
+  // 当前路由所在的subMenu
+  // // 找到最新点击的subMenu的所对应的数组
+  // // 若前一个路由所在的subMenu不是点击的这个 即默认选中最新点击subMenu与它下面的第一个子菜单
+  // const array = menuList.filter((item) => {
+  //   return item.subId === selSubMenu
+  // })
+  // // 当然，若他们相等我们将再次打开这个subMenu,不改变路由
+  // if(subMenu === selSubMenu) {
+  //   this.setState({
+  //     openKey: array[0].subId
+  //   });
+  // } else {
+  //   this.setState({
+  //     openKey: array[0].subId,
+  //   });
+  // }
   const Section = styled.section `
     display: flex;
     position: fixed;
@@ -63,10 +115,15 @@ function App({userInformation}) {
     background: ${color.$base_white_bg};
     min-height: 600px;
   `
+  const BreadCrumdBox = styled.div `
+    padding: 8px 0;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  `
   return (
     <div className="App">
-      <ThemeContext.Provider value={userInformation.theme}>
-        <PowerContext.Provider value={userInformation.power}>
+      <ThemeContext.Provider>
+        <PowerContext.Provider>
           {/* 头部 */}
           <HeaderCase></HeaderCase>
           <Section style={{minWidth: '1200px'}}>
@@ -75,6 +132,18 @@ function App({userInformation}) {
             {/* 主体内容区域 */}
               <Content>
                 {/* 内容模块组件 */}
+                { breadCrumdArr && (
+                  <BreadCrumdBox>
+                    <Breadcrumb>
+                      {breadCrumdArr.map((item)=>{
+                        return(
+                          <Breadcrumb.Item key={item.path}>{item.name}</Breadcrumb.Item>
+                        )
+                      })}
+                    </Breadcrumb>
+                  </BreadCrumdBox>
+                  )
+                }
                 <Switch>
                   <Route path='/rules_group' component={RulesGroupCase}></Route>
                   <Route path='/rules_built' component={RulesBuiltCase}></Route>
@@ -104,6 +173,6 @@ function App({userInformation}) {
 }
 
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
-  userInformation: state.userInformation
+  // userInformation: state.userInformation
 })
 export default connect(mapStateToProps)(App)
