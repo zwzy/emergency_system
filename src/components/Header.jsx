@@ -5,14 +5,14 @@ import config from '../utils/config'
 import PropTypes from 'prop-types'
 
 import { Icon, Button } from 'antd';
-import { btnlist } from '../utils/config'
+
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
 });
 
 const logoImg = require('../images/avatar.png')
 
-function Header({logOutEvent, isLogin, signEvent}) {
+function Header({isLogin, eventArr, btnlist}) {
   const Header = styled.header `
     height: ${config.HEADER_HEIGHT}px;
     display: flex;
@@ -83,8 +83,8 @@ function Header({logOutEvent, isLogin, signEvent}) {
         <div className='logo-info'>
           <div>应急处置值守人员：<strong>王五</strong></div>
           <div className='btn-wrap'>
-            <Button className='btn-icon' icon='calendar' size="small" onClick={()=>signEvent()}>签到</Button>
-            <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>logOutEvent()}>退出</Button>
+            <Button className='btn-icon' icon='calendar' size="small" onClick={()=>eventArr.signEvent()}>签到</Button>
+            <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>eventArr.logOutEvent()}>退出</Button>
           </div>
         </div>
       </LArea>
@@ -92,7 +92,7 @@ function Header({logOutEvent, isLogin, signEvent}) {
         {
           btnlist.map((btn,index)=>{
             return (
-              <div className='item' key={index}>
+              <div className='item' key={index} onClick={() => { eventArr[btn.eventName]() }}>
                 <div className='icon'>
                   <MyIcon type={btn.cla}/>
                 </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Route, Switch } from "react-router-dom";
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
@@ -20,8 +21,9 @@ import CountAssessCase from './containers/count/CountAssessCase'
 import CountHandleCase from './containers/count/CountHandleCase'
 import CountSignCase from './containers/count/CountSignCase'
 // 值班
-import DutyManagementCase from './containers/duty/DutyManagementCase'
-import DutyPlanCase from './containers/duty/DutyPlanCase'
+import DutyCase from './containers/menu/DutyCase'
+// import DutyManagementCase from './containers/duty/DutyManagementCase'
+// import DutyPlanCase from './containers/duty/DutyPlanCase'
 // 应急处置
 import ClassicCase from './containers/emergency/ClassicCase'
 import EvaluationCase from './containers/emergency/EvaluationCase'
@@ -52,11 +54,14 @@ function App({userInformation}) {
  `
   const Content = styled.div `
     flex:1;
+    overflow: auto;
     flex-direction: column;
-    padding: 20px;
+    min-width: 960px;
+    padding: ${config.CONTENT_PADDING}px;
     border-radius: 5px;
     margin-left: ${config.DIVIDER_HEIGHT}px;
     background: ${color.$base_white_bg};
+    min-height: 600px;
   `
   return (
     <div className="App">
@@ -64,7 +69,7 @@ function App({userInformation}) {
         <PowerContext.Provider value={userInformation.power}>
           {/* 头部 */}
           <HeaderCase></HeaderCase>
-          <Section>
+          <Section style={{minWidth: '1200px'}}>
             {/* 侧边栏 */}
             <SiderCase></SiderCase>
             {/* 主体内容区域 */}
@@ -77,8 +82,9 @@ function App({userInformation}) {
                   <Route path='/emergency_handle' component={HandleCase}></Route>
                   <Route path='/emergency_evaluation' component={EvaluationCase}></Route>
                   <Route path='/emergency_classic' component={ClassicCase}></Route>
-                  <Route path='/attendance_plan' component={DutyPlanCase}></Route>
-                  <Route path='/attendance_management' component={DutyManagementCase}></Route>
+                  {/* <Route path='/attendance_plan' component={DutyPlanCase}></Route>
+                  <Route path='/attendance_management' component={DutyManagementCase}></Route> */}
+                  <Route path='/attendance' component={DutyCase}></Route>
                   <Route path='/communication_group' component={GroupCase}></Route>
                   <Route path='/count_sign' component={CountSignCase}></Route>
                   <Route path='/count_assess' component={CountAssessCase}></Route>
