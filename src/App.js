@@ -118,7 +118,6 @@ function App({history}) {
   const BreadCrumdBox = styled.div `
     padding: 8px 0;
     border-radius: 5px;
-    margin-bottom: 10px;
   `
   return (
     <div className="App">

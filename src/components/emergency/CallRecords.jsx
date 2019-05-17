@@ -1,51 +1,41 @@
 import React from 'react';
-import PropTypes from 'prop-types'
 
 import { Table, Input, Button, Row, Col } from 'antd' 
 
 import styled from 'styled-components'
-import color from '../../utils/color'
+import {InputGroupSearch} from '../../utils/styled'
 
-const InputGroup = Input.Group
-// const handleSubmit = e => {
-//   e.preventDefault();
-//   this.props.form.validateFields((err, values) => {
-//     if (!err) {
-//       console.log('Received values of form: ', values);
-//     }
-//   });
-// };
-function CallRecords({data}) {
+function CallRecords({data, event}) {
   const CallRecordsBox = styled.div `
   `
   return (
     <CallRecordsBox>
-       <InputGroup style={{lineHeight: '32px'}}>
-          <Row gutter={8} style={{margin: '20px 0'}}>
-            <Col span={2} style={{textAlign: "right"}}> 工号：</Col>
+       <InputGroupSearch>
+          <Row gutter={8}>
+            <Col span={2}> 工号：</Col>
             <Col span={5}>
-              <Input style={{display: 'inline-block'}} placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'gongHao')} placeholder="Basic usage" />
             </Col>
-            <Col span={2} style={{textAlign: "right"}}> 车型：</Col>
+            <Col span={2} > 车型：</Col>
             <Col span={5}>
-               <Input placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'cheType')} placeholder="Basic usage" />
             </Col>
-            <Col span={2} style={{textAlign: "right"}}> 司机姓名：</Col>
+            <Col span={2}> 司机姓名：</Col>
             <Col span={5}>
-              <Input placeholder="Basic usage" />
-            </Col>
-          </Row>
-          <Row gutter={8} style={{margin: '20px 0'}}>
-            <Col span={2} style={{textAlign: "right"}}> 车号：</Col>
-            <Col span={5}>
-               <Input placeholder="Basic usage" />
-            </Col>
-            <Col span={2} style={{textAlign: "right"}}> 关键字：</Col>
-            <Col span={5}>
-              <Input placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'dirverName')} placeholder="Basic usage" />
             </Col>
           </Row>
-        </InputGroup>
+          <Row gutter={8}>
+            <Col span={2}> 车号：</Col>
+            <Col span={5}>     
+              <Input onChange={(e)=>event.changeInputValue(e, 'cheNum')} placeholder="Basic usage" />
+            </Col>
+            <Col span={2}> 关键字：</Col>
+            <Col span={5}>
+              <Input onChange={(e)=>event.changeInputValue(e, 'keyWord')} placeholder="Basic usage" />
+            </Col>
+          </Row>
+        </InputGroupSearch>
     
       <Table bordered columns={data.callRecordsColumns} dataSource={data.callRecordsData} />
     </CallRecordsBox>

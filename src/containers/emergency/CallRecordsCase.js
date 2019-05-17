@@ -23,6 +23,15 @@ export class CallRecordsCase extends Component {
   }
   constructor(props) {
     super(props)
+    this.searchParams = {
+      gonghao: '',
+      pageSize: '',
+      pageNum: '',
+      cheType: '',
+      dirverName: '',
+      cheNum: '',
+      keyWord: '',
+     }
     this.state = {
       callRecordsData: [
         {
@@ -43,15 +52,37 @@ export class CallRecordsCase extends Component {
           age: 32,
           address: 'Sidney No. 1 Lake Park',
         },
-      ]
+      ],
+     
     }
   }
-  
+
+  keyWordSearch = () => {
+
+  }
+  changeInputValue = ({currentTarget:{value}}, type) => {
+    this.searchParams = {...this.searchParams, [type]: value}
+    console.log(this.searchParams)
+  }
+  componentWillUpdate(props, state) {
+    console.log(state !== this.state)
+    if(state !== this.state) {
+      console.log(1111) 
+      return false
+    } else {
+      console.log(2222) 
+      return true
+    }
+  }
   render() {
+    console.log(3333)
     const {callRecordsData} = this.state
     return (
       <div>
-         <CallRecords data={{callRecordsColumns, callRecordsData}} />
+         <CallRecords 
+            data={{callRecordsColumns, callRecordsData}}
+            event={{changeInputValue: this.changeInputValue}}
+          />
       </div>
     )
   }
