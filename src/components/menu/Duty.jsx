@@ -12,6 +12,9 @@ import styled from 'styled-components'
 
 function Duty({data, event}) {
   const DutyBox = styled.div `
+    .top-btn {
+      margin-top: 10px;
+    }
     .duty-wrap {
       margin-top: 20px;
     }
@@ -31,10 +34,15 @@ function Duty({data, event}) {
         }
       }
     }
+    .nopad td:nth-of-type(2) {
+      box-sizing:border-box;
+      padding: 0!important;
+      margin: 0!important;
+    }
   `
   return (
     <DutyBox>
-      <div>
+      <div className='top-btn'>
         <Button type={data.dutyType === 0 ? 'primary':''} onClick={()=>{event.changeDutyType(0)}}>签到总览</Button>
         <Button type={data.dutyType === 1 ? 'primary':''} style={{marginLeft:'15px'}} onClick={()=>{event.changeDutyType(1)}}>签到记录</Button>
       </div>
@@ -42,7 +50,8 @@ function Duty({data, event}) {
         data.dutyType === 0 ? 
         (
           <div className="duty-wrap">
-            <Table bordered columns={data.allTablecolumns} dataSource={data.allTabledata} />
+            <Table bordered pagination={false} columns={data.allTablecolumns} dataSource={data.allTabledata} rowClassName={(record, index) => (index === 1) ? 'nopad':''} />
+            <Table bordered size="middle" pagination={false} columns={data.allTablecolumns1} dataSource={data.allTabledata1} />
           </div>
         ):(
           <div className='duty-wrap'>

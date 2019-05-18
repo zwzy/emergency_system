@@ -42,115 +42,232 @@ export class DutyCase extends Component {
       allTabledata: [ // 签到总览表数据
         {
           key: '1',
-          name: 'John Brown',
-          age: 32,
-          tel: '0571-22098909',
-          phone: 18889898989,
-          address: 'New York No. 1 Lake Park',
+          apart: '段值班领导',
+          name: '11'
         },
         {
           key: '2',
-          name: 'Jim Green',
-          tel: '0571-22098333',
-          phone: 18889898888,
-          age: 42,
-          address: 'London No. 1 Lake Park',
+          apart: '运用专业',
+          name: '22'
         },
         {
           key: '3',
-          name: 'Joe Black',
-          age: 32,
-          tel: '0575-22098909',
-          phone: 18900010002,
-          address: 'Sidney No. 1 Lake Park',
+          apart: '技术专业',
+          name: '33'
         },
         {
           key: '4',
-          name: 'Jim Red',
-          age: 18,
-          tel: '0575-22098909',
-          phone: 18900010002,
-          address: 'London No. 2 Lake Park',
+          apart: '应急指挥专员',
+          name: '44'
         },
         {
           key: '5',
-          name: 'Jake White',
-          age: 18,
-          tel: '0575-22098909',
-          phone: 18900010002,
-          address: 'Dublin No. 2 Lake Park',
+          apart: '应急指挥专员',
+          name: '55'
         }
       ],
       allTablecolumns: [ // 签到总览表表头
         {
-          title: 'Name',
-          dataIndex: 'name',
-          render: (text, row, index) => {
-            if (index < 4) {
-              return <a href="javascript:;">{text}</a>;
-            }
-            return {
-              children: <a href="javascript:;">{text}</a>,
-              props: {
-                colSpan: 5,
-              },
-            };
-          },
+          title: '序号',
+          dataIndex: 'key',
+          width: '100px'
         },
         {
-          title: 'Age',
-          dataIndex: 'age',
+          title: '部门',
+          dataIndex: 'apart',
+          width: '232px',
           render: this.renderContent,
         },
         {
-          title: 'Home phone',
-          colSpan: 2,
-          dataIndex: 'tel',
-          render: (value, row, index) => {
-            const obj = {
-              children: value,
-              props: {},
-            };
-            if (index === 2) {
-              obj.props.rowSpan = 2;
-            }
-            // These two are merged into above cell
-            if (index === 3) {
-              obj.props.rowSpan = 0;
-            }
-            if (index === 4) {
-              obj.props.colSpan = 0;
-            }
-            return obj;
-          },
+          title: '签名',
+          dataIndex: 'name'
+        }
+      ],
+      allTabledata1: [ // 签到总览表数据（下半部分）
+        {
+          key: '1',
+          apart: '合肥东运用',
+          name: '11',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
         },
         {
-          title: 'Phone',
-          colSpan: 0,
-          dataIndex: 'phone',
-          render: this.renderContent,
+          key: '2',
+          apart: '合肥西运用',
+          name: '22',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
         },
         {
-          title: 'Address',
-          dataIndex: 'address',
-          render: this.renderContent,
+          key: '3',
+          apart: '动车运用',
+          name: '33',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
         },
+        {
+          key: '4',
+          apart: '合肥运用',
+          name: '44',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '5',
+          apart: '芜湖运用',
+          name: '55',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '6',
+          apart: '阜阳运用',
+          name: '11',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '7',
+          apart: '淮南运用',
+          name: '22',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '8',
+          apart: '绩溪运用',
+          name: '33',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '9',
+          apart: '青龙山运用',
+          name: '44',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '10',
+          apart: '合肥检修',
+          name: '55',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '11',
+          apart: '阜阳检修',
+          name: '44',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        },
+        {
+          key: '12',
+          apart: '芜湖检修',
+          name: '55',
+          dayname:'',
+          dayname1:'',
+          nightname:'',
+          nightname1:''
+        }
+      ],
+      allTablecolumns1: [ // 签到总览表表头（下半部分）
+        {
+          title: '',
+          dataIndex: 'key',
+          width: '100px'
+        },
+        {
+          title: '车间',
+          dataIndex: 'apart',
+          width: '233px',
+        },
+        {
+          title: '应急值守人员',
+          dataIndex: '',
+          children: [
+            {
+              title: '白班',
+              dataIndex: 'dayname',
+            },{
+              title: '夜班',
+              dataIndex: 'nightname'
+            }
+          ]
+        },
+        {
+          title: '值班人员',
+          dataIndex: '',
+          children: [
+            {
+              title: '白班',
+              dataIndex: 'dayname1'
+            },{
+              title: '夜班',
+              dataIndex: 'nightname1'
+            }
+          ]
+        }
       ]
     }
   }
   renderContent = (value, row, index) => {
     const obj = {
       children: value,
-      props: {},
-    };
-    if (index === 4) {
-      obj.props.colSpan = 0;
+      props: {}
     }
-    return obj;
+    if (index === 2) {
+      obj.props.rowSpan = 0;
+    }
+    if (index === 1) {
+      return {
+        children: <div style={{display:'flex',flexDirection:'row'}}>
+          <div style={{width:'72px',height:'108px',overflow:'hidden', textAlign:'center', borderRight:'1px solid #e8e8e8',boxSizing:'border-box'}}>
+            <div style={{height:'20px',overflow:'hidden',marginTop:'4px'}}>段</div>
+            <div style={{height:'20px',overflow:'hidden'}}>值</div>
+            <div style={{height:'20px',overflow:'hidden'}}>班</div>
+            <div style={{height:'20px',overflow:'hidden'}}>领</div>
+            <div style={{height:'20px',overflow:'hidden'}}>导</div>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',width:'160px'}}>
+            <div style={{textAlign:'center',height: '54px',lineHeight: '54px',borderBottom:'1px solid #e8e8e8'}}>运用专业</div>
+            <div style={{textAlign:'center',height: '54px',lineHeight: '54px'}}>技术专业</div>
+          </div>
+        </div>,
+        props: {
+          rowSpan : 2
+        },
+        className:'haha'
+      }
+    } else {
+      return obj;
+    }
   }
   componentDidMount(){
     let tempData = []
-    for (let i = 0; i < 46; i++) {
+    for (let i = 0; i < 5; i++) {
       tempData.push({
         key: i,
         id: i,
@@ -170,8 +287,14 @@ export class DutyCase extends Component {
       dutyType: index
     })
   }
+  setClass = (item,index)=> {
+    console.log('item===',item)
+    if(index === 1){
+      return 'tdnopad'
+    }
+  }
   render() {
-    let {tableColumns,tableData, dutyType, allTabledata, allTablecolumns} = this.state
+    let {tableColumns,tableData, dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
     return (
       <div>
         <Duty
@@ -180,10 +303,13 @@ export class DutyCase extends Component {
           tableColumns,
           dutyType,
           allTabledata,
-          allTablecolumns
+          allTablecolumns,
+          allTabledata1,
+          allTablecolumns1
          }}
          event={{
-          changeDutyType: this.changeDutyType
+          changeDutyType: this.changeDutyType,
+          setClass: this.setClass
          }}
         />
       </div>
