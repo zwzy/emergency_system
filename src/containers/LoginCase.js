@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import color from '../utils/color'
 
 import { message, Form, Icon, Input, Button, Checkbox,} from 'antd' 
-
 const LoginPage = styled.div `
   background: ${color.$content};
   position: fixed;
