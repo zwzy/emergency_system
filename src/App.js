@@ -75,25 +75,7 @@ function getBreadCrumdArray (history) {
   return breadCrumdArr
 } 
 function App({history}) {
-  
   const breadCrumdArr = getBreadCrumdArray(history)
-  console.log(2222, breadCrumdArr)
-  // 当前路由所在的subMenu
-  // // 找到最新点击的subMenu的所对应的数组
-  // // 若前一个路由所在的subMenu不是点击的这个 即默认选中最新点击subMenu与它下面的第一个子菜单
-  // const array = menuList.filter((item) => {
-  //   return item.subId === selSubMenu
-  // })
-  // // 当然，若他们相等我们将再次打开这个subMenu,不改变路由
-  // if(subMenu === selSubMenu) {
-  //   this.setState({
-  //     openKey: array[0].subId
-  //   });
-  // } else {
-  //   this.setState({
-  //     openKey: array[0].subId,
-  //   });
-  // }
   const Section = styled.section `
     display: flex;
     position: fixed;
