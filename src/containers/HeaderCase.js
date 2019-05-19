@@ -98,7 +98,9 @@ export class HeaderCase extends Component {
         console.log(cmd, result.token)
         const acd = '2000'  // 坐席
         const token = result.token
-        window.UMO.login(aid, token, acd, -1, false, function(res) {
+        // login: function(aid, acd, skill, mon, silent, cb, w)
+        // UMO.login(aid, acd, -1, false, false, cbResult, null);
+        window.UMO.login(aid, acd, -1, false, false, function(res) {
           console.log(res)
         }, null)
         sessionStorage.setItem('token', result.token)
@@ -159,20 +161,63 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
+        // window.UMO.speedhook('1000', (res, res1)=>{
+        //   console.log(res, res1)
+        // })
+        window.UMO.onhook((res, res1)=>{
+          console.log(res, res1)
+        })
         message.success('操作成功')
       }
     });
   }
   callOutEvent = () => {
-    console.log('拨打')
+    // 快速拨出
+
+    // const dest = '1008'           // 分机号
+    // const dispno = ''             // 主叫显示
+    // const playfile = 'welcome.wav'// 放音文件 根据flow文件指示
+    // const oper = '0'              // 操作类型  0直接转队列；1按码转队列；2按码转菜单；3放音挂机，文件为空直接挂机；4留言挂机；5按码挂机；6放音转队列；7直接转队列评价；8按码转队列评价；9放音转队列评价；10直接转队列登记；11按码转队列登记；12放音转队列登记；19放音转菜单；20直接挂机；21加入会议；100操作回调；101用户控制；102函数控制
+    // const param = ''              // 操作参数  0队列号；1按码:队列号，逗号分隔；2按码:菜单号，逗号分隔；3-5无效；6队列号；7队列号；8按码:队列号，逗号分隔；9队列号；10队列号；11按码:队列号，逗号分隔；12队列号；19菜单号；20无效；21:会议号；100操作回调URL，可加&参数；101-空闲超时（秒）；102-类名,函数名,用户参数
+    // const gid = '@0'              // 指定中继号码，或 @+租户ID 选择租户任意线路
+    // const recflag = '0'           // 录音标志 0 不录音， 1录音
+    // const uud = '{"username": "zuowang", "age": 13, "sex": 1 }'  //  用户数据，可传至弹屏界面
+    // const backurl = ''            // 速拨回调URL, 可加&参数原样返回
+
+    // window.UMO.speeddial(dest, dispno, playfile, oper, param, gid, recflag, uud, backurl, (cmd, res, a, b, c)=>{
+    //   console.log('toPhone', cmd, res, a, b, c)
+    // }, null);
+    
+    // 座席拨出
+
+    const calleddn = 1008;   // 呼出电话号
+    const gid = '@0'        // 指定中继号码，或 @+租户ID 选择租户任意线路(转移会议无效)
+    const uud = 'who you are hosw';// 用户数据，可传至弹屏界面
+    // $("#errmsg").html("");
+    // * @param ano  主叫号码
+    // * @param bno  被叫号码
+    // * @param uud  业务数据，”dialout”分机拨出，”misc:callback”分机回呼
+
+    window.UMO.dialout(calleddn, gid, uud, true, (url, res)=>{
+      console.log(11111, url, res)
+    }, null)
   }
   callKeepEvent = () => {
     console.log('保持')
   }
   callOtherEvent = () => {
+    // 完成快速转移功能。在通话过程中，将已经连接的呼叫转移到新的目标号码，自己挂机。
     console.log('转接')
+    //  呼叫ID,或-1表示当前呼叫, 主叫显示, 目标号码, 用户数据 ,callback
+    window.UMO.speedtrans('1008', '1000', '1009', 'name=123', (cmd, res)=>{
+      console.log(cmd, res)
+    })
   }
   callQueueEvent = () => {
+    // acd 指定的队列号， 为空返回所有 (acd, cb)
+    window.UMO.acdlist('', (cmd, res)=>{
+      console.log(cmd, res)
+    })
     console.log('队列')
   }
   render() {
