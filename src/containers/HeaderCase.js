@@ -77,6 +77,8 @@ export class HeaderCase extends Component {
       }
     }
     this.state = {
+       type: 'hold',
+       handleBtnlist: btnlist,
        isLogin: false,
        callInIsShow: false,         // 来电通知modal
     }
@@ -202,8 +204,8 @@ export class HeaderCase extends Component {
       console.log(11111, url, res)
     }, null)
   }
-  callKeepEvent = (type) => {
-   
+  callKeepEvent = () => {
+    const {type, handleBtnlist} = this.state
     Modal.confirm({
       title: type === 'hold' ? '挂起': '恢复',
       content: `确定要${ type === 'hold' ? '挂起': '恢复'}么？`,
@@ -215,11 +217,15 @@ export class HeaderCase extends Component {
         // })
         if(type === 'hold') {
           window.UMO.hold(false, (res, res1)=>{
-            console.log(res, res1)
+            const newhandleBtnlist = handleBtnlist
+            newhandleBtnlist [3].tit = '恢复'
+            this.setState({handleBtnlist: newhandleBtnlist, type: 'huifu'})
           }, null)
         } else {
-          window.UMO.retrieve(false, (res, res1)=>{
-            console.log(res, res1)
+          window.UMO.retrieve((res, res1)=>{
+            const newhandleBtnlist = handleBtnlist
+            newhandleBtnlist [3].tit = '挂起'
+            this.setState({type: 'hold', handleBtnlist: newhandleBtnlist})
           }, null)
         }
         message.success('操作成功')
@@ -251,7 +257,7 @@ export class HeaderCase extends Component {
       trainPosition: '江苏苏州园林',
       trainBreakRuleInfo: '底盘损坏底盘损坏底盘损坏坏底盘损坏底盘损坏底盘损坏'
     }
-    const {callInIsShow} = this.state
+    const {callInIsShow, type} = this.state
     return (
       <Header 
        event = {
@@ -266,7 +272,7 @@ export class HeaderCase extends Component {
           callQueueEvent: this.callQueueEvent,
         }
        } 
-       data = { {btnlist, callinInfo, modalItemStyle, callInIsShow} } 
+       data = { {btnlist, callinInfo, type, modalItemStyle, callInIsShow} } 
        ></Header>  
     )
   }
