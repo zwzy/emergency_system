@@ -202,8 +202,29 @@ export class HeaderCase extends Component {
       console.log(11111, url, res)
     }, null)
   }
-  callKeepEvent = () => {
-    console.log('保持')
+  callKeepEvent = (type) => {
+   
+    Modal.confirm({
+      title: type === 'hold' ? '挂起': '恢复',
+      content: `确定要${ type === 'hold' ? '挂起': '恢复'}么？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk:()=>{
+        // window.UMO.speedhook('1000', (res, res1)=>{
+        //   console.log(res, res1)
+        // })
+        if(type === 'hold') {
+          window.UMO.hold(false, (res, res1)=>{
+            console.log(res, res1)
+          }, null)
+        } else {
+          window.UMO.retrieve(false, (res, res1)=>{
+            console.log(res, res1)
+          }, null)
+        }
+        message.success('操作成功')
+      }
+    });
   }
   callOtherEvent = () => {
     // 完成快速转移功能。在通话过程中，将已经连接的呼叫转移到新的目标号码，自己挂机。
