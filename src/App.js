@@ -98,7 +98,7 @@ function App({history}) {
     min-height: 600px;
   `
   const BreadCrumdBox = styled.div `
-    padding: 8px 0;
+    padding-bottom: 12px;
     border-radius: 5px;
   `
   return (

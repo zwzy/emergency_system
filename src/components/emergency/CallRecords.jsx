@@ -37,7 +37,8 @@ function CallRecords({data, event}) {
           </Row>
         </InputGroupSearch>
     
-      <Table bordered columns={data.callRecordsColumns} dataSource={data.callRecordsData} />
+      <Table bordered columns={data.callRecordsColumns} dataSource={data.callRecordsData} 
+      />
     </CallRecordsBox>
   );
 }
