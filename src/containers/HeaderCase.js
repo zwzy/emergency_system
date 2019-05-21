@@ -7,6 +7,34 @@ import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
 const modalItemStyle = {margin: '8px 0'}
+
+const callColumns = [
+  {
+    title: '来电类型',
+    dataIndex: 'devtype',
+    width: 250
+  },
+  {
+    title: '来电方式',
+    dataIndex: 'dir',
+    width: 250
+  },
+  {
+    title: '拨出方',
+    dataIndex: 'ano',
+    width: 250
+  },
+  {
+    title: '接收方',
+    dataIndex: 'bno',
+    width: 250
+  },
+  {
+    title: '来电时间',
+    dataIndex: 'tm',
+    width: 250
+  }
+];
 export class HeaderCase extends Component {
   static propTypes = {
     userInformation: PropTypes.object
@@ -79,9 +107,18 @@ export class HeaderCase extends Component {
     this.state = {
        type: 'hold',
        handleBtnlist: btnlist,
+       callData: [],
+       callListIsShow: false,
        isLogin: false,
        callInIsShow: false,         // 来电通知modal
     }
+  }
+   // 显示通话历史记录弹窗
+  callListShowEvent = () => {
+    const {callListIsShow}  = this.state
+    this.setState({
+      callListIsShow: !callListIsShow
+    })
   }
   componentDidMount() {
     const params = {
@@ -240,12 +277,24 @@ export class HeaderCase extends Component {
       console.log(cmd, res)
     })
   }
+  callListShowEvent() {
+    const {callListIsShow}  = this.state
+    this.setState({
+      callListIsShow: !callListIsShow
+    })
+  }
   callQueueEvent = () => {
     // acd 指定的队列号， 为空返回所有 (acd, cb)
-    window.UMO.acdlist('', (cmd, res)=>{
-      console.log(cmd, res)
-    })
-    console.log('队列')
+   this.callListShowEvent()
+    window.UMO.calllist((cmd, result)=>{
+      if (result.errno == 0)
+      {
+        const callData = result.calllist;
+        this.setState({
+          callData
+        })
+      }
+    }, null);
   }
   render() {
     const callinInfo = {
@@ -257,7 +306,7 @@ export class HeaderCase extends Component {
       trainPosition: '江苏苏州园林',
       trainBreakRuleInfo: '底盘损坏底盘损坏底盘损坏坏底盘损坏底盘损坏底盘损坏'
     }
-    const {callInIsShow, type} = this.state
+    const {callInIsShow, type, callListIsShow, callData} = this.state
     return (
       <Header 
        event = {
@@ -270,9 +319,10 @@ export class HeaderCase extends Component {
           callKeepEvent: this.callKeepEvent,
           callOtherEvent: this.callOtherEvent,
           callQueueEvent: this.callQueueEvent,
+          callListShowEvent: this.callListShowEvent,
         }
        } 
-       data = { {btnlist, callinInfo, type, modalItemStyle, callInIsShow} } 
+       data = { {btnlist, callinInfo, type, callData, modalItemStyle, callInIsShow, callListIsShow, callColumns} } 
        ></Header>  
     )
   }

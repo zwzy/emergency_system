@@ -4,7 +4,7 @@ import color from '../utils/color'
 import config from '../utils/config'
 import PropTypes from 'prop-types'
 
-import { Icon, Button } from 'antd';
+import { Icon, Button, Modal, Table } from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
@@ -133,6 +133,15 @@ function Header({event, data}) {
         <Button icon='edit'>填写台账</Button>
       </RArea>
       </Header>
+      <Modal
+        width={900}
+        title='呼叫队列'
+        visible={data.callListIsShow}
+        onCancel={()=>event.callListShowEvent()}
+        footer={null}
+      >
+        <Table columns={data.callColumns} dataSource={data.callData} scroll={{y: 265}} pagination={false} />
+      </Modal>
       {
         data.callInIsShow && <CallInModal>
           <div className='title'> <Icon type="phone" /> 来电信息</div>
