@@ -7,8 +7,19 @@ import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
 const modalItemStyle = {margin: '8px 0'}
-
-const callColumns = [
+const callOutColumns = [
+  {
+    title: '群组名',
+    dataIndex: 'groupName',
+    width: 250
+  },
+  {
+    title: '拨打',
+    dataIndex: '',
+    width: 250
+  }
+];
+const callInListColumns = [
   {
     title: '来电类型',
     dataIndex: 'devtype',
@@ -35,6 +46,18 @@ const callColumns = [
     width: 250
   }
 ];
+const callOtherColumns = [
+  {
+    title: '群组名',
+    dataIndex: 'groupName',
+    width: 250
+  },
+  {
+    title: '拨打',
+    dataIndex: '',
+    width: 250
+  }
+];
 export class HeaderCase extends Component {
   static propTypes = {
     userInformation: PropTypes.object
@@ -50,7 +73,7 @@ export class HeaderCase extends Component {
       // 来电
       onCallincome: (ano, bno, uud) => {
         this.setState({
-          callInIsShow: true,
+          callInListIsShow: true,
         })
         console.log('根据来电分机号，获取用户信息')
         console.log("onCallincome: 来电分机号=" + ano + " 本机分号=" + bno + " uud= 分机拨出，分机回呼" + uud);
@@ -61,7 +84,7 @@ export class HeaderCase extends Component {
       // 挂断
       onRingStoped: () => {
         this.setState({
-          callInIsShow: false,
+          callInListIsShow: false,
         })
         console.log("onRingStoped");
       },
@@ -105,22 +128,47 @@ export class HeaderCase extends Component {
       }
     }
     this.state = {
-       type: 'hold',
-       handleBtnlist: btnlist,
-       callData: [],
-       callListIsShow: false,
-       isLogin: false,
-       callInIsShow: false,         // 来电通知modal
+      type: 'hold',
+      handleBtnlist: btnlist,
+      // 拨出
+      callOutIsShow: false,
+      callOutData:[],
+      // 转接
+      callOtherIsShow: false,
+      callOtherData: [],
+      // 队列
+      callInListData: [],
+      callInListIsShow: false,         // 来电通知modal
     }
   }
-   // 显示通话历史记录弹窗
-  callListShowEvent = () => {
-    const {callListIsShow}  = this.state
+
+  // 显示拨出
+  callOutShowEvent = () => {
+    const {callOutIsShow}  = this.state
     this.setState({
-      callListIsShow: !callListIsShow
+      callOutIsShow: !callOutIsShow
     })
   }
+  // 显示转接
+  callOtherShowEvent = () => {
+    const {callOtherIsShow}  = this.state
+    this.setState({
+      callOtherIsShow: !callOtherIsShow
+    })
+  }
+   // 显示队列
+  callInListShowEvent = () => {
+    const {callInListIsShow}  = this.state
+    this.setState({
+      callInListIsShow: !callInListIsShow
+    })
+  }
+
   componentDidMount() {
+    this.userLoginACD()
+  }
+  // 用户登录ACD
+  userLoginACD() {
     const params = {
       apihost: 'http://192.168.7.61:8181/IPServer',  // 域名
       bizhost: null,                                 // 
@@ -136,7 +184,6 @@ export class HeaderCase extends Component {
       if(result.errno === 0) {
         console.log(cmd, result.token)
         const acd = '2000'  // 坐席
-        const token = result.token
         // login: function(aid, acd, skill, mon, silent, cb, w)
         // UMO.login(aid, acd, -1, false, false, cbResult, null);
         window.UMO.login(aid, acd, -1, false, false, function(res) {
@@ -146,7 +193,6 @@ export class HeaderCase extends Component {
       }
     })
   }
-
   // 登出
   logOutEvent = () => {
     Modal.confirm({
@@ -186,13 +232,14 @@ export class HeaderCase extends Component {
       }
     });
   }
-
+  // 接听
   callInEvent = () => {
-    this.setState({
-      callInIsShow: false,
-     })
-     message.success('操作成功')
+    // this.setState({
+    //   callInListIsShow: false,
+    //  })
+    //  message.success('操作成功')
   }
+  // 挂断
   hangUpEvent = () => {
     Modal.confirm({
       title: '挂断',
@@ -210,25 +257,10 @@ export class HeaderCase extends Component {
       }
     });
   }
+  // 拨出
   callOutEvent = () => {
-    // 快速拨出
-
-    // const dest = '1008'           // 分机号
-    // const dispno = ''             // 主叫显示
-    // const playfile = 'welcome.wav'// 放音文件 根据flow文件指示
-    // const oper = '0'              // 操作类型  0直接转队列；1按码转队列；2按码转菜单；3放音挂机，文件为空直接挂机；4留言挂机；5按码挂机；6放音转队列；7直接转队列评价；8按码转队列评价；9放音转队列评价；10直接转队列登记；11按码转队列登记；12放音转队列登记；19放音转菜单；20直接挂机；21加入会议；100操作回调；101用户控制；102函数控制
-    // const param = ''              // 操作参数  0队列号；1按码:队列号，逗号分隔；2按码:菜单号，逗号分隔；3-5无效；6队列号；7队列号；8按码:队列号，逗号分隔；9队列号；10队列号；11按码:队列号，逗号分隔；12队列号；19菜单号；20无效；21:会议号；100操作回调URL，可加&参数；101-空闲超时（秒）；102-类名,函数名,用户参数
-    // const gid = '@0'              // 指定中继号码，或 @+租户ID 选择租户任意线路
-    // const recflag = '0'           // 录音标志 0 不录音， 1录音
-    // const uud = '{"username": "zuowang", "age": 13, "sex": 1 }'  //  用户数据，可传至弹屏界面
-    // const backurl = ''            // 速拨回调URL, 可加&参数原样返回
-
-    // window.UMO.speeddial(dest, dispno, playfile, oper, param, gid, recflag, uud, backurl, (cmd, res, a, b, c)=>{
-    //   console.log('toPhone', cmd, res, a, b, c)
-    // }, null);
-    
+    this.callOutShowEvent()
     // 座席拨出
-
     const calleddn = 1008;   // 呼出电话号
     const gid = '@0'        // 指定中继号码，或 @+租户ID 选择租户任意线路(转移会议无效)
     const uud = 'who you are hosw';// 用户数据，可传至弹屏界面
@@ -236,11 +268,10 @@ export class HeaderCase extends Component {
     // * @param ano  主叫号码
     // * @param bno  被叫号码
     // * @param uud  业务数据，”dialout”分机拨出，”misc:callback”分机回呼
-
     window.UMO.dialout(calleddn, gid, uud, true, (url, res)=>{
-      console.log(11111, url, res)
     }, null)
   }
+  // 保持
   callKeepEvent = () => {
     const {type, handleBtnlist} = this.state
     Modal.confirm({
@@ -255,13 +286,13 @@ export class HeaderCase extends Component {
         if(type === 'hold') {
           window.UMO.hold(false, (res, res1)=>{
             const newhandleBtnlist = handleBtnlist
-            newhandleBtnlist [3].tit = '恢复'
+            newhandleBtnlist[3].tit = '恢复'
             this.setState({handleBtnlist: newhandleBtnlist, type: 'huifu'})
           }, null)
         } else {
           window.UMO.retrieve((res, res1)=>{
             const newhandleBtnlist = handleBtnlist
-            newhandleBtnlist [3].tit = '挂起'
+            newhandleBtnlist[3].tit = '挂起'
             this.setState({type: 'hold', handleBtnlist: newhandleBtnlist})
           }, null)
         }
@@ -269,7 +300,9 @@ export class HeaderCase extends Component {
       }
     });
   }
+  // 转接
   callOtherEvent = () => {
+    this.callOtherShowEvent()
     // 完成快速转移功能。在通话过程中，将已经连接的呼叫转移到新的目标号码，自己挂机。
     console.log('转接')
     //  呼叫ID,或-1表示当前呼叫, 主叫显示, 目标号码, 用户数据 ,callback
@@ -277,25 +310,21 @@ export class HeaderCase extends Component {
       console.log(cmd, res)
     })
   }
-  callListShowEvent() {
-    const {callListIsShow}  = this.state
-    this.setState({
-      callListIsShow: !callListIsShow
-    })
-  }
+  // 队列
   callQueueEvent = () => {
     // acd 指定的队列号， 为空返回所有 (acd, cb)
-   this.callListShowEvent()
+   this.callInListShowEvent()
     window.UMO.calllist((cmd, result)=>{
       if (result.errno == 0)
       {
-        const callData = result.calllist;
+        const callInListData = result.calllist;
         this.setState({
-          callData
+          callInListData
         })
       }
     }, null);
   }
+
   render() {
     const callinInfo = {
       trainPhone: '18755489161',
@@ -306,7 +335,12 @@ export class HeaderCase extends Component {
       trainPosition: '江苏苏州园林',
       trainBreakRuleInfo: '底盘损坏底盘损坏底盘损坏坏底盘损坏底盘损坏底盘损坏'
     }
-    const {callInIsShow, type, callListIsShow, callData} = this.state
+    const {
+      type, 
+      callOtherData, callOtherIsShow,
+      callOutData, callOutIsShow,
+      callInListIsShow, callInListData,
+    } = this.state
     return (
       <Header 
        event = {
@@ -319,10 +353,21 @@ export class HeaderCase extends Component {
           callKeepEvent: this.callKeepEvent,
           callOtherEvent: this.callOtherEvent,
           callQueueEvent: this.callQueueEvent,
-          callListShowEvent: this.callListShowEvent,
+          callOutShowEvent: this.callOutShowEvent,
+          callInListShowEvent: this.callInListShowEvent,
+          callOtherShowEvent: this.callOtherShowEvent,
         }
        } 
-       data = { {btnlist, callinInfo, type, callData, modalItemStyle, callInIsShow, callListIsShow, callColumns} } 
+       data = { {
+         btnlist, 
+         callinInfo, type, modalItemStyle, 
+        //  拨出
+         callOutIsShow, callOutData, callOutColumns,
+        //  转接
+         callOtherColumns, callOtherIsShow, callOtherData,
+        //  队列
+         callInListIsShow, callInListColumns, callInListData,
+        } } 
        ></Header>  
     )
   }

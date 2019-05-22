@@ -134,13 +134,32 @@ function Header({event, data}) {
       </RArea>
       </Header>
       <Modal
+        /* 拨出modal */
+        width={900}
+        title='通讯列表'
+        visible={data.callOutIsShow}
+        onCancel={()=>event.callOutShowEvent()}
+        footer={null}>
+        <Table columns={data.callOutColumns} dataSource={data.callOutData} scroll={{y: 265}} pagination={false} />
+      </Modal>
+      <Modal
+        /* 转接modal */
+        width={900}
+        title='通讯列表'
+        visible={data.callOtherIsShow}
+        onCancel={()=>event.callOtherShowEvent()}
+        footer={null}>
+        <Table columns={data.callOtherColumns} dataSource={data.callOtherData} scroll={{y: 265}} pagination={false} />
+      </Modal>
+
+      <Modal
+        /* 队列列表modal */
         width={900}
         title='呼叫队列'
-        visible={data.callListIsShow}
-        onCancel={()=>event.callListShowEvent()}
-        footer={null}
-      >
-        <Table columns={data.callColumns} dataSource={data.callData} scroll={{y: 265}} pagination={false} />
+        visible={data.callInListIsShow}
+        onCancel={()=>event.callInListShowEvent()}
+        footer={null}>
+        <Table columns={data.callInListColumns} dataSource={data.callInListData} scroll={{y: 265}} pagination={false} />
       </Modal>
       {
         data.callInIsShow && <CallInModal>
