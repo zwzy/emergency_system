@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import { Divider, Button } from 'antd'
-import Group from '../../components/communication/Group'                 // 引用的ui组件
+import Contact from '../../components/communication/Contact'                 // 引用的ui组件
 
-export class GroupCase extends Component {
+export class ContactCase extends Component {
   static propTypes = {
     // prop: PropTypes
   }
@@ -18,11 +18,11 @@ export class GroupCase extends Component {
     this.state = {
       tableColumns: [
         {
-          title: '群组名',
+          title: '联系人姓名',
           dataIndex: 'age',
         },
         {
-          title: '群组成员',
+          title: '联系人号码',
           dataIndex: 'address',
         },
         {
@@ -66,7 +66,7 @@ export class GroupCase extends Component {
     let {tableColumns,tableData} = this.state
     return (
       <div>
-        <Group 
+        <Contact 
           data = {{
             tableData,
             tableColumns
@@ -84,4 +84,4 @@ const mapStateToProps = (state) => ({                  // owProps 是这个容�
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
 })
-export default connect(mapStateToProps, mapDispatchToProps)(GroupCase)
+export default connect(mapStateToProps, mapDispatchToProps)(ContactCase)

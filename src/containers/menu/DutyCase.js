@@ -10,6 +10,14 @@ export class DutyCase extends Component {
   }
   constructor(props) {
     super(props)
+    this.searchParams = {// 筛选条件
+      pageSize: 10,
+      pageIndex: 1,
+      apartment:'',
+      job:'',
+      username:'',
+      worktime: ''
+    }
     this.state = {
       tableColumns: [ // 签到记录表头
         {
@@ -37,7 +45,7 @@ export class DutyCase extends Component {
           dataIndex: 'createtime'
         }
       ],
-      tableData:[], // 签到记录表数据
+      tableData: [], // 签到记录表数据
       dutyType: 0, // 0 签到总览， 1 签到记录
       allTabledata: [ // 签到总览表数据
         {
@@ -293,6 +301,13 @@ export class DutyCase extends Component {
       return 'tdnopad'
     }
   }
+  // 输入框筛选条件
+  handleInputVal = (e, type) => {
+    this.searchParams[type] = e.target.value
+  }
+  clickSearch= ()=>{
+    console.log('searchParams=',this.searchParams)
+  }
   render() {
     let {tableColumns,tableData, dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
     return (
@@ -309,7 +324,9 @@ export class DutyCase extends Component {
          }}
          event={{
           changeDutyType: this.changeDutyType,
-          setClass: this.setClass
+          setClass: this.setClass,
+          handleInputVal: this.handleInputVal,
+          clickSearch:this.clickSearch
          }}
         />
       </div>

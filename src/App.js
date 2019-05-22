@@ -18,6 +18,7 @@ import RulesGroupCase from './containers/rules/RulesGroupCase'
 import RulesBuiltCase from './containers/rules/RulesBuiltCase'
 // 通讯分组
 import GroupCase from './containers/communication/GroupCase'
+import ContactCase from './containers/communication/ContactCase'
 // 统计
 import CountAssessCase from './containers/count/CountAssessCase'
 import CountHandleCase from './containers/count/CountHandleCase'
@@ -136,6 +137,7 @@ function App({history}) {
                   <Route path='/attendance_management' component={DutyManagementCase}></Route> */}
                   <Route path='/attendance' component={DutyCase}></Route>
                   <Route path='/communication_group' component={GroupCase}></Route>
+                  <Route path='/communication_contact' component={ContactCase}></Route>
                   <Route path='/count_sign' component={CountSignCase}></Route>
                   <Route path='/count_assess' component={CountAssessCase}></Route>
                   <Route path='/count_handle' component={CountHandleCase}></Route>

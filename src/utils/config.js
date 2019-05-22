@@ -52,9 +52,13 @@ export const menuList = [
     subIcon: 'icon-tongxunlu',
     menus: [
       {
+        id: 'communication_contact',
+        name: '通讯录',
+      },
+      {
         id: 'communication_group',
         name: '通讯群组',
-      },
+      }
     ]
   },
   {

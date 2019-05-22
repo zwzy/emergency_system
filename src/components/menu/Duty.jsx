@@ -58,22 +58,22 @@ function Duty({data, event}) {
             <ul className='input-ul'>
               <li>
                 <span className='input-tit'>部门:</span>
-                <Input style={{width:'188px'}}/>
+                <Input onChange={(e) => event.handleInputVal(e,'apartment')} style={{width:'188px'}}/>
               </li>
               <li>
                 <span className='input-tit'>职位:</span>
-                <Input style={{width:'188px'}}/>
+                <Input onChange={(e) => event.handleInputVal(e,'job')} style={{width:'188px'}}/>
               </li>
               <li>
                 <span className='input-tit'>姓名:</span>
-                <Input style={{width:'188px'}}/>
+                <Input onChange={(e) => event.handleInputVal(e,'username')} style={{width:'188px'}}/>
               </li>
               <li>
                 <span className='input-tit'>值班时间:</span>
-                <Input style={{width:'188px'}}/>
+                <Input onChange={(e) => event.handleInputVal(e,'worktime')} style={{width:'188px'}}/>
               </li>
               <li>
-                <Button type="primary">搜索</Button>
+                <Button type="primary" onClick={() => event.clickSearch()}>搜索</Button>
               </li>
             </ul>
             <Table bordered columns={data.tableColumns} dataSource={data.tableData} />
