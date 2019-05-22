@@ -4,7 +4,9 @@ import color from '../utils/color'
 import config from '../utils/config'
 import PropTypes from 'prop-types'
 
-import { Icon, Button, Modal, Table } from 'antd';
+import { Icon, Button, Modal, Table, Select, Input } from 'antd';
+const Option = Select.Option
+const Search = Input.Search
 
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
@@ -102,6 +104,67 @@ function Header({event, data}) {
       text-align: left;
     }
   `
+  const CallOutBox = styled.div`
+    display: flex;
+    justify-content: space-between;
+    .lf-box{
+      width: 50%;
+      border-right: 1px solid #eee;
+      padding: 0 20px;
+      box-sizing: border-box;
+      .lf-box-title{
+        font-weight: bold;
+        color: #333;
+        padding-bottom: 10px;
+      }
+      .history-box{
+        padding-right: 20px;
+        height: 400px;
+        overflow: auto;
+      }
+      .callout-item{
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        .desc{
+          color: #999;
+          font-size: 12px;
+        }
+      }
+    }
+    .rt-box{
+      width: 50%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      overflow: auto;
+      .rt-box-title{
+        font-weight: bold;
+        color: #333;
+        padding-bottom: 10px;
+      }
+      .filter-box{
+        display: flex;
+        padding-right: 20px;
+        padding-bottom: 5px;
+        justify-content: space-between;
+      }
+      .address-box{
+        height: 360px;
+        padding-right: 20px;
+        overflow: auto;
+        .address-item{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          border-bottom: 1px solid #eee;
+        }
+      }
+    }
+  `
+
   return (
     <div>
       <Header>
@@ -135,12 +198,59 @@ function Header({event, data}) {
       </Header>
       <Modal
         /* 拨出modal */
-        width={900}
-        title='通讯列表'
+        width={800}
+        title='拨打'
         visible={data.callOutIsShow}
         onCancel={()=>event.callOutShowEvent()}
         footer={null}>
-        <Table columns={data.callOutColumns} dataSource={data.callOutData} scroll={{y: 265}} pagination={false} />
+        <CallOutBox>
+          <div className="lf-box">
+            <div className='lf-box-title'>历史通话记录</div>  
+            <div className='history-box'>
+            { data.callOutData.callHistoryData.map((item, index)=>{
+              return (
+                <div className="callout-item" key={index}>
+                  <div className="lf-item">
+                      <div><span className='right-divider'>{item.userName}</span> <span>{item.userPhone}</span></div>
+                      <div className='desc'><span className='right-divider'>{item.time}</span> <span>{item.timeLong}</span></div>
+                  </div>
+                  <div className="rt-item">
+                    <Button type="primary" shape="circle" icon="phone" />
+                  </div>
+                </div>
+              )
+              })
+            }
+            </div>
+          </div>
+          <div className="rt-box">
+             <div className='rt-box-title'>通讯录</div>
+             <div className="filter-box">
+              <Select placeholder="请选择部门" style={{ width: 150 }} onChange={event.handleSelectChange}>
+                <Option value="jack">Jack</Option>
+                <Option value="lucy">Lucy</Option>
+                <Option value="Yiminghe">yiminghe</Option>
+              </Select>
+              <Search
+                placeholder="关键字搜索"
+                onSearch={value => console.log(value)}
+                style={{ width: 150 }}
+              />
+             </div>
+             <div className='address-box'>
+              { data.callOutData.callHistoryData.map((item, index)=>{
+                return (
+                  <div className="address-item" key={index}>
+                    <div><span className='right-divider'>{item.userName}</span></div>
+                    <div><span className='right-divider'>{item.work}</span></div>
+                    <Button type="primary" shape="circle" icon="phone" />
+                  </div>
+                )
+                })
+              }
+             </div>
+          </div>
+        </CallOutBox>  
       </Modal>
       <Modal
         /* 转接modal */

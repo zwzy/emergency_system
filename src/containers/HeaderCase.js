@@ -132,7 +132,20 @@ export class HeaderCase extends Component {
       handleBtnlist: btnlist,
       // 拨出
       callOutIsShow: false,
-      callOutData:[],
+      callOutData: {
+        callHistoryData: [
+          { userName: '张三', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张大', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
+          { userName: '张二', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
+          { userName: '张四', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},
+          { userName: '张五', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '采购部'},
+          { userName: '张六', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '市场部'},
+          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+        ]
+      },
       // 转接
       callOtherIsShow: false,
       callOtherData: [],
@@ -247,9 +260,6 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        // window.UMO.speedhook('1000', (res, res1)=>{
-        //   console.log(res, res1)
-        // })
         window.UMO.onhook((res, res1)=>{
           console.log(res, res1)
         })
@@ -260,15 +270,17 @@ export class HeaderCase extends Component {
   // 拨出
   callOutEvent = () => {
     this.callOutShowEvent()
-    // 座席拨出
-    const calleddn = 1008;   // 呼出电话号
+  }
+  // 座席拨出
+  callOutByPhoneNumber(phoneNumber) {
+    // const calleddn = 1008;   // 呼出电话号
     const gid = '@0'        // 指定中继号码，或 @+租户ID 选择租户任意线路(转移会议无效)
     const uud = 'who you are hosw';// 用户数据，可传至弹屏界面
-    // $("#errmsg").html("");
-    // * @param ano  主叫号码
-    // * @param bno  被叫号码
-    // * @param uud  业务数据，”dialout”分机拨出，”misc:callback”分机回呼
-    window.UMO.dialout(calleddn, gid, uud, true, (url, res)=>{
+    // // $("#errmsg").html("");
+    // // * @param ano  主叫号码
+    // // * @param bno  被叫号码
+    // // * @param uud  业务数据，”dialout”分机拨出，”misc:callback”分机回呼
+    window.UMO.dialout( phoneNumber, gid, uud, true, () => {
     }, null)
   }
   // 保持
@@ -280,9 +292,6 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        // window.UMO.speedhook('1000', (res, res1)=>{
-        //   console.log(res, res1)
-        // })
         if(type === 'hold') {
           window.UMO.hold(false, (res, res1)=>{
             const newhandleBtnlist = handleBtnlist
@@ -325,6 +334,11 @@ export class HeaderCase extends Component {
     }, null);
   }
 
+  // 部门选择
+  handleSelectChange = (value) => {
+    console.log(`selected ${value}`);
+  }
+
   render() {
     const callinInfo = {
       trainPhone: '18755489161',
@@ -345,17 +359,30 @@ export class HeaderCase extends Component {
       <Header 
        event = {
         {
+          // 注销
           logOutEvent: this.logOutEvent,
+          // 签到
           signEvent: this.signEvent,
+          // 接听按钮
           callInEvent: this.callInEvent,
+          // 挂断按钮
           hangUpEvent: this.hangUpEvent,
+          // 听出按钮
           callOutEvent: this.callOutEvent,
+          // 保持按钮
           callKeepEvent: this.callKeepEvent,
+          // 转接按钮
           callOtherEvent: this.callOtherEvent,
+          // 队列按钮
           callQueueEvent: this.callQueueEvent,
+          // 显示呼出modal
           callOutShowEvent: this.callOutShowEvent,
+          // 显示队列modal
           callInListShowEvent: this.callInListShowEvent,
+          // 显示转接modal
           callOtherShowEvent: this.callOtherShowEvent,
+           // 部门选择
+           handleSelectChange: this.handleSelectChange,
         }
        } 
        data = { {
