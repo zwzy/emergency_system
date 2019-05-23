@@ -125,7 +125,7 @@ export const btnlist = [
   {cla:'icon-dianhua1', tit: '接听', eventName: 'callInEvent'},
   {cla:'icon-guaduan', tit: '挂断', eventName: 'hangUpEvent'},
   {cla:'icon-mobile', tit: '拨打', eventName: 'callOutEvent'},
-  {cla:'icon-Hold-TheLine', tit: '保持', eventName: 'callKeepEvent'},
+  // {cla:'icon-Hold-TheLine', tit: '保持', eventName: 'callKeepEvent'},
   {cla:'icon-zhuanjie', tit: '转接', eventName: 'callOtherEvent'},
   {cla:'icon-bhjpaidui', tit: '队列', eventName: 'callQueueEvent'}
 ]

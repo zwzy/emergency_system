@@ -147,11 +147,11 @@ function Header({event, data}) {
       .filter-box{
         display: flex;
         padding-right: 20px;
-        padding-bottom: 5px;
+        padding-bottom: 15px;
         justify-content: space-between;
       }
       .address-box{
-        height: 360px;
+        height: 350px;
         padding-right: 20px;
         overflow: auto;
         .address-item{
@@ -226,11 +226,15 @@ function Header({event, data}) {
           <div className="rt-box">
              <div className='rt-box-title'>通讯录</div>
              <div className="filter-box">
-              <Select placeholder="请选择部门" style={{ width: 150 }} onChange={event.handleSelectChange}>
+              
+              <Select 
+                placeholder="请选择部门"
+                style={{ width: 150 }} 
+                onChange={event.handleSelectChange}>
                 <Option value="jack">Jack</Option>
                 <Option value="lucy">Lucy</Option>
                 <Option value="Yiminghe">yiminghe</Option>
-              </Select>
+               </Select>
               <Search
                 placeholder="关键字搜索"
                 onSearch={value => console.log(value)}

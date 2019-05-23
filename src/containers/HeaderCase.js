@@ -315,9 +315,16 @@ export class HeaderCase extends Component {
     // 完成快速转移功能。在通话过程中，将已经连接的呼叫转移到新的目标号码，自己挂机。
     console.log('转接')
     //  呼叫ID,或-1表示当前呼叫, 主叫显示, 目标号码, 用户数据 ,callback
-    window.UMO.speedtrans('1008', '1000', '1009', 'name=123', (cmd, res)=>{
-      console.log(cmd, res)
-    })
+  }
+  // 初始转移
+  callOtherStartByUmo(phoneNumber) {
+    const uud = '1234'
+    window.UMO.inittrans(phoneNumber, uud, true, ()=>{}, null)
+  }
+  // 完成转移
+  callOtherEndByUmo(phoneNumber) {
+    const uud = '1234'
+    window.UMO.comptrans(phoneNumber, uud, true, ()=>{}, null)
   }
   // 队列
   callQueueEvent = () => {
