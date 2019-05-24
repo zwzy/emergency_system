@@ -141,41 +141,36 @@ export function userLoginACD(data = {}, event = {callincomeBack: ()=>{}, onRingS
   })
 }
 // 拨打
-export function callOutPhone(data = {}) {
-  // const calleddn = 1008;   // 呼出电话号
-  const gid = '@0'        // 指定中继号码，或 @+租户ID 选择租户任意线路(转移会议无效)
-  const uud = 'who you are hosw';// 用户数据，可传至弹屏界面
-  // // $("#errmsg").html("");
-  // // * @param ano  主叫号码
-  // // * @param bno  被叫号码
-  // // * @param uud  业务数据，”dialout”分机拨出，”misc:callback”分机回呼
-  window.UMO.dialout( '1008', gid, uud, true, () => {
+export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) {
+  const {phoneNumber, uud, gid} = data
+  window.UMO.dialout( phoneNumber, gid, uud, true, () => {
   }, null)
 }
 
 // 转接
 // 初始转移
-export function startTransferPhone(data) {
+export function startTransferPhone(data = {uud: '', phoneNumber: ''}) {
   const {phoneNumber, uud} = data
   window.UMO.inittrans(phoneNumber, uud, true, ()=>{}, null)
 }
 // 完成转移
-export function endTransferPhone(data) {
+export function endTransferPhone(data = {uud: '', phoneNumber: ''}) {
   const {phoneNumber, uud} = data
   window.UMO.comptrans(phoneNumber, uud, true, ()=>{}, null)
 }
+
 // 会议
 //初始会议
-export function startTransferMeeting(data = {uud: '', calleddn = ''}) {
-  const {uud, calleddn} = data
-  UMO.initconf(calleddn, uud, true, ()=>{}, null)
+export function startTransferMeeting(data = {uud: '', phoneNumber: ''}) {
+  const {uud, phoneNumber} = data
+  UMO.initconf(phoneNumber, uud, true, ()=>{}, null)
 }
 
 //完成会议
-export function startTransferMeeting(data = {uud: '', calleddn = ''})
+export function startTransferMeeting(data = {uud: '', phoneNumber: ''})
 {
-  const {uud, calleddn} = data
-  UMO.compconf(calleddn, uud, true, ()=>{}, null)
+  const {uud, phoneNumber} = data
+  UMO.compconf(phoneNumber, uud, true, ()=>{}, null)
 }
 
 // 挂断
