@@ -6,6 +6,8 @@ import Header from '../components/Header'
 import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
+// umo
+import {userLoginACD, hangUpPhone} from '../utils/umo'
 const modalItemStyle = {margin: '8px 0'}
 const callOutColumns = [
   {
@@ -62,74 +64,13 @@ export class HeaderCase extends Component {
   static propTypes = {
     userInformation: PropTypes.object
   }
- 
   constructor(props) {
     super(props)
-    this.EvtHandler = {
-      onReadyState: function(status)
-      {
-        console.log("onReadyState: " + status);
-      },
-      // 来电
-      onCallincome: (ano, bno, uud) => {
-        this.setState({
-          callInListIsShow: true,
-        })
-        console.log('根据来电分机号，获取用户信息')
-        console.log("onCallincome: 来电分机号=" + ano + " 本机分号=" + bno + " uud= 分机拨出，分机回呼" + uud);
-      },
-      onTalked: (ano, bno, uud) => {
-        console.log("onTalked: ano=" + ano + " bno=" + bno + " uud=" + uud);
-      },
-      // 挂断
-      onRingStoped: () => {
-        this.setState({
-          callInListIsShow: false,
-        })
-        console.log("onRingStoped");
-      },
-
-      onHookChanged: (status) => {
-        console.log("onHookChanged: status=" + status);
-      },
-  
-      onAgentChanged: (status) => {
-          console.log("onAgentChanged: status=" + status);
-      },
-  
-      onAsyncFinished: (atype, taskid, ret, desc) => {
-        console.log("onAsyncFinished: atype=" + atype + " taskid=" + taskid + " ret=" + ret + " desc=" + desc);
-      },
-
-      onAllBusy: (status, acd, quelen) => {
-        console.log("onAllBusy: status=" + status + " acd=" + acd + " quelen=" + quelen);
-      },
-  
-      onQuelen: (acd, quelen) => {
-        console.log("onQuelen: acd=" + acd + " quelen=" + quelen);
-      },
-  
-      onSmsincome: (dtime, from, content, slot) => {
-        console.log("onSmsincome: dtime=" + dtime + " from=" + from+ " content=" + content + " slot=" + slot);
-      },
-      onOperCallback: (flowid, callid, cdrid, direction, teleno, time, menuid, keypress, state) => {
-       console.log("onOperCallback: : flowid=" + flowid + " callid=" + callid + " cdrid=" + cdrid +  " direction=" + direction
-        + " teleno=" + teleno  + " time=" + time  + " menuid=" + menuid + " keypress=" + keypress 
-        + " state=" + state)
-      },
-  
-      onSpeedCallback: (flowid, callid, cdrid, direction, teleno, time, menuid, keypress, state, desc, sessionid) => {
-        console.log("onSpeedCallback: flowid=" + flowid + " callid=" + callid + " cdrid=" + cdrid + " direction=" + direction
-          + " teleno=" + teleno  + " time=" + time  + " menuid=" + menuid + " keypress=" + keypress 
-          + " state=" + state  + " desc=" + desc + " sessionid=" + sessionid );
-      },
-      onTextMessage: (fromaid, chatmode, text) => {
-        console.log("onTextMessage: fromaid=" + fromaid + " chatmode=" + chatmode+ " content=" + text);
-      }
-    }
     this.state = {
       type: 'hold',
       handleBtnlist: btnlist,
+      // 来电弹窗
+      callInModalIsShow: false,
       // 拨出
       callOutIsShow: false,
       callOutData: {
@@ -154,7 +95,6 @@ export class HeaderCase extends Component {
       callInListIsShow: false,         // 来电通知modal
     }
   }
-
   // 显示拨出
   callOutShowEvent = () => {
     const {callOutIsShow}  = this.state
@@ -176,35 +116,20 @@ export class HeaderCase extends Component {
       callInListIsShow: !callInListIsShow
     })
   }
+  // 显示电话来电
+  callInModalShowEvent = () => {
+    const {callInModalIsShow}  = this.state
+    this.setState({
+      callInModalIsShow: !callInModalIsShow
+    })
+  }
 
   componentDidMount() {
-    this.userLoginACD()
-  }
-  // 用户登录ACD
-  userLoginACD() {
-    const params = {
-      apihost: 'http://192.168.7.61:8181/IPServer',  // 域名
-      bizhost: null,                                 // 
-      eid: '0',                                      // 企业密码
-      aid: '1000',                                   // 工号
-      adn: '1000',                                   // 绑定分机
-      apwd: window.hex_md5('123456'),                // 密码
-      epwd: window.hex_md5(''),                      // 企业密码
-      EvtHandler: this.EvtHandler,                   // 回调方法
+    userLoginACD({}, {
+      callincomeBack: () => {this.callInModalShowEvent()},
+      onRingStoped: () => {this.callInModalShowEvent()}
     }
-    const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
-    window.UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {
-      if(result.errno === 0) {
-        console.log(cmd, result.token)
-        const acd = '2000'  // 坐席
-        // login: function(aid, acd, skill, mon, silent, cb, w)
-        // UMO.login(aid, acd, -1, false, false, cbResult, null);
-        window.UMO.login(aid, acd, -1, false, false, function(res) {
-          console.log(res)
-        }, null)
-        sessionStorage.setItem('token', result.token)
-      }
-    })
+    )
   }
   // 登出
   logOutEvent = () => {
@@ -260,54 +185,15 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        window.UMO.onhook((res, res1)=>{
-          console.log(res, res1)
+        hangUpPhone(()=>{
+          message.success('操作成功')
         })
-        message.success('操作成功')
       }
     });
   }
   // 拨出
   callOutEvent = () => {
     this.callOutShowEvent()
-  }
-  // 座席拨出
-  callOutByPhoneNumber(phoneNumber) {
-    // const calleddn = 1008;   // 呼出电话号
-    const gid = '@0'        // 指定中继号码，或 @+租户ID 选择租户任意线路(转移会议无效)
-    const uud = 'who you are hosw';// 用户数据，可传至弹屏界面
-    // // $("#errmsg").html("");
-    // // * @param ano  主叫号码
-    // // * @param bno  被叫号码
-    // // * @param uud  业务数据，”dialout”分机拨出，”misc:callback”分机回呼
-    window.UMO.dialout( phoneNumber, gid, uud, true, () => {
-    }, null)
-  }
-  // 保持
-  callKeepEvent = () => {
-    const {type, handleBtnlist} = this.state
-    Modal.confirm({
-      title: type === 'hold' ? '挂起': '恢复',
-      content: `确定要${ type === 'hold' ? '挂起': '恢复'}么？`,
-      okText: '确认',
-      cancelText: '取消',
-      onOk:()=>{
-        if(type === 'hold') {
-          window.UMO.hold(false, (res, res1)=>{
-            const newhandleBtnlist = handleBtnlist
-            newhandleBtnlist[3].tit = '恢复'
-            this.setState({handleBtnlist: newhandleBtnlist, type: 'huifu'})
-          }, null)
-        } else {
-          window.UMO.retrieve((res, res1)=>{
-            const newhandleBtnlist = handleBtnlist
-            newhandleBtnlist[3].tit = '挂起'
-            this.setState({type: 'hold', handleBtnlist: newhandleBtnlist})
-          }, null)
-        }
-        message.success('操作成功')
-      }
-    });
   }
   // 转接
   callOtherEvent = () => {
@@ -316,16 +202,8 @@ export class HeaderCase extends Component {
     console.log('转接')
     //  呼叫ID,或-1表示当前呼叫, 主叫显示, 目标号码, 用户数据 ,callback
   }
-  // 初始转移
-  callOtherStartByUmo(phoneNumber) {
-    const uud = '1234'
-    window.UMO.inittrans(phoneNumber, uud, true, ()=>{}, null)
-  }
-  // 完成转移
-  callOtherEndByUmo(phoneNumber) {
-    const uud = '1234'
-    window.UMO.comptrans(phoneNumber, uud, true, ()=>{}, null)
-  }
+
+ 
   // 队列
   callQueueEvent = () => {
     // acd 指定的队列号， 为空返回所有 (acd, cb)
@@ -357,6 +235,7 @@ export class HeaderCase extends Component {
       trainBreakRuleInfo: '底盘损坏底盘损坏底盘损坏坏底盘损坏底盘损坏底盘损坏'
     }
     const {
+      callInModalIsShow,
       type, 
       callOtherData, callOtherIsShow,
       callOutData, callOutIsShow,
@@ -393,8 +272,12 @@ export class HeaderCase extends Component {
         }
        } 
        data = { {
+         callInModalIsShow, callinInfo,
+         // 头部菜单列表
          btnlist, 
-         callinInfo, type, modalItemStyle, 
+         // 挂机恢复
+         type, 
+         modalItemStyle, 
         //  拨出
          callOutIsShow, callOutData, callOutColumns,
         //  转接
