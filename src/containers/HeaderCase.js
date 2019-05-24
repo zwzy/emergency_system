@@ -118,7 +118,7 @@ export class HeaderCase extends Component {
   }
   // 显示电话来电
   callInModalShowEvent = () => {
-    const {callInModalIsShow}  = this.state
+    const {callInModalIsShow} = this.state
     this.setState({
       callInModalIsShow: !callInModalIsShow
     })
@@ -223,7 +223,10 @@ export class HeaderCase extends Component {
   handleSelectChange = (value) => {
     console.log(`selected ${value}`);
   }
-
+  
+  goToRouter = () => {
+    this.props.history.push('/emergency_telegram')
+  }
   render() {
     const callinInfo = {
       trainPhone: '18755489161',
@@ -267,8 +270,10 @@ export class HeaderCase extends Component {
           callInListShowEvent: this.callInListShowEvent,
           // 显示转接modal
           callOtherShowEvent: this.callOtherShowEvent,
-           // 部门选择
-           handleSelectChange: this.handleSelectChange,
+          // 部门选择
+          handleSelectChange: this.handleSelectChange,
+          // 路由跳转
+          goToRouter: this.goToRouter, 
         }
        } 
        data = { {

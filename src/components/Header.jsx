@@ -211,7 +211,7 @@ function Header({event, data}) {
           }
         </CArea>
         <RArea>
-        <Button icon='edit'>填写台账</Button>
+        <Button icon='edit' onClick={()=>{event.goToRouter()}}>填写台账</Button>
       </RArea>
       </Header>
       

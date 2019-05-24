@@ -29,14 +29,18 @@ function setEvtHandler (callincomeBack, onRingStoped){
   // 振铃停止
   // 在来话接接听或久叫不应用户端挂断时触发。
   onRingStoped: () => {
-    onRingStoped()
-    console.log("onRingStoped");
+    console.log(888, "onRingStoped");
   },
   // 话机状态
   // 在话机摘机或挂机时触发。
   // status 话机状态，1 挂机 2 摘机
   onHookChanged: (status) => {
-    console.log("onHookChanged: status=" + status);
+    if(status === '1') {
+      console.log("挂机");
+      onRingStoped()
+    } else {
+      console.log("摘机");
+    }
   },
   // 话务员状态
   // 在话务员示忙、示闲、接听电话或挂断电话时触发。
@@ -160,10 +164,23 @@ export function endTransferPhone(data) {
   const {phoneNumber, uud} = data
   window.UMO.comptrans(phoneNumber, uud, true, ()=>{}, null)
 }
+// 会议
+//初始会议
+export function startTransferMeeting(data = {uud: '', calleddn = ''}) {
+  const {uud, calleddn} = data
+  UMO.initconf(calleddn, uud, true, ()=>{}, null)
+}
+
+//完成会议
+export function startTransferMeeting(data = {uud: '', calleddn = ''})
+{
+  const {uud, calleddn} = data
+  UMO.compconf(calleddn, uud, true, ()=>{}, null)
+}
+
 // 挂断
 export function hangUpPhone (callback = ()=>{}) { 
   UMO.onhook((res, res1)=>{
-    console.log('已挂断')
     callback()
   })
 }
