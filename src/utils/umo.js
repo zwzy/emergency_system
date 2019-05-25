@@ -160,14 +160,14 @@ export function endTransferPhone(data = {uud: '', phoneNumber: ''}) {
 }
 
 // 会议
-//初始会议
+// 初始会议
 export function startTransferMeeting(data = {uud: '', phoneNumber: ''}) {
   const {uud, phoneNumber} = data
   UMO.initconf(phoneNumber, uud, true, ()=>{}, null)
 }
 
 //完成会议
-export function startTransferMeeting(data = {uud: '', phoneNumber: ''})
+export function endTransferMeeting(data = {uud: '', phoneNumber: ''})
 {
   const {uud, phoneNumber} = data
   UMO.compconf(phoneNumber, uud, true, ()=>{}, null)
