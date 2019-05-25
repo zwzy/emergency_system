@@ -1,5 +1,5 @@
 const UMO = window.UMO
-function setEvtHandler (callincomeBack, onRingStoped){
+function setEvtHandler (event){
   return {
   // 就绪状态
   // 服务端与 CTI 服务器连接建立(1)或断开(0)时触发。 浏览器 JS 与服务器无法连接时会触发 state=0。
@@ -14,7 +14,7 @@ function setEvtHandler (callincomeBack, onRingStoped){
   // bno:”” 被叫号码 
   // uud:”” 业务数据，”dialout”分机拨出、”misc:callback”分机回呼
   onCallincome: (ano, bno, uud) => {
-    callincomeBack()
+    event.callincomeBack()
     console.log('根据来电分机号，获取用户信息')
     console.log("onCallincome: 来电分机号=" + ano + " 本机分号=" + bno + " uud= 分机拨出，分机回呼" + uud);
   },
@@ -24,6 +24,7 @@ function setEvtHandler (callincomeBack, onRingStoped){
   // bno:”” 被叫号码 
   // uud:”” 业务数据
   onTalked: (ano, bno, uud) => {
+    event.callConnectStartBack()
     console.log("onTalked: ano=" + ano + " bno=" + bno + " uud=" + uud);
   },
   // 振铃停止
@@ -37,7 +38,7 @@ function setEvtHandler (callincomeBack, onRingStoped){
   onHookChanged: (status) => {
     if(status === '1') {
       console.log("挂机");
-      onRingStoped()
+      event.onRingStoped()
     } else {
       console.log("摘机");
     }
@@ -115,7 +116,7 @@ function setEvtHandler (callincomeBack, onRingStoped){
 
 // login
 // 用户登录ACD
-export function userLoginACD(data = {}, event = {callincomeBack: ()=>{}, onRingStoped: () => {}}) {
+export function userLoginACD(data = {}, event = {callincomeBack: ()=>{}, onRingStoped: () => {}, callConnectStartBack: () => {}}) {
   const params = {
     apihost: 'http://192.168.7.61:8181/IPServer',  // 域名
     bizhost: null,                                 // 
@@ -124,7 +125,7 @@ export function userLoginACD(data = {}, event = {callincomeBack: ()=>{}, onRingS
     adn: '1000',                                   // 绑定分机
     apwd: window.hex_md5('123456'),                // 密码
     epwd: window.hex_md5(''),                      // 企业密码
-    EvtHandler: setEvtHandler(event.callincomeBack, event.onRingStoped),                   // 回调方法
+    EvtHandler: setEvtHandler(event),                   // 回调方法
   }
   const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
   UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {

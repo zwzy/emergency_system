@@ -12,6 +12,8 @@ import config from '../../utils/config'
 
 const Search = Input.Search;
 function Console({data,event}) {
+  const {phoneNumber,timer,comeTime,talkStartTime,handupTime,talkTimer } = data.commationInfo
+
   const ConsoleBox = styled.div `
     display: flex;
     .call-info{
@@ -87,17 +89,17 @@ function Console({data,event}) {
     margin-left: 5px;
   `
   return (
-    <ConsoleBox style={{height: '100%'}}> 
+    <ConsoleBox style={{height: '100%'}}>
       <Card  hoverable  className='call-info'>
         <Title>当前通话概况</Title>
-        <div className='phone'>18755489161</div>
-        <div className='timer'>05:23:00</div>
+        <div className='phone'>{phoneNumber}</div>
+        <div className='timer'>{timer}</div>
         <div className='call-history'><Button type="link" onClick={()=>{event.historyShowEvent()}}> <span className='text'>通话历史（9）</span>  点击查看</Button></div>
         <Title>来电详情</Title>
-        <Timer>来电时间：2019-03-11 17:14:28</Timer>  
-        <Timer>接听时间：2019-03-11 17:14:28</Timer>  
-        <Timer>挂断时间：-------------------</Timer>  
-        <Timer>通话时长：05：04： 31</Timer>  
+        <Timer>来电时间：{comeTime}</Timer>  
+        <Timer>接听时间：{talkStartTime}</Timer>  
+        <Timer>挂断时间：{handupTime}</Timer>  
+        <Timer>通话时长：{talkTimer}</Timer>  
       </Card>
       <RtBox>
         <Card hoverable className='train-info'>

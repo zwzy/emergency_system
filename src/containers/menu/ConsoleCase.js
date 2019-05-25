@@ -147,6 +147,7 @@ export class ConsoleCase extends Component {
     return (
       <Console 
       data={{
+        commationInfo: this.props.commation,
         trainData,
         callHistoryIsShow,
         breakRuleIsShow,
@@ -172,6 +173,7 @@ export class ConsoleCase extends Component {
   }
 }
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
+  commation: state.commation
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
 })
