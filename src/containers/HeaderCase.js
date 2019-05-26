@@ -89,7 +89,7 @@ export class HeaderCase extends Component {
       callOutIsShow: false,
       callOutData: {
         callHistoryData: [
-          { userName: '张三', userPhone: '1008', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张三', userPhone: '1001', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
           { userName: '张大', userPhone: '1009', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
           { userName: '张二', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
           { userName: '张四', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},

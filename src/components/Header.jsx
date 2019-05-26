@@ -4,7 +4,7 @@ import color from '../utils/color'
 import config from '../utils/config'
 import BaseCommunication from '../components/base/BaseCommunication'
 import PropTypes from 'prop-types'
-import {callOutPhone} from '../utils/umo'
+import {callOutPhone, startTransferPhone} from '../utils/umo'
 import { Icon, Button, Modal, Table, } from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
@@ -143,17 +143,10 @@ function Header({event, data}) {
   const TransferBox = styled.div`
     display: flex;
     justify-content: space-between;
-    .lf-box{
-      width: 50%;
-      border-right: 1px solid #eee;
+    .attention-box{
+      width: 100%;
       padding: 0 20px;
       box-sizing: border-box;
-    }
-    .rt-box{
-      width: 50%;
-      padding: 0 20px;
-      box-sizing: border-box;
-      overflow: auto;
       .rt-title{
         font-weight: bold;
         color: #333;
@@ -170,6 +163,10 @@ function Header({event, data}) {
           flex: 1;
           text-align: center;
         }
+      }
+      .table-box{
+        max-height: 300px;
+        overflow: auto;
       }
       .table-item-box{
         display: flex;
@@ -255,44 +252,67 @@ function Header({event, data}) {
 
       <Modal
         /* 转接modal */
-        width={900}
-        title='转接通讯列表'
+        title='今日执班列表'
         visible={data.callOtherIsShow}
         onCancel={()=>event.callOtherShowEvent()}
         footer={null}>
         <TransferBox>
-          <div className="lf-box">
-            <BaseCommunication 
-              callHistoryData={data.callOutData.callHistoryData} 
-              handleSelectChange={event.handleSelectChange}
-              onSearch={event.searchBykeyWord}>
-            </BaseCommunication>
-          </div>
-          <div className="rt-box">
-            <div className="rt-title">
-              群组通讯录
-            </div>
+          <div className="attention-box">
             <div className="table-title-box">
-              <div className='table-title-item'>群组名</div>
+              <div className='table-title-item'>姓名</div>
+              <div className='table-title-item'>值班部门</div>
               <div className='table-title-item'>拨打</div>
             </div>
-            <div className="table-item-box">
-              <div className="table-item">应急交流群1</div>
+            <div className='table-box'>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1008', uud: ''})}} />
+                </div>
+              </div>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" />
+                </div>
+              </div>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" />
+                </div>
+              </div>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" />
+                </div>
+              </div>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" />
+                </div>
+              </div>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" />
+                </div>
+              </div>
+              <div className="table-item-box">
+              <div className="table-item">张三</div>
+              <div className="table-item">技术部</div>
               <div className="table-item">
                 <Button type="primary" shape="circle" icon="phone" />
               </div>
             </div>
-            <div className="table-item-box">
-              <div className="table-item">应急交流群1</div>
-              <div className="table-item">
-                <Button type="primary" shape="circle" icon="phone" />
-              </div>
-            </div>
-            <div className="table-item-box">
-              <div className="table-item">应急交流群1</div>
-              <div className="table-item">
-                <Button type="primary" shape="circle" icon="phone" />
-              </div>
             </div>
           </div>
         </TransferBox>

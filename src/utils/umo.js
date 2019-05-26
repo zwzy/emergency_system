@@ -52,6 +52,10 @@ function setEvtHandler (event){
   // 异步任务结束
   // 在异步呼叫结束时触发。
   onAsyncFinished: (atype, taskid, ret, desc) => {
+    console.log(1111, atype, taskid, ret, desc)
+    if(atype === '8' && desc === '呼叫完成') {
+      endTransferPhone()
+    }
     console.log("onAsyncFinished: atype=" + atype + " taskid=" + taskid + " ret=" + ret + " desc=" + desc);
   },
   // 座席全忙通知
@@ -144,7 +148,7 @@ export function userLoginACD(data = {}, event = {callincomeBack: ()=>{}, onRingS
 // 拨打
 export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) {
   const {phoneNumber, uud, gid} = data
-  window.UMO.dialout( phoneNumber, gid, uud, true, () => {
+  UMO.dialout( phoneNumber, gid, uud, true, () => {
   }, null)
 }
 
@@ -152,12 +156,11 @@ export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) 
 // 初始转移
 export function startTransferPhone(data = {uud: '', phoneNumber: ''}) {
   const {phoneNumber, uud} = data
-  window.UMO.inittrans(phoneNumber, uud, true, ()=>{}, null)
+  UMO.inittrans(phoneNumber, uud, true, ()=>{}, null)
 }
 // 完成转移
-export function endTransferPhone(data = {uud: '', phoneNumber: ''}) {
-  const {phoneNumber, uud} = data
-  window.UMO.comptrans(phoneNumber, uud, true, ()=>{}, null)
+export function endTransferPhone() {
+  UMO.comptrans(()=>{}, null)
 }
 
 // 会议
@@ -176,7 +179,7 @@ export function endTransferMeeting(data = {uud: '', phoneNumber: ''})
 
 // 挂断
 export function hangUpPhone (callback = ()=>{}) { 
-  UMO.onhook((res, res1)=>{
+  UMO.onhook(()=>{
     callback()
   })
 }
