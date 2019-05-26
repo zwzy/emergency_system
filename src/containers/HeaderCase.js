@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 
-import {updateCommationInformation} from '../actions/call'
+import {updateCommationInformation, resetCommationInformation} from '../actions/call'
 
 import Header from '../components/Header'
 import {Modal, message} from 'antd'
@@ -89,8 +89,8 @@ export class HeaderCase extends Component {
       callOutIsShow: false,
       callOutData: {
         callHistoryData: [
-          { userName: '张三', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张大', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
+          { userName: '张三', userPhone: '1008', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张大', userPhone: '1009', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
           { userName: '张二', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
           { userName: '张四', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},
           { userName: '张五', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '采购部'},
@@ -131,36 +131,48 @@ export class HeaderCase extends Component {
     // 2、 设置挂机时间
     this.setState({
       callInModalIsShow: !callInModalIsShow,
-      commationInfomation: {...commationInfomation, handupTime: nowData}
+      commationInfomation: {...commationInfomation, handupTime: nowData, talkTimer: commationInfomation.timer}
     }, ()=>{
       this.props.updateCommationInformationEvent(this.state.commationInfomation)
     })
     clearInterval(this.timer)
   }
   // 来电时回调
-  callincomeBackEvent = () => {
-    const nowData = getNowDate()
-    const {commationInfomation, callInModalIsShow} = this.state
-    // 1、 显示电话信息
-    // 2、 设置来电时间
+  callincomeBackEvent = (phoneNumber) => {
+    const initCommationInfoState = {
+      phoneNumber:'--', // 号码
+      timer: '--',  // 当前通话时长
+      comeTime: '--', // 来电时间
+      talkStartTime: '--',  // 接听时间
+      handupTime: '--', // 挂断时间
+      talkTimer: '--' // 通话时长
+    }
+    //  重置通话概况
     this.setState({
-      callInModalIsShow: !callInModalIsShow,
-      commationInfomation: {...commationInfomation, comeTime: nowData}
+      commationInfomation: initCommationInfoState
     }, ()=>{
-      this.props.updateCommationInformationEvent(this.state.commationInfomation)
+      const nowData = getNowDate()
+      const {commationInfomation, callInModalIsShow} = this.state
+      // 1、 显示电话信息
+      // 2、 设置来电时间
+      this.setState({
+        callInModalIsShow: !callInModalIsShow,
+        commationInfomation: {...commationInfomation, comeTime: nowData, phoneNumber}
+      }, ()=>{
+        this.props.updateCommationInformationEvent(this.state.commationInfomation)
+      })
     })
   }
 
   componentDidMount() {
-    this.setCallInfomation()
     userLoginACD({}, {
-      callincomeBack: () => {this.callincomeBackEvent()}, //来电显示列表
+      callincomeBack: (phoneNumber) => {this.callincomeBackEvent(phoneNumber)}, //来电显示列表
       onRingStoped: () => {this.onRingStopedBackEvent()},  // 挂断时的回调
       callConnectStartBack: ()=>{this.setCallInfomation()}  // 计算通话信息
     }
     )
   }
-  // 计算通话信息
+  // 设置开始通话时间
   setCallInfomation = () => {
     const {commationInfomation} = this.state
     const nowData = getNowDate()
@@ -171,6 +183,7 @@ export class HeaderCase extends Component {
       this.props.updateCommationInformationEvent(this.state.commationInfomation)
     })
   }
+  // 设置当前通话时间
   setActiveCommationTimer = () => {
     const {commationInfomation} = this.state
     const nowTime = getNowTime()
@@ -352,7 +365,8 @@ export class HeaderCase extends Component {
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
-  updateCommationInformationEvent: (commationInfo)=>dispatch(updateCommationInformation(commationInfo))
+  updateCommationInformationEvent: (commationInfo)=>dispatch(updateCommationInformation(commationInfo)),
+  resetCommationInformationEvent: ()=>dispatch(resetCommationInformation())
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderCase))

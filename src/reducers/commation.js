@@ -15,6 +15,8 @@ const commationInfo = (state = commationInfoState, action) => {
         ...state,
         ...action.commationInfo
       }
+    case 'RESEET_COMMATION_INFORMATION':
+      return commationInfoState
     default:
       return state
   }

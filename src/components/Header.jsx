@@ -4,7 +4,7 @@ import color from '../utils/color'
 import config from '../utils/config'
 import BaseCommunication from '../components/base/BaseCommunication'
 import PropTypes from 'prop-types'
-
+import {callOutPhone} from '../utils/umo'
 import { Icon, Button, Modal, Table, } from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
@@ -234,7 +234,7 @@ function Header({event, data}) {
                       <div className='desc'><span className='right-divider'>{item.time}</span> <span>{item.timeLong}</span></div>
                   </div>
                   <div className="rt-item">
-                    <Button type="primary" shape="circle" icon="phone" />
+                    <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.userPhone, uud: '4555', gid: '@0'})} />
                   </div>
                 </div>
               )

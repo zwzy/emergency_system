@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-
+import { Modal, Table } from 'antd' 
 import Console from '../../components/menu/Console'                 // 引用的ui组件
+import color from '../../utils/color'
 
 // 历史记录表格数据
 const callHistoryColumns = [
@@ -145,30 +146,51 @@ export class ConsoleCase extends Component {
   render() {
     const {trainData, dirverName, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow} = this.state
     return (
-      <Console 
-      data={{
-        commationInfo: this.props.commation,
-        trainData,
-        callHistoryIsShow,
-        breakRuleIsShow,
-        trainInfoIsShow,
-        // 来电电话记录
-        callHistoryColumns,
-        callHistoryData,
-        // 违规记录
-        breakRuleColumns,
-        breakRuleData,
-        // 机车信息
-        trainInfoColumns,
-        trainInfoData,
-        dirverName
-      }}
-      event={{
-        historyShowEvent: this.historyShowEvent,
-        breakRuleShowEvent: this.breakRuleShowEvent,
-        trainInfoShowEvent: this.trainInfoShowEvent,
-      }}
-      />
+      <div>
+        <Console 
+          data={{
+            commationInfo: this.props.commation,
+            trainData,
+          }}
+          event={{
+            historyShowEvent: this.historyShowEvent,
+            breakRuleShowEvent: this.breakRuleShowEvent,
+            trainInfoShowEvent: this.trainInfoShowEvent,
+          }}
+        />
+
+        {/* 通话历史 Modal*/}
+        <Modal
+          title={<div>通话历史（<span style={{color: color.$primary}}>18755489161</span>）</div>}
+          visible={callHistoryIsShow}
+          onCancel={()=>this.historyShowEvent()}
+          footer={null}
+        >
+          <Table columns={callHistoryColumns} dataSource={callHistoryData} scroll={{y: 265}} pagination={false} />
+        </Modal>
+
+        {/* 司机违章信息 Modal */}
+        <Modal
+          width={900}
+          title={<div>司机违章信息（<span style={{color: color.$primary}}>{dirverName}</span>）</div>}
+          visible={breakRuleIsShow}
+          onCancel={()=>this.breakRuleShowEvent()}
+          footer={null}
+        >
+          <Table columns={breakRuleColumns} dataSource={breakRuleData}  pagination={false} />
+        </Modal>
+        
+        {/* 机车维护信息 Modal */}
+        <Modal
+          width={900}
+          title='机车维护信息'
+          visible={trainInfoIsShow}
+          onCancel={()=>this.trainInfoShowEvent()}
+          footer={null}
+        >
+        <Table columns={trainInfoColumns} dataSource={trainInfoData}  pagination={false} />
+        </Modal>
+      </div>
     )
   }
 }

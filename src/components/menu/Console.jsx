@@ -128,39 +128,6 @@ function Console({data,event}) {
          
         </Card>
       </RtBox>
-
-
-      {/* 通话历史 Modal*/}
-      <Modal
-        title={<div>通话历史（<span style={{color: color.$primary}}>18755489161</span>）</div>}
-        visible={data.callHistoryIsShow}
-        onCancel={()=>event.historyShowEvent()}
-        footer={null}
-      >
-        <Table columns={data.callHistoryColumns} dataSource={data.callHistoryData} scroll={{y: 265}} pagination={false} />
-      </Modal>
-
-      {/* 司机违章信息 Modal */}
-      <Modal
-        width={900}
-        title={<div>司机违章信息（<span style={{color: color.$primary}}>{data.dirverName}</span>）</div>}
-        visible={data.breakRuleIsShow}
-        onCancel={()=>event.breakRuleShowEvent()}
-        footer={null}
-      >
-        <Table columns={data.breakRuleColumns} dataSource={data.breakRuleData}  pagination={false} />
-      </Modal>
-      
-      {/* 机车维护信息 Modal */}
-      <Modal
-        width={900}
-        title='机车维护信息'
-        visible={data.trainInfoIsShow}
-        onCancel={()=>event.trainInfoShowEvent()}
-        footer={null}
-      >
-        <Table columns={data.trainInfoColumns} dataSource={data.trainInfoData}  pagination={false} />
-      </Modal>
     </ConsoleBox>
   );
 }

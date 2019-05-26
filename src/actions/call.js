@@ -5,3 +5,8 @@ export const updateCommationInformation = (commationInfo) => {
     commationInfo
   }
 }
+export const resetCommationInformation = () => {
+  return {
+    type: 'RESEET_COMMATION_INFORMATION'
+  }
+}
