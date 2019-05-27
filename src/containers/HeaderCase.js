@@ -123,6 +123,13 @@ export class HeaderCase extends Component {
       callOtherIsShow: !callOtherIsShow
     })
   }
+  // 显示队列
+  callInListShowEvent = () => {
+    const {callInListIsShow}  = this.state
+    this.setState({
+      callInListIsShow: !callInListIsShow
+    })
+  }
    // 挂断时回调
    onRingStopedBackEvent = () => {
     const nowData = getNowDate()
@@ -138,14 +145,15 @@ export class HeaderCase extends Component {
     clearInterval(this.timer)
   }
   // 来电时回调
-  callincomeBackEvent = (phoneNumber) => {
+  callincomeBackEvent = (phoneNumber, uud) => {
     const initCommationInfoState = {
       phoneNumber:'--', // 号码
       timer: '--',  // 当前通话时长
       comeTime: '--', // 来电时间
       talkStartTime: '--',  // 接听时间
       handupTime: '--', // 挂断时间
-      talkTimer: '--' // 通话时长
+      talkTimer: '--', // 通话时长
+      callStatus: '--'
     }
     //  重置通话概况
     this.setState({
@@ -155,9 +163,13 @@ export class HeaderCase extends Component {
       const {commationInfomation, callInModalIsShow} = this.state
       // 1、 显示电话信息
       // 2、 设置来电时间
+      // 3、 设置拨号方向
+      if(uud === 'dialout') {
+        
+      }
       this.setState({
         callInModalIsShow: !callInModalIsShow,
-        commationInfomation: {...commationInfomation, comeTime: nowData, phoneNumber}
+        commationInfomation: {...commationInfomation, comeTime: nowData, phoneNumber, callStatus: uud}
       }, ()=>{
         this.props.updateCommationInformationEvent(this.state.commationInfomation)
       })
@@ -166,7 +178,7 @@ export class HeaderCase extends Component {
 
   componentDidMount() {
     userLoginACD({}, {
-      callincomeBack: (phoneNumber) => {this.callincomeBackEvent(phoneNumber)}, //来电显示列表
+      callincomeBack: (phoneNumber, uud) => {this.callincomeBackEvent(phoneNumber, uud)}, //来电显示列表
       onRingStoped: () => {this.onRingStopedBackEvent()},  // 挂断时的回调
       callConnectStartBack: ()=>{this.setCallInfomation()}  // 计算通话信息
     }

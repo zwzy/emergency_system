@@ -1,2 +1,2 @@
-const baseCallUrl = 'http://192.168.7.61:8181'
+const baseCallUrl = 'http://118.190.205.139:8051/sys/call'
 export default baseCallUrl

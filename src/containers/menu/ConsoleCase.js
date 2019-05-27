@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Modal, Table } from 'antd' 
+import { Modal, Table, message } from 'antd' 
 import Console from '../../components/menu/Console'                 // 引用的ui组件
 import color from '../../utils/color'
-
+import {userInfoByPhone, updateCallHistory} from '../../api/call'
+import { async } from 'q';
 // 历史记录表格数据
 const callHistoryColumns = [
   {
@@ -105,20 +106,70 @@ export class ConsoleCase extends Component {
       trainInfoIsShow: false,        // 违章记录是否显示
       dirverName: '',                // 选中的司机名
       // 车次信息
+      trainValueInfo: {
+        driverCode: '--',
+        driverName: '--',
+        driverMobile: '--',
+        assisCode: '--',
+        assisName: '--',
+        assisMobile: '--',
+        model_trainCode: '--',
+        zone: '--',
+        frontStation: '--',
+        activePosition: '--',
+        outDate: '--',
+      },
       trainData:[
-        {name: '司机工号', value: '88888888', id: 'gonghao', event: ''},
-        {name: '司机姓名', value: '王大志', id: 'xingming', event: 'breakRuleShowEvent'},
-        {name: '联系电话', value: '18755489161', id: 'phone', event: ''},
-        {name: '副司机工号', value: '66666666', id: 'fugonghao', event: ''},
-        {name: '副司机姓名', value: '张大彪', id: 'fuxingming', event: 'breakRuleShowEvent'},
-        {name: '联系电话', value: '1776838383', id: 'fuphone', event: ''},
-        {name: '机型/车号', value: 'A8/宝马', id: 'trainNum', event: 'trainInfoShowEvent'},
-        {name: '区段', value: 'b区10009883', id: 'chuduan', event: ''},
-        {name: '前方站信息', value: '南京南站388', id: 'stationInfo', event: ''},
-        {name: '当前定位', value: '南京淮海区', id: 'activePosition', event: ''},
-        {name: '出勤时间', value: '2019-04-05 12:20:24', id: 'workTime', event: ''}
+        {name: '司机工号', id: 'driverCode', event: ''},
+        {name: '司机姓名', id: 'driverName', event: 'breakRuleShowEvent'},
+        {name: '联系电话',  id: 'driverMobile', event: ''},
+        {name: '副司机工号', id: 'assisCode', event: ''},
+        {name: '副司机姓名',  id: 'assisName', event: 'breakRuleShowEvent'},
+        {name: '联系电话',  id: 'assisMobile', event: ''},
+        {name: '机型/车号', id: 'model_trainCode', event: 'trainInfoShowEvent'},
+        {name: '区段', id: 'zone', event: ''},
+        {name: '前方站信息', id: 'frontStation', event: ''},
+        {name: '当前定位', id: 'activePosition', event: ''},
+        {name: '出勤时间', id: 'outDate', event: ''}
       ]
     }
+  }
+  componentWillReceiveProps(props) {
+    console.log(props, this.props)
+    if(props.commation.talkStartTime !== this.props.commation.talkStartTime) {
+      console.log(111111111111)
+      this.getUserInfoByphoneNumber()
+    }
+    if(props.commation.handupTime !== this.props.commation.handupTime) {
+      console.log(22222222222)
+      this.setUserInfoByphoneNumber()
+    }
+  }
+   getUserInfoByphoneNumber = async () => {
+     try {
+       const {phoneNumber, comeTime, talkStartTime} = this.props.commation
+       const {data} = await userInfoByPhone({mobile: phoneNumber, callDate: comeTime, answerDate: talkStartTime})
+       const trainValueInfo = data.content
+       const newTrainValueInfo = {...trainValueInfo, model_trainCode: trainValueInfo.model+'/'+trainValueInfo.trainCode}
+       this.setState({
+        trainValueInfo: newTrainValueInfo
+       })
+       
+     } catch (error) {
+       
+     }
+
+  }
+  setUserInfoByphoneNumber = async() => {
+    const {talkTimer, handupTime} = this.props.commation
+    // 没有效果
+     const {trainValueInfo} = this.state
+     const {data} = await updateCallHistory({callId: trainValueInfo.callId, callDuration: talkTimer, hangupDate: handupTime, callStatus: 'CALL_IN'})
+    console.log(data)
+    //  if(data.content.code === 0) {
+    //   message.success('保存通话记录成功')
+    // }
+
   }
   // 显示通话历史记录弹窗
   historyShowEvent = () => {
@@ -144,13 +195,13 @@ export class ConsoleCase extends Component {
   }
 
   render() {
-    const {trainData, dirverName, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow} = this.state
+    const {trainData, dirverName, trainValueInfo, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow} = this.state
     return (
       <div>
         <Console 
           data={{
             commationInfo: this.props.commation,
-            trainData,
+            trainData, trainValueInfo
           }}
           event={{
             historyShowEvent: this.historyShowEvent,

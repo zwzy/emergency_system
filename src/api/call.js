@@ -1,11 +1,20 @@
 import baseCallUrl from '../utils/getUrl'
 import fetch from '../utils/fetch'
 console.log(baseCallUrl)
-export function callStart (data = {}) {
+export function userInfoByPhone (data = {}) {
   return fetch({
     baseURL: baseCallUrl,
-    url: '/IPServer/comm/start',
-    method: 'post',
-    data: data
+    url: '/findCallUser',
+    method: 'GET',
+    params: data
+  })
+} 
+
+export function updateCallHistory (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/updateCall',
+    method: 'GET',
+    params: data
   })
 } 

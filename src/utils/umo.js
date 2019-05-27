@@ -14,7 +14,7 @@ function setEvtHandler (event){
   // bno:”” 被叫号码 
   // uud:”” 业务数据，”dialout”分机拨出、”misc:callback”分机回呼
   onCallincome: (ano, bno, uud) => {
-    event.callincomeBack(ano)
+    event.callincomeBack(ano, uud)
     console.log('根据来电分机号，获取用户信息')
     console.log("onCallincome: 来电分机号=" + ano + " 本机分号=" + bno + " uud= 分机拨出，分机回呼" + uud);
   },
