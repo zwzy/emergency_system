@@ -12,7 +12,7 @@ import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
 // umo
-import {userLoginACD, hangUpPhone} from '../utils/umo'
+import {userLoginACD, hangUpPhone, getUmoData} from '../utils/umo'
 import { getNowDate, formatSeconds, getNowTime } from '../utils/common'
 const modalItemStyle = {margin: '8px 0'}
 const callOutColumns = [
@@ -223,6 +223,7 @@ export class HeaderCase extends Component {
       }
     }
     )
+
   }
   // 登出
   logOutEvent = () => {

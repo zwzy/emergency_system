@@ -182,8 +182,9 @@ export class ConsoleCase extends Component {
   onHookChangedEvent = (data) => {
     const {status} = data
     if(status === '1') {
-      const nowData = getNowDate()
       const {commationInfomation} = this.state
+      if(commationInfomation.talkStartTime ==='--') return
+      const nowData = getNowDate()
       this.setState({
         commationInfomation: {...commationInfomation, handupTime: nowData, talkTimer: commationInfomation.timer}
       }, ()=>{

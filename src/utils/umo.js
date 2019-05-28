@@ -30,7 +30,7 @@ function setEvtHandler (event){
   },
   // 振铃停止
   // 在来话接接听或久叫不应用户端挂断时触发。
-  onRingStoped: () => {
+  onRingStoped: (ano,bno,cno) => {
     event.onRingStoped()
     console.log(888, "onRingStoped");
   },
@@ -155,6 +155,7 @@ export function userLoginACD(data = {}, event = {
       // UMO.login(aid, acd, -1, false, false, cbResult, null);
       UMO.login(aid, acd, -1, false, false, function(res) {
         console.log(res)
+        getUmoData()
       }, null)
       sessionStorage.setItem('token', result.token)
     }
@@ -198,6 +199,25 @@ export function hangUpPhone (callback = ()=>{}) {
     callback()
   })
 }
+export function getUmoData (data) {
+  const where = ''
+  const group = ''
+  const order = ''
+  const mode = 'q'
+  UMO.dataoper('t_sheetrecord', 'system', mode, 'ano, direction,fileDate', 'vals', where, group,
+    order, 20, 1, function(cmd, result){
+      console.log(result)
+    if ((mode == "q") && (result.errno == 0))
+    {
+       console.log(111, result.data)
+      //  ["ano", "direction", "fileDate"]
+      //  1: (3) ["1001", "0", "20190518083730"]
+      //  2: (3) ["1009", "0", "20190518184149"]
+      //  3: (3) ["1009", "0", "20190518184221"]
+    }
+  }, null);
+}
+
 
 // 保持
 export const callKeepEvent = () => {
