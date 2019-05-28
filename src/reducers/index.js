@@ -2,11 +2,13 @@ import { combineReducers } from 'redux'
 import user from './user'
 import config from './config'
 import commation from './commation'
+import umoEvent from './umoEvent'
 
 const rootReducer = combineReducers({
   userInformation: user,
   config,
-  commation
+  commation,
+  umoEvent
 })
 
 export default rootReducer

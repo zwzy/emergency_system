@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 
-import {updateCommationInformation, resetCommationInformation} from '../actions/call'
+import {updateCommationInformation} from '../actions/call'
+import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
 
 import Header from '../components/Header'
 import {Modal, message} from 'antd'
@@ -175,12 +176,108 @@ export class HeaderCase extends Component {
       })
     })
   }
-
   componentDidMount() {
     userLoginACD({}, {
-      callincomeBack: (phoneNumber, uud) => {this.callincomeBackEvent(phoneNumber, uud)}, //来电显示列表
-      onRingStoped: () => {this.onRingStopedBackEvent()},  // 挂断时的回调
-      callConnectStartBack: ()=>{this.setCallInfomation()}  // 计算通话信息
+      onReadyState: (status)=>{
+        console.log(status)
+        const {id} = this.props.umoEvent.onReadyState
+        this.props.updateUmoEventState({
+          onReadyState: {
+            id: id+1, 
+            status: status
+          }
+        })
+      },
+      onCallincome: (ano, bno ,uud) => {
+        const {id} = this.props.umoEvent.onCallincome
+        this.props.updateUmoEventState({
+          onCallincome: {
+            id: id++, 
+            ano,
+            bno,
+            uud
+          }
+        })
+      }, 
+      onTalked: (ano, bno ,uud) => {
+        const {id} = this.props.umoEvent.onTalked
+        this.props.updateUmoEventState({
+          onTalked: {
+            id: id+1, 
+            ano,
+            bno,
+            uud
+          }
+        })
+      },
+      onRingStoped: () => {
+        const {id} = this.props.umoEvent.onRingStoped
+        this.props.updateUmoEventState({
+          onRingStoped: {
+            id: id+1
+          }
+        })
+      },
+      onHookChanged: (status) => {
+        const {id} = this.props.umoEvent.onHookChanged
+        this.props.updateUmoEventState({
+          onHookChanged: {
+            id: id+1,
+            status
+          }
+        })
+      },
+      onAgentChanged: (status) => {
+        const {id} = this.props.umoEvent.onAgentChanged
+        this.props.updateUmoEventState({
+          onAgentChanged: {
+            id: id+1,
+            status
+          }
+        })
+      },
+      onAsyncFinished: (atype, taskid, ret, desc) => {
+        const {id} = this.props.umoEvent.onAsyncFinished
+        this.props.updateUmoEventState({
+          onAsyncFinished: {
+            id: id+1,
+            atype,
+            taskid,
+            ret,
+            desc
+          }
+        })
+      },
+      onAllBusy: () => {
+        const {id} = this.props.umoEvent.onAllBusy
+        this.props.updateUmoEventState({
+          onAllBusy: {
+            id: id+1
+          }
+        })
+      },
+      onQuelen: () => {
+        const {id} = this.props.umoEvent.onQuelen
+        this.props.updateUmoEventState({
+          onQuelen: {
+            id: id+1
+          }
+        })
+      },
+      onSmsincome: (dtime, from, content, slot) => {
+        const {id} = this.props.umoEvent.onSmsincome
+        this.props.updateUmoEventState({
+          onSmsincome: {
+            id: id+1,
+            dtime,
+            from,
+            content,
+            slot
+          }
+        })
+      },
+      // onRingStoped: () => {this.onRingStopedBackEvent()},  // 挂断时的回调
+      // callConnectStartBack: ()=>{this.setCallInfomation()}  // 计算通话信息
     }
     )
   }
@@ -375,10 +472,13 @@ export class HeaderCase extends Component {
 
 
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
+  umoEvent: state.umoEvent
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
   updateCommationInformationEvent: (commationInfo)=>dispatch(updateCommationInformation(commationInfo)),
-  resetCommationInformationEvent: ()=>dispatch(resetCommationInformation())
+  updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
+  // resetCommationInformationEvent: ()=>dispatch(resetCommationInformation())
+  resetUmoEventState: ()=>dispatch(resetUmoEventState())
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderCase))

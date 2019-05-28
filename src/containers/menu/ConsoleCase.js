@@ -135,7 +135,7 @@ export class ConsoleCase extends Component {
     }
   }
   componentWillReceiveProps(props) {
-    console.log(props, this.props)
+    console.log(111, props.umoEventState)
     if(props.commation.talkStartTime !== this.props.commation.talkStartTime) {
       console.log(111111111111)
       this.getUserInfoByphoneNumber()
@@ -163,8 +163,8 @@ export class ConsoleCase extends Component {
   setUserInfoByphoneNumber = async() => {
     const {talkTimer, handupTime} = this.props.commation
     // 没有效果
-     const {trainValueInfo} = this.state
-     const {data} = await updateCallHistory({callId: trainValueInfo.callId, callDuration: talkTimer, hangupDate: handupTime, callStatus: 'CALL_IN'})
+    const {trainValueInfo} = this.state
+    const {data} = await updateCallHistory({callId: trainValueInfo.callId, callDuration: talkTimer, hangupDate: handupTime, callStatus: 'CALL_IN'})
     console.log(data)
     //  if(data.content.code === 0) {
     //   message.success('保存通话记录成功')
@@ -246,7 +246,8 @@ export class ConsoleCase extends Component {
   }
 }
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
-  commation: state.commation
+  commation: state.commation,
+  umoEventState: state.umoEvent
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
 })

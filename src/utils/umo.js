@@ -6,6 +6,7 @@ function setEvtHandler (event){
   // status 就绪(可登录) 0未就绪
   onReadyState: function(status)
   {
+    event.onReadyState(status)
     console.log("onReadyState: " + status); 
   },
   // 来电
@@ -14,7 +15,7 @@ function setEvtHandler (event){
   // bno:”” 被叫号码 
   // uud:”” 业务数据，”dialout”分机拨出、”misc:callback”分机回呼
   onCallincome: (ano, bno, uud) => {
-    event.callincomeBack(ano, uud)
+    event.onCallincome(ano, bno, uud)
     console.log('根据来电分机号，获取用户信息')
     console.log("onCallincome: 来电分机号=" + ano + " 本机分号=" + bno + " uud= 分机拨出，分机回呼" + uud);
   },
@@ -24,18 +25,20 @@ function setEvtHandler (event){
   // bno:”” 被叫号码 
   // uud:”” 业务数据
   onTalked: (ano, bno, uud) => {
-    event.callConnectStartBack()
+    event.onTalked(ano, bno, uud)
     console.log("onTalked: ano=" + ano + " bno=" + bno + " uud=" + uud);
   },
   // 振铃停止
   // 在来话接接听或久叫不应用户端挂断时触发。
   onRingStoped: () => {
+    event.onRingStoped()
     console.log(888, "onRingStoped");
   },
   // 话机状态
   // 在话机摘机或挂机时触发。
   // status 话机状态，1 挂机 2 摘机
   onHookChanged: (status) => {
+    event.onHookChanged(status)
     if(status === '1') {
       console.log("挂机");
       event.onRingStoped()
@@ -47,15 +50,13 @@ function setEvtHandler (event){
   // 在话务员示忙、示闲、接听电话或挂断电话时触发。
   // 话务员状态:1 未登录 2 空闲 3 离开 4 工作
   onAgentChanged: (status) => {
+      event.onAgentChanged(status)
       console.log("onAgentChanged: status=" + status);
   },
   // 异步任务结束
   // 在异步呼叫结束时触发。
   onAsyncFinished: (atype, taskid, ret, desc) => {
-    console.log(1111, atype, taskid, ret, desc)
-    if(atype === '8' && desc === '呼叫完成') {
-      endTransferPhone()
-    }
+    event.onAsyncFinished(atype, taskid, ret, desc)
     console.log("onAsyncFinished: atype=" + atype + " taskid=" + taskid + " ret=" + ret + " desc=" + desc);
   },
   // 座席全忙通知
@@ -64,6 +65,7 @@ function setEvtHandler (event){
   // acd:"" //队列号 
   // quelen:"" //队列长度
   onAllBusy: (status, acd, quelen) => {
+    event.onAllBusy(status, acd, quelen)
     console.log("onAllBusy: status=" + status + " acd=" + acd + " quelen=" + quelen);
   },
   // 队列长度通知
@@ -71,6 +73,7 @@ function setEvtHandler (event){
   // acd:””, //acd 号码 
   // quelen:”” //队列长度
   onQuelen: (acd, quelen) => {
+    event.onQuelen(acd, quelen)
     console.log("onQuelen: acd=" + acd + " quelen=" + quelen);
   },
   // 短信到达通知
@@ -80,6 +83,7 @@ function setEvtHandler (event){
   // content:””, //内容 
   // slot:”” //设备号
   onSmsincome: (dtime, from, content, slot) => {
+    event.onSmsincome(dtime, from, content, slot)
     console.log("onSmsincome: dtime=" + dtime + " from=" + from+ " content=" + content + " slot=" + slot);
   },
   // 操作回调通知
@@ -120,7 +124,18 @@ function setEvtHandler (event){
 
 // login
 // 用户登录ACD
-export function userLoginACD(data = {}, event = {callincomeBack: ()=>{}, onRingStoped: () => {}, callConnectStartBack: () => {}}) {
+export function userLoginACD(data = {}, event = {
+  onReadyState: ()=>{},
+  onCallincome: () => {}, 
+  onTalked: () => {},
+  onRingStoped: () => {},
+  onHookChanged: () => {},
+  onAgentChanged: () => {},
+  onAsyncFinished: () => {},
+  onAllBusy: () => {},
+  onQuelen: () => {},
+  onSmsincome: () => {}
+}) {
   const params = {
     apihost: 'http://192.168.7.61:8181/IPServer',  // 域名
     bizhost: null,                                 // 
