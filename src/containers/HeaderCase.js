@@ -29,28 +29,18 @@ const callOutColumns = [
 ];
 const callInListColumns = [
   {
-    title: '来电类型',
-    dataIndex: 'devtype',
-    width: 250
-  },
-  {
-    title: '来电方式',
-    dataIndex: 'dir',
-    width: 250
-  },
-  {
-    title: '拨出方',
-    dataIndex: 'ano',
-    width: 250
-  },
-  {
-    title: '接收方',
-    dataIndex: 'bno',
+    title: '联系电话',
+    dataIndex: 'phoneNumber',
     width: 250
   },
   {
     title: '来电时间',
-    dataIndex: 'tm',
+    dataIndex: 'time',
+    width: 250
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
     width: 250
   }
 ];
@@ -131,51 +121,6 @@ export class HeaderCase extends Component {
       callInListIsShow: !callInListIsShow
     })
   }
-   // 挂断时回调
-   onRingStopedBackEvent = () => {
-    const nowData = getNowDate()
-    const {commationInfomation, callInModalIsShow} = this.state
-    // 1、 关闭电话信息
-    // 2、 设置挂机时间
-    this.setState({
-      callInModalIsShow: !callInModalIsShow,
-      commationInfomation: {...commationInfomation, handupTime: nowData, talkTimer: commationInfomation.timer}
-    }, ()=>{
-      this.props.updateCommationInformationEvent(this.state.commationInfomation)
-    })
-    clearInterval(this.timer)
-  }
-  // 来电时回调
-  callincomeBackEvent = (phoneNumber, uud) => {
-    const initCommationInfoState = {
-      phoneNumber:'--', // 号码
-      timer: '--',  // 当前通话时长
-      comeTime: '--', // 来电时间
-      talkStartTime: '--',  // 接听时间
-      handupTime: '--', // 挂断时间
-      talkTimer: '--', // 通话时长
-      callStatus: '--'
-    }
-    //  重置通话概况
-    this.setState({
-      commationInfomation: initCommationInfoState
-    }, ()=>{
-      const nowData = getNowDate()
-      const {commationInfomation, callInModalIsShow} = this.state
-      // 1、 显示电话信息
-      // 2、 设置来电时间
-      // 3、 设置拨号方向
-      if(uud === 'dialout') {
-        
-      }
-      this.setState({
-        callInModalIsShow: !callInModalIsShow,
-        commationInfomation: {...commationInfomation, comeTime: nowData, phoneNumber, callStatus: uud}
-      }, ()=>{
-        this.props.updateCommationInformationEvent(this.state.commationInfomation)
-      })
-    })
-  }
   componentDidMount() {
     userLoginACD({}, {
       onReadyState: (status)=>{
@@ -192,7 +137,7 @@ export class HeaderCase extends Component {
         const {id} = this.props.umoEvent.onCallincome
         this.props.updateUmoEventState({
           onCallincome: {
-            id: id++, 
+            id: id+1, 
             ano,
             bno,
             uud
@@ -275,36 +220,10 @@ export class HeaderCase extends Component {
             slot
           }
         })
-      },
-      // onRingStoped: () => {this.onRingStopedBackEvent()},  // 挂断时的回调
-      // callConnectStartBack: ()=>{this.setCallInfomation()}  // 计算通话信息
+      }
     }
     )
   }
-  // 设置开始通话时间
-  setCallInfomation = () => {
-    const {commationInfomation} = this.state
-    const nowData = getNowDate()
-    this.setState({
-      commationInfomation: {...commationInfomation, talkStartTime: nowData}
-    },()=>{
-      this.timer = setInterval(()=>{this.setActiveCommationTimer()}, 1000)
-      this.props.updateCommationInformationEvent(this.state.commationInfomation)
-    })
-  }
-  // 设置当前通话时间
-  setActiveCommationTimer = () => {
-    const {commationInfomation} = this.state
-    const nowTime = getNowTime()
-    
-    const timer = nowTime - getNowTime(commationInfomation.talkStartTime)
-    this.setState({
-      commationInfomation: {...commationInfomation, timer: formatSeconds(timer)}
-    }, ()=>{
-      this.props.updateCommationInformationEvent(this.state.commationInfomation)
-    })
-  }
-
   // 登出
   logOutEvent = () => {
     Modal.confirm({

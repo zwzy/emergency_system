@@ -331,7 +331,7 @@ function Header({event, data}) {
         data.callInModalIsShow && <CallInModal>
           <div className='title'> <Icon type="phone" /> 来电信息</div>
           <div className='content'>
-            <div style={data.modalItemStyle}>来电号码： <strong>{data.callinInfo.trainPhone}</strong></div>
+            <div style={data.modalItemStyle}>联系： <strong>{data.callinInfo.trainPhone}</strong></div>
             <div style={data.modalItemStyle}>司机姓名： <strong>{data.callinInfo.trainDirverName}</strong></div>
             <div style={data.modalItemStyle}>机班人员： <strong>{data.callinInfo.trainDirverNames}</strong></div>
             <div style={data.modalItemStyle}>车间班组： <strong>{data.callinInfo.trainByGroup}</strong></div>

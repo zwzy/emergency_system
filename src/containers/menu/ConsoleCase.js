@@ -5,7 +5,9 @@ import { Modal, Table, message } from 'antd'
 import Console from '../../components/menu/Console'                 // 引用的ui组件
 import color from '../../utils/color'
 import {userInfoByPhone, updateCallHistory} from '../../api/call'
-import { async } from 'q';
+
+import { getNowDate, formatSeconds, getNowTime } from '../../utils/common'
+
 // 历史记录表格数据
 const callHistoryColumns = [
   {
@@ -100,12 +102,22 @@ export class ConsoleCase extends Component {
   }
   constructor(props) {
     super(props)
+    this.timer = null
     this.state = {
       callHistoryIsShow: false,      // 历史记录是否显示
       breakRuleIsShow: false,        // 违章记录是否显示
       trainInfoIsShow: false,        // 违章记录是否显示
       dirverName: '',                // 选中的司机名
       // 车次信息
+      commationInfomation: {
+        phoneNumber:'--', // 号码
+        timer: '--',  // 当前通话时长
+        comeTime: '--', // 来电时间
+        talkStartTime: '--',  // 接听时间
+        handupTime: '--', // 挂断时间
+        talkTimer: '--', // 通话时长
+        callStatus: '--'
+      },
       trainValueInfo: {
         driverCode: '--',
         driverName: '--',
@@ -136,40 +148,96 @@ export class ConsoleCase extends Component {
   }
   componentWillReceiveProps(props) {
     console.log(111, props.umoEventState)
-    if(props.commation.talkStartTime !== this.props.commation.talkStartTime) {
-      console.log(111111111111)
-      this.getUserInfoByphoneNumber()
+    if(props.umoEventState.onCallincome.id !== this.props.umoEventState.onCallincome.id) {
+      this.onCallincomeEvent(props.umoEventState.onCallincome)
     }
-    if(props.commation.handupTime !== this.props.commation.handupTime) {
-      console.log(22222222222)
-      this.setUserInfoByphoneNumber()
+    if(props.umoEventState.onHookChanged.id !== this.props.umoEventState.onHookChanged.id) {
+      this.onHookChangedEvent(props.umoEventState.onHookChanged)
+    }
+    if(props.umoEventState.onTalked.id !== this.props.umoEventState.onTalked.id) {
+      this.onTalkedEvent(props.umoEventState.onTalked)
     }
   }
-   getUserInfoByphoneNumber = async () => {
+   // 设置当前通话时间
+  setActiveCommationTimer = () => {
+    const {commationInfomation} = this.state
+    const nowTime = getNowTime()
+    const timer = nowTime - getNowTime(commationInfomation.talkStartTime)
+    this.setState({
+      commationInfomation: {...commationInfomation, timer: formatSeconds(timer)}
+    })
+  }
+  // 接听时回调
+  onTalkedEvent = () => {
+    const {commationInfomation} = this.state
+    const nowData = getNowDate()
+    this.setState({
+      commationInfomation: {...commationInfomation, talkStartTime: nowData}
+    },()=>{
+      this.saveUserInfoByphoneNumber()
+      this.timer = setInterval(()=>{this.setActiveCommationTimer()}, 1000)
+    })
+  }
+  // 挂断时回调
+  onHookChangedEvent = (data) => {
+    const {status} = data
+    if(status === '1') {
+      const nowData = getNowDate()
+      const {commationInfomation} = this.state
+      this.setState({
+        commationInfomation: {...commationInfomation, handupTime: nowData, talkTimer: commationInfomation.timer}
+      }, ()=>{
+        this.updateUserInfoByphoneNumber()
+      })
+    }
+    clearInterval(this.timer)
+  }
+  // 接听时回调
+  onCallincomeEvent = (data) => {
+    const {ano, uud} = data
+    const initCommationInfomation = {
+      phoneNumber:'--', // 号码
+      timer: '--',  // 当前通话时长
+      comeTime: '--', // 来电时间
+      talkStartTime: '--',  // 接听时间
+      handupTime: '--', // 挂断时间
+      talkTimer: '--', // 通话时长
+      callStatus: '--'
+    }
+    //  重置通话概况
+    this.setState({
+      commationInfomation: initCommationInfomation
+    }, ()=>{
+      const nowData = getNowDate()
+      const {commationInfomation} = this.state
+      // 1、 显示电话信息
+      // 2、 设置来电时间
+      // 3、 设置拨号方向
+      if(uud === 'dialout') {
+      }
+      this.setState({
+        commationInfomation: {...commationInfomation, comeTime: nowData, phoneNumber: ano, callStatus: uud}
+      })
+    })
+
+  }
+   saveUserInfoByphoneNumber = async () => {
      try {
-       const {phoneNumber, comeTime, talkStartTime} = this.props.commation
+       const {phoneNumber, comeTime, talkStartTime} = this.state.commationInfomation
        const {data} = await userInfoByPhone({mobile: phoneNumber, callDate: comeTime, answerDate: talkStartTime})
        const trainValueInfo = data.content
        const newTrainValueInfo = {...trainValueInfo, model_trainCode: trainValueInfo.model+'/'+trainValueInfo.trainCode}
        this.setState({
         trainValueInfo: newTrainValueInfo
        })
-       
      } catch (error) {
-       
      }
-
   }
-  setUserInfoByphoneNumber = async() => {
-    const {talkTimer, handupTime} = this.props.commation
+  updateUserInfoByphoneNumber = async () => {
+    const {talkTimer, handupTime} = this.state.commationInfomation
     // 没有效果
     const {trainValueInfo} = this.state
     const {data} = await updateCallHistory({callId: trainValueInfo.callId, callDuration: talkTimer, hangupDate: handupTime, callStatus: 'CALL_IN'})
-    console.log(data)
-    //  if(data.content.code === 0) {
-    //   message.success('保存通话记录成功')
-    // }
-
   }
   // 显示通话历史记录弹窗
   historyShowEvent = () => {
@@ -195,12 +263,12 @@ export class ConsoleCase extends Component {
   }
 
   render() {
-    const {trainData, dirverName, trainValueInfo, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow} = this.state
+    const {trainData, dirverName, trainValueInfo, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow, commationInfomation} = this.state
     return (
       <div>
         <Console 
           data={{
-            commationInfo: this.props.commation,
+            commationInfomation,
             trainData, trainValueInfo
           }}
           event={{

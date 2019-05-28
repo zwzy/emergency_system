@@ -12,8 +12,7 @@ import config from '../../utils/config'
 
 const Search = Input.Search;
 function Console({data,event}) {
-  const {phoneNumber,timer,comeTime,talkStartTime,handupTime,talkTimer } = data.commationInfo
-
+  const {phoneNumber,timer,comeTime,talkStartTime,handupTime,talkTimer } = data.commationInfomation
   const ConsoleBox = styled.div `
     display: flex;
     .call-info{
