@@ -276,17 +276,17 @@ function Header({event, data}) {
               <div className="table-item-box">
                 <div className="table-item">张三</div>
                 <div className="table-item">技术部</div>
-                <div className="table-item">1009</div>
+                <div className="table-item">1001</div>
                 <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" />
+                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1009', uud: ''})}} />
                 </div>
               </div>
               <div className="table-item-box">
                 <div className="table-item">张三</div>
                 <div className="table-item">技术部</div>
-                <div className="table-item">1001</div>
+                <div className="table-item">1006</div>
                 <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" />
+                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1006', uud: ''})}} />
                 </div>
               </div>
               <div className="table-item-box">
