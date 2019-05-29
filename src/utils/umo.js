@@ -204,7 +204,25 @@ export function getUmoData (data) {
   const group = ''
   const order = ''
   const mode = 'q'
-  UMO.dataoper('t_sheetrecord', 'system', mode, 'ano, direction,fileDate', 'vals', where, group,
+  // recordID: 记录 ID
+  // FileDate: 文件日期
+  // Direction: 方向 设备的话单方向(呼 入/呼出/呼转- 1/0/2)
+  // Ano: 本次通话的主叫号
+  // Bno： 本次通话的被叫号 码
+  // BegTime: 话单开始 时间 本次通话开始时间， 年月日时分秒 (yyyymmddhhnns s)
+  // EndTime 本次通话结束时间， 年月日时分秒 (yyyymmddhhnns s)
+  // Duration  本次通话时长，单位 秒
+  // AgentID  参与了该设备通话 的座席 ID
+  // ForceOnhook (系统挂/用户挂- 1/0)
+  // IsCallOk  呼叫是否成功，1- 成功 0-失败
+  // RingDuration  振铃时长，被应答前 听回来音的时间
+  // HoldDuration 保持累计时长，单位 秒，呼叫对象调用 Hold 函数听等待音
+  // IsTransOut 转出标志
+  // RouteAgentTime 座席接听时间 (yyyymmddhhnnss)
+  // RoutedDN 落地号码
+  // RoutedTime 接听时间(yyyymmddhhnnss)
+
+  UMO.dataoper('t_sheetrecord', 'system', mode, 'recordID, ano, bno, direction,duration,begTime, endTime,ringDuration', 'vals', where, group,
     order, 20, 1, function(cmd, result){
       console.log(result)
     if ((mode == "q") && (result.errno == 0))
