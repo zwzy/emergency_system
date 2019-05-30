@@ -121,6 +121,7 @@ export class LoginCase extends Component {
       },
       onHookChanged: (status) => {
         const {id} = this.props.umoEvent.onHookChanged
+        console.log(2222222, status)
         this.props.updateUmoEventState({
           onHookChanged: {
             id: id+1,

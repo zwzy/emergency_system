@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
+import { callRecord } from '../api/call'
 
 import {hangUpPhone} from '../utils/umo'
 
@@ -26,17 +27,17 @@ const callOutColumns = [
 const callInListColumns = [
   {
     title: '联系电话',
-    dataIndex: 'phoneNumber',
+    dataIndex: 'mobile',
     width: 250
   },
   {
     title: '来电时间',
-    dataIndex: 'time',
+    dataIndex: 'callDate',
     width: 250
   },
   {
     title: '状态',
-    dataIndex: 'status',
+    dataIndex: 'callStatus',
     width: 250
   }
 ];
@@ -118,6 +119,16 @@ export class HeaderCase extends Component {
     })
   }
   componentDidMount() {
+    this.getCallRecord()
+  }
+  getCallRecord = async() => {
+   clearTimeout(this.timer)
+   const {data} = await callRecord({callStatus: 'CALL_FAILURE'})
+   console.log(111, data)
+   this.setState({
+     callInListData: data.content
+   })
+   this.timer = setTimeout(()=>{this.getCallRecord()}, 5000)
   }
   // 登出
   logOutEvent = () => {
@@ -128,7 +139,6 @@ export class HeaderCase extends Component {
       cancelText: '取消',
       onOk:()=>{
         sessionStorage.clear()
-        localStorage.clear()
         this.props.history.push('login')
       }
     });

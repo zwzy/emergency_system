@@ -30,7 +30,7 @@ function setEvtHandler (event){
   },
   // 振铃停止
   // 在来话接接听或久叫不应用户端挂断时触发。
-  onRingStoped: (ano,bno,cno) => {
+  onRingStoped: () => {
     event.onRingStoped()
     console.log(888, "onRingStoped");
   },
@@ -38,10 +38,8 @@ function setEvtHandler (event){
   // 在话机摘机或挂机时触发。
   // status 话机状态，1 挂机 2 摘机
   onHookChanged: (status) => {
-    event.onHookChanged(status)
     if(status === '1') {
-      console.log("挂机");
-      event.onRingStoped()
+       event.onHookChanged(status)
     } else {
       console.log("摘机");
     }
@@ -142,7 +140,7 @@ export function userLoginACD(data = {},
 ) {
   const {user, domain, password} = data
   const params = {
-    apihost: 'http://' + domain + '/IPServer',  // 域名
+    apihost: 'http://' + domain + ':8181/IPServer',  // 域名
     bizhost: null,                                 // 
     eid: '0',                                      // 企业密码
     aid: user,                                   // 工号
@@ -151,22 +149,30 @@ export function userLoginACD(data = {},
     epwd: window.hex_md5(''),                      // 企业密码
     EvtHandler: setEvtHandler(event),                   // 回调方法
   }
-  const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
-  UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {
-    if(result.errno === 0) {
-      console.log(cmd, result.token)
-      const acd = '2000'  // 坐席
-      // login: function(aid, acd, skill, mon, silent, cb, w)
-      // UMO.login(aid, acd, -1, false, false, cbResult, null);
-      UMO.login(aid, acd, -1, false, false, function(res) {
-        okCallback()
-      }, null)
-      sessionStorage.setItem('token', result.token)
-    } else {
-      console.log(cmd, result)
-      noCallback(result.errmsg)
-    }
-  })
+  umoStart(params,
+    okCallback ,
+    noCallback)
+}
+export function umoStart(params,
+  okCallback = () => {},
+  noCallback = () => {})
+  {
+    const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
+    UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {
+      if(result.errno === 0) {
+        console.log(cmd, result.token)
+        const acd = '2000'  // 坐席
+        // login: function(aid, acd, skill, mon, silent, cb, w)
+        // UMO.login(aid, acd, -1, false, false, cbResult, null);
+        UMO.login(aid, acd, -1, false, false, function(res) {
+          okCallback()
+        }, null)
+        sessionStorage.setItem('token', result.token)
+      } else {
+        console.log(cmd, result)
+        noCallback(result.errmsg)
+      }
+    })
 }
 // 拨打
 export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) {
@@ -178,8 +184,11 @@ export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) 
 // 转接
 // 初始转移
 export function startTransferPhone(data = {uud: '', phoneNumber: ''}) {
+  console.log(1111111111111, data)
   const {phoneNumber, uud} = data
-  UMO.inittrans(phoneNumber, uud, true, ()=>{}, null)
+  UMO.inittrans(phoneNumber, uud, true, (res, msg)=>{
+    console.log(1111111, res,msg)
+  }, null)
 }
 // 完成转移
 export function endTransferPhone() {
