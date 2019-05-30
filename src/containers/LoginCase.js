@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import color from '../utils/color'
+import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
+import {userLoginACD} from '../utils/umo'
+import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
+
 
 import { message, Form, Icon, Input, Button, Checkbox,} from 'antd' 
 const LoginPage = styled.div `
@@ -30,6 +34,7 @@ export class LoginCase extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      loading: false
     }
   }
   componentDidMount() {
@@ -38,10 +43,10 @@ export class LoginCase extends Component {
       this.props.form.setFieldsValue({
         password: userInfo.password,
         remember: true,
-        userName: userInfo.user
+        userName: userInfo.user,
+        domain: userInfo.domain
       })
     }
-   
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -51,22 +56,139 @@ export class LoginCase extends Component {
         if (values.remember === true) {
           const userInfo = {
             user: values.userName,
-            password: values.password
+            password: values.password,
+            domain: values.domain
           }
           localStorage.setItem('userInfo',JSON.stringify(userInfo))
         } else {
           localStorage.removeItem('userInfo')
         }
-        if(values.userName==='admin' && values.password==='12345'){
-          sessionStorage.setItem('isLogin', true)
-          this.props.history.push('/')
-        } else {
-          message.error('你输入的用户名或密码有误！');
+        const userInfo = {
+          user: values.userName,
+          password: values.password,
+          domain: values.domain
         }
+        // 登录成功
+        this.loginUmoSystem(userInfo)
       } else {
-        console.log(values)
       }
     });
+  }
+  loginUmoSystem = (userInfo) => {
+    this.setState({
+      loading: true
+    })
+    userLoginACD(userInfo, {
+      onReadyState: (status)=>{
+        console.log(status)
+        const {id} = this.props.umoEvent.onReadyState
+        this.props.updateUmoEventState({
+          onReadyState: {
+            id: id+1, 
+            status: status
+          }
+        })
+      },
+      onCallincome: (ano, bno ,uud) => {
+        const {id} = this.props.umoEvent.onCallincome
+        this.props.updateUmoEventState({
+          onCallincome: {
+            id: id+1, 
+            ano,
+            bno,
+            uud
+          }
+        })
+      }, 
+      onTalked: (ano, bno ,uud) => {
+        const {id} = this.props.umoEvent.onTalked
+        this.props.updateUmoEventState({
+          onTalked: {
+            id: id+1, 
+            ano,
+            bno,
+            uud
+          }
+        })
+      },
+      onRingStoped: () => {
+        const {id} = this.props.umoEvent.onRingStoped
+        this.props.updateUmoEventState({
+          onRingStoped: {
+            id: id+1
+          }
+        })
+      },
+      onHookChanged: (status) => {
+        const {id} = this.props.umoEvent.onHookChanged
+        this.props.updateUmoEventState({
+          onHookChanged: {
+            id: id+1,
+            status
+          }
+        })
+      },
+      onAgentChanged: (status) => {
+        const {id} = this.props.umoEvent.onAgentChanged
+        this.props.updateUmoEventState({
+          onAgentChanged: {
+            id: id+1,
+            status
+          }
+        })
+      },
+      onAsyncFinished: (atype, taskid, ret, desc) => {
+        const {id} = this.props.umoEvent.onAsyncFinished
+        this.props.updateUmoEventState({
+          onAsyncFinished: {
+            id: id+1,
+            atype,
+            taskid,
+            ret,
+            desc
+          }
+        })
+      },
+      onAllBusy: () => {
+        const {id} = this.props.umoEvent.onAllBusy
+        this.props.updateUmoEventState({
+          onAllBusy: {
+            id: id+1
+          }
+        })
+      },
+      onQuelen: () => {
+        const {id} = this.props.umoEvent.onQuelen
+        this.props.updateUmoEventState({
+          onQuelen: {
+            id: id+1
+          }
+        })
+      },
+      onSmsincome: (dtime, from, content, slot) => {
+        const {id} = this.props.umoEvent.onSmsincome
+        this.props.updateUmoEventState({
+          onSmsincome: {
+            id: id+1,
+            dtime,
+            from,
+            content,
+            slot
+          }
+        })
+      }
+    }, () => {
+      this.setState({
+        loading: false
+      })
+      sessionStorage.setItem('isLogin', true)
+      this.props.history.push('/')
+    }, (msg) => {
+      this.setState({
+        loading: false
+      })
+      message.error( msg || '你输入的账号或域名不正确，请重试...', 5)
+    })
   }
 
   render() {
@@ -77,20 +199,27 @@ export class LoginCase extends Component {
           <LoginBox>
             <Form.Item>
               {getFieldDecorator('userName', {
-                rules: [{ required: true, message: 'Please input your username!' }],
+                rules: [{ required: true, message: '请输入用户名!' }],
               })(
-                <Input size='large' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                <Input size='large' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="分机号" />
               )}
             </Form.Item>
             <Form.Item>
               {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }],
+                rules: [{ required: true, message: '请输入密码!' }],
               })(
-                <Input size='large' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                <Input size='large' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="密码" />
               )}
             </Form.Item>
             <Form.Item>
-              <Button  size='large' type="primary" block htmlType="submit" className="login-form-button">
+              {getFieldDecorator('domain', {
+                rules: [{ required: true, message: '请输入密码虚拟机域名!' }],
+              })(
+                <Input size='large' prefix={<Icon type="chrome" style={{ color: 'rgba(0,0,0,.25)' }} />} type="domain" placeholder="域名" />
+              )}
+            </Form.Item>
+            <Form.Item>
+              <Button  size='large' type="primary" block htmlType="submit"  loading={this.state.loading} className="login-form-button">
                 登 录
               </Button>
             </Form.Item>            
@@ -117,6 +246,13 @@ export class LoginCase extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
+  umoEvent: state.umoEvent
+})
+const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
+  updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
+  resetUmoEventState: ()=>dispatch(resetUmoEventState())
+})
 
-
-export default Form.create({ name: 'normal_login' })(LoginCase);
+const LoginCaseForm = Form.create({ name: 'normal_login' })(LoginCase);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginCaseForm)

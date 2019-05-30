@@ -137,15 +137,17 @@ export function userLoginACD(data = {},
     onQuelen: () => {},
     onSmsincome: () => {}
   },
-  callback = () => {}
+  okCallback = () => {},
+  noCallback = () => {}
 ) {
+  const {user, domain, password} = data
   const params = {
-    apihost: 'http://192.168.7.61:8181/IPServer',  // 域名
+    apihost: 'http://' + domain + '/IPServer',  // 域名
     bizhost: null,                                 // 
     eid: '0',                                      // 企业密码
-    aid: '1000',                                   // 工号
-    adn: '1000',                                   // 绑定分机
-    apwd: window.hex_md5('123456'),                // 密码
+    aid: user,                                   // 工号
+    adn: user,                                   // 绑定分机
+    apwd: window.hex_md5(password),                // 密码
     epwd: window.hex_md5(''),                      // 企业密码
     EvtHandler: setEvtHandler(event),                   // 回调方法
   }
@@ -157,9 +159,12 @@ export function userLoginACD(data = {},
       // login: function(aid, acd, skill, mon, silent, cb, w)
       // UMO.login(aid, acd, -1, false, false, cbResult, null);
       UMO.login(aid, acd, -1, false, false, function(res) {
-        callback()
+        okCallback()
       }, null)
       sessionStorage.setItem('token', result.token)
+    } else {
+      console.log(cmd, result)
+      noCallback(result.errmsg)
     }
   })
 }
@@ -227,4 +232,68 @@ export const callKeepEvent = () => {
   //     message.success('操作成功')
   //   }
   // });
+}
+
+// 获取话单
+export const getUmoData = () => {
+  const where = 'begTime >= 20190530000000 and begTime<20190530235900 '
+  const group = ''
+  const order = 'begTime desc'
+  const mode = 'q'
+  // recordID: 记录 ID
+  // FileDate: 文件日期
+  // Direction: 方向 设备的话单方向(呼 入/呼出/呼转- 1/0/2)
+  // Ano: 本次通话的主叫号
+  // Bno： 本次通话的被叫号 码
+  // BegTime: 话单开始 时间 本次通话开始时间， 年月日时分秒 (yyyymmddhhnns s)
+  // EndTime 本次通话结束时间， 年月日时分秒 (yyyymmddhhnns s)
+  // Duration  本次通话时长，单位 秒
+  // AgentID  参与了该设备通话 的座席 ID
+  // ForceOnhook (系统挂/用户挂- 1/0)
+  // IsCallOk  呼叫是否成功，1- 成功 0-失败
+  // RingDuration  振铃时长，被应答前 听回来音的时间
+  // HoldDuration 保持累计时长，单位 秒，呼叫对象调用 Hold 函数听等待音
+  // IsTransOut 转出标志
+  // RouteAgentTime 座席接听时间 (yyyymmddhhnnss)
+  // RoutedDN 落地号码
+  // RoutedTime 接听时间(yyyymmddhhnnss)
+
+  window.UMO.dataoper(
+    't_sheetrecord', 
+    'system', 
+    mode, 
+    'recordID, FileDate, ano, bno, direction,duration,begTime, endTime,ringDuration, RouteAgentTime',
+    'vals',
+    where,
+    group,
+    order, 10, 1,
+    (cmd, result) => {
+      console.log(result)
+    if ((mode == "q") && (result.errno == 0))
+    {
+       console.log(111, result.data)
+       const data = result.data
+       const callInListData = data.slice(1)
+       const handleCallInListData = callInListData.map((item)=>{
+         return {
+          ano: item.ano,
+         }
+       })
+       this.setState({
+        callInListData
+      })
+      //  this.timer = setTimeout(
+      //    this.getUmoData()
+      //  , 100000)
+      // this.timer = setTimeout(() => {
+      //   this.getUmoData()
+      // }, 5000);
+      //  ["ano", "direction", "fileDate"]
+      //  1: (3) ["1001", "0", "20190518083730"]
+      //  2: (3) ["1009", "0", "20190518184149"]
+      //  3: (3) ["1009", "0", "20190518184221"]
+    }
+  }, null);
+
+ 
 }

@@ -3,16 +3,13 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
-
-import {updateCommationInformation} from '../actions/call'
-import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
-
 import Header from '../components/Header'
 import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
-// umo
-import {userLoginACD, hangUpPhone} from '../utils/umo'
+
+import {hangUpPhone} from '../utils/umo'
+
 const modalItemStyle = {margin: '8px 0'}
 const callOutColumns = [
   {
@@ -121,168 +118,6 @@ export class HeaderCase extends Component {
     })
   }
   componentDidMount() {
-    userLoginACD({}, {
-      onReadyState: (status)=>{
-        console.log(status)
-        const {id} = this.props.umoEvent.onReadyState
-        this.props.updateUmoEventState({
-          onReadyState: {
-            id: id+1, 
-            status: status
-          }
-        })
-      },
-      onCallincome: (ano, bno ,uud) => {
-        const {id} = this.props.umoEvent.onCallincome
-        this.props.updateUmoEventState({
-          onCallincome: {
-            id: id+1, 
-            ano,
-            bno,
-            uud
-          }
-        })
-      }, 
-      onTalked: (ano, bno ,uud) => {
-        const {id} = this.props.umoEvent.onTalked
-        this.props.updateUmoEventState({
-          onTalked: {
-            id: id+1, 
-            ano,
-            bno,
-            uud
-          }
-        })
-      },
-      onRingStoped: () => {
-        const {id} = this.props.umoEvent.onRingStoped
-        this.props.updateUmoEventState({
-          onRingStoped: {
-            id: id+1
-          }
-        })
-      },
-      onHookChanged: (status) => {
-        const {id} = this.props.umoEvent.onHookChanged
-        this.props.updateUmoEventState({
-          onHookChanged: {
-            id: id+1,
-            status
-          }
-        })
-      },
-      onAgentChanged: (status) => {
-        const {id} = this.props.umoEvent.onAgentChanged
-        this.props.updateUmoEventState({
-          onAgentChanged: {
-            id: id+1,
-            status
-          }
-        })
-      },
-      onAsyncFinished: (atype, taskid, ret, desc) => {
-        const {id} = this.props.umoEvent.onAsyncFinished
-        this.props.updateUmoEventState({
-          onAsyncFinished: {
-            id: id+1,
-            atype,
-            taskid,
-            ret,
-            desc
-          }
-        })
-      },
-      onAllBusy: () => {
-        const {id} = this.props.umoEvent.onAllBusy
-        this.props.updateUmoEventState({
-          onAllBusy: {
-            id: id+1
-          }
-        })
-      },
-      onQuelen: () => {
-        const {id} = this.props.umoEvent.onQuelen
-        this.props.updateUmoEventState({
-          onQuelen: {
-            id: id+1
-          }
-        })
-      },
-      onSmsincome: (dtime, from, content, slot) => {
-        const {id} = this.props.umoEvent.onSmsincome
-        this.props.updateUmoEventState({
-          onSmsincome: {
-            id: id+1,
-            dtime,
-            from,
-            content,
-            slot
-          }
-        })
-      }
-    }, this.getUmoData)
-  }
-   getUmoData = () => {
-    const where = 'begTime >= 20190530000000 and begTime<20190530235900 '
-    const group = ''
-    const order = 'begTime desc'
-    const mode = 'q'
-    // recordID: 记录 ID
-    // FileDate: 文件日期
-    // Direction: 方向 设备的话单方向(呼 入/呼出/呼转- 1/0/2)
-    // Ano: 本次通话的主叫号
-    // Bno： 本次通话的被叫号 码
-    // BegTime: 话单开始 时间 本次通话开始时间， 年月日时分秒 (yyyymmddhhnns s)
-    // EndTime 本次通话结束时间， 年月日时分秒 (yyyymmddhhnns s)
-    // Duration  本次通话时长，单位 秒
-    // AgentID  参与了该设备通话 的座席 ID
-    // ForceOnhook (系统挂/用户挂- 1/0)
-    // IsCallOk  呼叫是否成功，1- 成功 0-失败
-    // RingDuration  振铃时长，被应答前 听回来音的时间
-    // HoldDuration 保持累计时长，单位 秒，呼叫对象调用 Hold 函数听等待音
-    // IsTransOut 转出标志
-    // RouteAgentTime 座席接听时间 (yyyymmddhhnnss)
-    // RoutedDN 落地号码
-    // RoutedTime 接听时间(yyyymmddhhnnss)
-  
-    window.UMO.dataoper(
-      't_sheetrecord', 
-      'system', 
-      mode, 
-      'recordID, FileDate, ano, bno, direction,duration,begTime, endTime,ringDuration, RouteAgentTime',
-      'vals',
-      where,
-      group,
-      order, 10, 1,
-      (cmd, result) => {
-        console.log(result)
-      if ((mode == "q") && (result.errno == 0))
-      {
-         console.log(111, result.data)
-         const data = result.data
-         const callInListData = data.slice(1)
-         const handleCallInListData = callInListData.map((item)=>{
-           return {
-            ano: item.ano,
-           }
-         })
-         this.setState({
-          callInListData
-        })
-        //  this.timer = setTimeout(
-        //    this.getUmoData()
-        //  , 100000)
-        // this.timer = setTimeout(() => {
-        //   this.getUmoData()
-        // }, 5000);
-        //  ["ano", "direction", "fileDate"]
-        //  1: (3) ["1001", "0", "20190518083730"]
-        //  2: (3) ["1009", "0", "20190518184149"]
-        //  3: (3) ["1009", "0", "20190518184221"]
-      }
-    }, null);
-
-   
   }
   // 登出
   logOutEvent = () => {
@@ -451,13 +286,8 @@ export class HeaderCase extends Component {
 
 
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
-  umoEvent: state.umoEvent
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
-  updateCommationInformationEvent: (commationInfo)=>dispatch(updateCommationInformation(commationInfo)),
-  updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
-  // resetCommationInformationEvent: ()=>dispatch(resetCommationInformation())
-  resetUmoEventState: ()=>dispatch(resetUmoEventState())
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderCase))
