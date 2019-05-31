@@ -19,7 +19,7 @@ const callInListColumns = [
     width: 250
   }
 ];
-export default class BaseCallOnLineList extends Component {
+export default class BaseCallOnLineListModal extends Component {
   static propTypes = {
     // prop: PropTypes
   }
@@ -27,7 +27,9 @@ export default class BaseCallOnLineList extends Component {
     super(props)
     this.timer = null
     this.state = {
-      callInListData: [],
+      callInListData: [
+        {mobile: '1001', callDate: '2019-02-01 04:02:32', callStatus: '未接通'}
+      ],
     }
   }
   componentDidMount() {
@@ -49,7 +51,7 @@ export default class BaseCallOnLineList extends Component {
    }
    this.timer = setTimeout(()=>{this.getCallRecord()}, 5000)
   } catch (error) {
-    throw new Error(error)
+    console.log(error)
   }
   
  }

@@ -1,4 +1,4 @@
-import baseCallUrl from '../utils/getUrl'
+import {baseCallUrl} from '../utils/getUrl'
 import fetch from '../utils/fetch'
 console.log(baseCallUrl)
 // 通讯来了

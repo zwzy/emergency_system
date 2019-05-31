@@ -5,7 +5,7 @@ import color from '../utils/color'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import {userLoginACD} from '../utils/umo'
 import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
-
+import {updateUserInformation} from '../actions/user'
 
 import { message, Form, Icon, Input, Button, Checkbox,} from 'antd' 
 const LoginPage = styled.div `
@@ -64,13 +64,25 @@ export class LoginCase extends Component {
           localStorage.removeItem('userInfo')
         }
         const userInfo = {
-          user: values.userName,
-          password: values.password,
+          userName: values.userName,
+          passWord: values.password,
           domain: values.domain
         }
+        this.props.updateUserInformation({
+          userName: values.userName,
+          passWord:  values.password,
+          domain: values.domain,
+          extNumber: values.userName
+        })
         // 登录成功
-        this.loginUmoSystem(userInfo)
+        // this.loginUmoSystem(userInfo)
+        this.setState({
+          loading: false
+        })
+        sessionStorage.setItem('isLogin', true)
+        this.props.history.push('/')
       } else {
+        
       }
     });
   }
@@ -252,6 +264,7 @@ const mapStateToProps = (state) => ({                  // owProps 是这个容�
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
   updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
+  updateUserInformation: (userInfo) => dispatch(updateUserInformation(userInfo)),
   resetUmoEventState: ()=>dispatch(resetUmoEventState())
 })
 

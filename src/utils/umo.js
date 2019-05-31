@@ -138,14 +138,15 @@ export function userLoginACD(data = {},
   okCallback = () => {},
   noCallback = () => {}
 ) {
-  const {user, domain, password} = data
+  const {userName, domain, passWord} = data
+  console.log(userName, domain, passWord)
   const params = {
     apihost: 'http://' + domain + ':8181/IPServer',  // 域名
     bizhost: null,                                 // 
     eid: '0',                                      // 企业密码
-    aid: user,                                   // 工号
-    adn: user,                                   // 绑定分机
-    apwd: window.hex_md5(password),                // 密码
+    aid: userName,                                   // 工号
+    adn: userName,                                   // 绑定分机
+    apwd: window.hex_md5(passWord),                // 密码
     epwd: window.hex_md5(''),                      // 企业密码
     EvtHandler: setEvtHandler(event),                   // 回调方法
   }
@@ -185,7 +186,6 @@ export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) 
 // 转接
 // 初始转移
 export function startTransferPhone(data = {uud: '', phoneNumber: ''}) {
-  console.log(1111111111111, data)
   const {phoneNumber, uud} = data
   UMO.inittrans(phoneNumber, uud, true, (res, msg)=>{
     console.log(1111111, res,msg)

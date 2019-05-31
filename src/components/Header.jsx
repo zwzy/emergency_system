@@ -2,12 +2,11 @@ import React from 'react';
 import styled from 'styled-components'
 import color from '../utils/color'
 import config from '../utils/config'
-import BaseCommunication from '../components/base/BaseCommunication'
-import BaseCallOnLineList from '../components/base/BaseCallOnLineList'
+import BaseCallOnLineListModal from './base/BaseCallOnLineListModal'
+import BaseCallOutModal from './base/BaseCallOutModal'
+import TransferModal from './base/TransferModal'
 import PropTypes from 'prop-types'
-import {callOutPhone, startTransferPhone} from '../utils/umo'
 import { Icon, Button, Modal} from 'antd';
-
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
 });
@@ -104,83 +103,6 @@ function Header({event, data}) {
       text-align: left;
     }
   `
-  const CallOutBox = styled.div`
-    display: flex;
-    justify-content: space-between;
-    .lf-box{
-      width: 50%;
-      border-right: 1px solid #eee;
-      padding: 0 20px;
-      box-sizing: border-box;
-      .lf-box-title{
-        font-weight: bold;
-        color: #333;
-        padding-bottom: 10px;
-      }
-      .history-box{
-        padding-right: 20px;
-        height: 400px;
-        overflow: auto;
-      }
-      .callout-item{
-        padding: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #eee;
-        .desc{
-          color: #999;
-          font-size: 12px;
-        }
-      }
-    }
-    .rt-box{
-      width: 50%;
-      padding: 0 20px;
-      box-sizing: border-box;
-      overflow: auto;
-    }
-  `
-  const TransferBox = styled.div`
-    display: flex;
-    justify-content: space-between;
-    .attention-box{
-      width: 100%;
-      padding: 0 20px;
-      box-sizing: border-box;
-      .rt-title{
-        font-weight: bold;
-        color: #333;
-        padding-bottom: 10px;
-      }
-      .table-title-box{
-        margin-bottom: 7px;
-        height: 40px;
-        line-height: 40px;
-        display: flex;
-        background: #f3f5f7;
-        border-radius: 3px;
-        .table-title-item{
-          flex: 1;
-          text-align: center;
-        }
-      }
-      .table-box{
-        max-height: 300px;
-        overflow: auto;
-      }
-      .table-item-box{
-        display: flex;
-        border-bottom: 1px solid #eee;
-        align-items:center;
-        padding: 10px 0;
-        .table-item{
-          flex: 1;
-          text-align: center;
-        }
-      }
-    }
-  `
   return (
     <div>
       <Header>
@@ -221,106 +143,19 @@ function Header({event, data}) {
         visible={data.callOutIsShow}
         onCancel={()=>event.callOutShowEvent()}
         footer={null}>
-        <CallOutBox>
-          <div className="lf-box">
-            <div className='lf-box-title'>历史通话记录</div>
-            <div className='history-box'>
-            { data.callOutData.callHistoryData.map((item, index)=>{
-              return (
-                <div className="callout-item" key={index}>
-                  <div className="lf-item">
-                      <div><span className='right-divider'>{item.userName}</span> <span>{item.mobile}</span></div>
-                      <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
-                  </div>
-                  <div className="rt-item">
-                    <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.userPhone, uud: '4555', gid: '@0'})} />
-                  </div>
-                </div>
-              )
-              })
-            }
-            </div>
-          </div>
-          <div className="rt-box">
-             <BaseCommunication 
-              activeDept ={data.activeDept}
-              callOutDept={data.callOutAllDept}
-              callOutBook={data.callOutBook} 
-              handleSelectChange={event.handleSelectChange}
-              onSearch={event.searchBykeyWord}>
-              </BaseCommunication>
-          </div>
-        </CallOutBox>  
+        <BaseCallOutModal callOutIsShow={data.callOutIsShow}></BaseCallOutModal>
       </Modal>
 
 
       <Modal
         /* 转接modal */
         title='今日执班列表'
+        width={900}
         maskClosable = {false}
         visible={data.callOtherIsShow}
         onCancel={()=>event.callOtherShowEvent()}
         footer={null}>
-        <TransferBox>
-          <div className="attention-box">
-            <div className="table-title-box">
-              <div className='table-title-item'>姓名</div>
-              <div className='table-title-item'>值班部门</div>
-              <div className='table-title-item'>手机号码</div>
-              <div className='table-title-item'>拨打</div>
-            </div>
-            <div className='table-box'>
-              <div className="table-item-box">
-                <div className="table-item">张三</div>
-                <div className="table-item">技术部</div>
-                <div className="table-item">1000</div>
-                <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1000', uud: ''})}} />
-                </div>
-              </div>
-              <div className="table-item-box">
-                <div className="table-item">张三</div>
-                <div className="table-item">技术部</div>
-                <div className="table-item">1001</div>
-                <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1001', uud: ''})}} />
-                </div>
-              </div>
-              <div className="table-item-box">
-                <div className="table-item">张三</div>
-                <div className="table-item">技术部</div>
-                <div className="table-item">1006</div>
-                <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1006', uud: ''})}} />
-                </div>
-              </div>
-              <div className="table-item-box">
-                <div className="table-item">张三</div>
-                <div className="table-item">技术部</div>
-                <div className="table-item">1003</div>
-                <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1003', uud: ''})}} />
-                </div>
-              </div>
-              <div className="table-item-box">
-                <div className="table-item">张三</div>
-                <div className="table-item">技术部</div>
-                <div className="table-item">1004</div>
-                <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1004', uud: ''})}} />
-                </div>
-              </div>
-              <div className="table-item-box">
-                <div className="table-item">张三</div>
-                <div className="table-item">技术部</div>
-                <div className="table-item">1005</div>
-                <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1005', uud: ''})}} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </TransferBox>
+        <TransferModal />
       </Modal>
 
       <Modal
@@ -331,7 +166,7 @@ function Header({event, data}) {
         visible={data.callInListIsShow}
         onCancel={()=>event.callInListShowEvent()}
         footer={null}>
-        {data.callInListIsShow && <BaseCallOnLineList></BaseCallOnLineList>}
+        {data.callInListIsShow && <BaseCallOnLineListModal></BaseCallOnLineListModal>}
       </Modal>
       {
         data.callInModalIsShow && <CallInModal>

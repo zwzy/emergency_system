@@ -1,10 +1,11 @@
 const jsonUserInformation = sessionStorage.getItem('userInformation') ? JSON.parse(sessionStorage.getItem('userInformation')) : {}
 
 const initUserState = {
-  name: jsonUserInformation.name || '',
-  phone: jsonUserInformation.phone || '',
-  theme: jsonUserInformation.theme || 'white',        // white black
-  power: jsonUserInformation.theme || 1,              // power 1,2,3,4,5  普通，组长，经理，总监，董事长
+  userName: jsonUserInformation.userName || '',
+  extNumber: jsonUserInformation.extNumber || '',
+  passWord: jsonUserInformation.passWord || '',
+  domain: jsonUserInformation.domain || '',
+  userPost: jsonUserInformation.userPost || ''
 }
 const user = (state = initUserState, action) => {
   switch (action.type) {

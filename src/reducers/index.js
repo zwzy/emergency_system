@@ -5,7 +5,7 @@ import commation from './commation'
 import umoEvent from './umoEvent'
 
 const rootReducer = combineReducers({
-  userInformation: user,
+  user: user,
   config,
   commation,
   umoEvent

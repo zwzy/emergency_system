@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Modal, Table, message } from 'antd' 
+import { Modal, Table } from 'antd' 
 import Console from '../../components/menu/Console'                 // 引用的ui组件
 import color from '../../utils/color'
 import {findCallUser, answerCall} from '../../api/call'

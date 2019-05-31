@@ -5,9 +5,10 @@ import { connect } from 'react-redux'                           // 用来连接r
 
 import Header from '../components/Header'
 import {Modal, message} from 'antd'
-
+import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
 import { btnlist } from '../utils/config'
-import { callRecord} from '../api/call'
+import { sign } from '../api/user'
+import {getNowDate} from '../utils/common'
 
 import {hangUpPhone, userLoginACD} from '../utils/umo'
 
@@ -33,20 +34,6 @@ export class HeaderCase extends Component {
       callInModalIsShow: false,
       // 拨出
       callOutIsShow: false,
-      callOutData: {
-        callHistoryData: [
-          { userName: '张三', mobile: '1001', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张大', mobile: '1009', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
-          { userName: '张二', mobile: '1002', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
-          { userName: '张四', mobile: '1003', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},
-          { userName: '张五', mobile: '1004', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '采购部'},
-          { userName: '张六', mobile: '1005', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '市场部'},
-          { userName: '张七', mobile: '1006', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张七', mobile: '1007', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张七', mobile: '1008', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张七', mobile: '1010', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-        ]
-      },
       // 转接
       callOtherIsShow: false,
       callOtherData: [],
@@ -76,26 +63,121 @@ export class HeaderCase extends Component {
     })
   }
   componentDidMount() {
-  }
-  componentWillUnmount() {
-    alert(11)
-  }
-  // 得到顺利挂断记录
-  getHandUpCallRecord = async() => {
-    clearTimeout(this.timer)
-    try {
-      const {data} = await callRecord({callStatus: 'CALL_HANGUP'})
-      if(data.code === 0) {
-        this.setState({
-          callHistoryData: data.content
+    const {userInfo} = this.props
+    console.log(userInfo)
+    userLoginACD(userInfo, {
+      onReadyState: (status)=>{
+        console.log(status)
+        const {id} = this.props.umoEvent.onReadyState
+        this.props.updateUmoEventState({
+          onReadyState: {
+            id: id+1, 
+            status: status
+          }
+        })
+      },
+      onCallincome: (ano, bno ,uud) => {
+        const {id} = this.props.umoEvent.onCallincome
+        this.props.updateUmoEventState({
+          onCallincome: {
+            id: id+1, 
+            ano,
+            bno,
+            uud
+          }
+        })
+      }, 
+      onTalked: (ano, bno ,uud) => {
+        const {id} = this.props.umoEvent.onTalked
+        this.props.updateUmoEventState({
+          onTalked: {
+            id: id+1, 
+            ano,
+            bno,
+            uud
+          }
+        })
+      },
+      onRingStoped: () => {
+        const {id} = this.props.umoEvent.onRingStoped
+        this.props.updateUmoEventState({
+          onRingStoped: {
+            id: id+1
+          }
+        })
+      },
+      onHookChanged: (status) => {
+        const {id} = this.props.umoEvent.onHookChanged
+        console.log(2222222, status)
+        this.props.updateUmoEventState({
+          onHookChanged: {
+            id: id+1,
+            status
+          }
+        })
+      },
+      onAgentChanged: (status) => {
+        const {id} = this.props.umoEvent.onAgentChanged
+        this.props.updateUmoEventState({
+          onAgentChanged: {
+            id: id+1,
+            status
+          }
+        })
+      },
+      onAsyncFinished: (atype, taskid, ret, desc) => {
+        const {id} = this.props.umoEvent.onAsyncFinished
+        this.props.updateUmoEventState({
+          onAsyncFinished: {
+            id: id+1,
+            atype,
+            taskid,
+            ret,
+            desc
+          }
+        })
+      },
+      onAllBusy: () => {
+        const {id} = this.props.umoEvent.onAllBusy
+        this.props.updateUmoEventState({
+          onAllBusy: {
+            id: id+1
+          }
+        })
+      },
+      onQuelen: () => {
+        const {id} = this.props.umoEvent.onQuelen
+        this.props.updateUmoEventState({
+          onQuelen: {
+            id: id+1
+          }
+        })
+      },
+      onSmsincome: (dtime, from, content, slot) => {
+        const {id} = this.props.umoEvent.onSmsincome
+        this.props.updateUmoEventState({
+          onSmsincome: {
+            id: id+1,
+            dtime,
+            from,
+            content,
+            slot
+          }
         })
       }
-      this.timer = setTimeout(()=>{this.getHandUpCallRecord()}, 5000)
-    } catch (error) {
-      throw new Error(error)
-    }
+    }, () => {
+      this.setState({
+        loading: false
+      })
+      sessionStorage.setItem('isLogin', true)
+      this.props.history.push('/')
+    }, (msg) => {
+      this.setState({
+        loading: false
+      })
+      message.error( msg || '你输入的账号或域名不正确，请重试...', 5)
+    })
   }
- 
   // 登出
   logOutEvent = () => {
     Modal.confirm({
@@ -111,35 +193,39 @@ export class HeaderCase extends Component {
   }
   // 签到
   signEvent =  () => {
-    const userInfo = {
-      userNum: '88888888',
-      userName: '左旺',
-      userPost: '应急值守人员',
-      time: '2019-04-05 12:30:36'
-    }
+    const nowData = getNowDate()
+    const {userInfo} = this.props
     Modal.confirm({
       title: '签到',
       content:(
         <div>
-          <div style={modalItemStyle}>工号： <strong>{userInfo.userNum}</strong></div>
+          <div style={modalItemStyle}>工号： <strong>{userInfo.extNumber}</strong></div>
           <div style={modalItemStyle}>姓名： <strong>{userInfo.userName}</strong></div>
           <div style={modalItemStyle}>职位： <strong>{userInfo.userPost}</strong></div>
-          <div style={modalItemStyle}>时间： <strong>{userInfo.time}</strong></div>
+          <div style={modalItemStyle}>时间： <strong>{nowData}</strong></div>
         </div>
       ),
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
+        sign({userId: '1001'}).then(
+          res => {
+            const {data} = res
+            if(data.code === 0) {
+              message.success(data.message)
+            } else {
+              message.error(data.message)
+            }
+          }
+        ).catch(
+          (error) => {
+            message.error('接口故障，请重试...')
+            throw new Error(error)
+          }
+        )
         this.props.history.push('/attendance')
       }
     });
-  }
-  // 接听
-  callInEvent = () => {
-    // this.setState({
-    //   callInListIsShow: false,
-    //  })
-    //  message.success('操作成功')
   }
   // 挂断
   hangUpEvent = () => {
@@ -242,10 +328,13 @@ export class HeaderCase extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
+  umoEvent: state.umoEvent,
+  userInfo: state.user
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
+  updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
 })
+
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderCase))
