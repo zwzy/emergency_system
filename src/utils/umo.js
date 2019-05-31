@@ -157,7 +157,6 @@ function _umoStart(params,
   okCallback = () => {},
   noCallback = () => {})
   {
-    console.log(111)
     okCallback()
     const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
     UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {
