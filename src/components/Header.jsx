@@ -227,8 +227,8 @@ function Header({event, data}) {
               return (
                 <div className="callout-item" key={index}>
                   <div className="lf-item">
-                      <div><span className='right-divider'>{item.userName}</span> <span>{item.userPhone}</span></div>
-                      <div className='desc'><span className='right-divider'>{item.time}</span> <span>{item.timeLong}</span></div>
+                      <div><span className='right-divider'>{item.userName}</span> <span>{item.mobile}</span></div>
+                      <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
                   </div>
                   <div className="rt-item">
                     <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.userPhone, uud: '4555', gid: '@0'})} />
@@ -292,17 +292,25 @@ function Header({event, data}) {
               <div className="table-item-box">
                 <div className="table-item">张三</div>
                 <div className="table-item">技术部</div>
-                <div className="table-item">18764623363</div>
+                <div className="table-item">1003</div>
                 <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" />
+                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1003', uud: ''})}} />
                 </div>
               </div>
               <div className="table-item-box">
                 <div className="table-item">张三</div>
                 <div className="table-item">技术部</div>
-                <div className="table-item">18764623363</div>
+                <div className="table-item">1004</div>
                 <div className="table-item">
-                  <Button type="primary" shape="circle" icon="phone" />
+                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1004', uud: ''})}} />
+                </div>
+              </div>
+              <div className="table-item-box">
+                <div className="table-item">张三</div>
+                <div className="table-item">技术部</div>
+                <div className="table-item">1005</div>
+                <div className="table-item">
+                  <Button type="primary" shape="circle" icon="phone" onClick={()=>{startTransferPhone({phoneNumber: '1005', uud: ''})}} />
                 </div>
               </div>
             </div>

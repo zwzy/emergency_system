@@ -112,6 +112,7 @@ export class ConsoleCase extends Component {
       commationInfomation: {
         callId: '',
         phoneNumber:'--', // 号码
+        timerSecond: '',
         timer: '--',  // 当前通话时长
         comeTime: '--', // 来电时间
         talkStartTime: '--',  // 接听时间
@@ -186,8 +187,9 @@ export class ConsoleCase extends Component {
     const {commationInfomation} = this.state
     const nowTime = getNowTime()
     const timer = nowTime - getNowTime(commationInfomation.talkStartTime)
+    console.log(88888, timer)
     this.setState({
-      commationInfomation: {...commationInfomation, timer: formatSeconds(timer)}
+      commationInfomation: {...commationInfomation, timer: formatSeconds(timer), timerSecond: parseInt(timer/1000) }
     })
   }
   // 接听时回调
@@ -213,7 +215,7 @@ export class ConsoleCase extends Component {
   onHookChangedEvent = async ({status}) => {
     if(status === '1') {
       const nowData = getNowDate()
-      const {callId, timer, callStatus} = this.state.commationInfomation
+      const {callId, timer, callStatus, timerSecond} = this.state.commationInfomation
       if(callStatus !== 'CALL_ONLINE' ) return
       try {
         const {data} = await answerCall({callId, callStatus: 'CALL_HANGUP', hangupDate: nowData, callDuration: timer})
@@ -224,7 +226,7 @@ export class ConsoleCase extends Component {
          throw new Error(error)
        }
       this.setState({
-        commationInfomation: {...this.state.commationInfomation, handupTime: nowData, talkTimer: timer, callStatus: 'CALL_HANGUP'}
+        commationInfomation: {...this.state.commationInfomation, handupTime: nowData, talkTimer: timerSecond, callStatus: 'CALL_HANGUP'}
       }, ()=>{
          console.log(this.state.commationInfomation)
       })
