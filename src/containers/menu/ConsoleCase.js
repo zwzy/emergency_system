@@ -165,6 +165,7 @@ export class ConsoleCase extends Component {
   }
   // 挂断时的回调，改变电话状态
   onRingStopedEvent = async () => {
+    console.log(22222222222222222222)
     const {commationInfomation} = this.state
     const nowDate = getNowDate()
     try {
@@ -176,7 +177,7 @@ export class ConsoleCase extends Component {
       throw new Error(error)
     }
     this.setState({
-      commationInfomation: {...commationInfomation, talkStartTime: nowDate, callStatus: 'CALL_FAILURE'}
+      commationInfomation: {...commationInfomation, handupTime: nowDate, callStatus: 'CALL_FAILURE'}
     },()=>{
       console.log('挂断记录成功', this.state.commationInfomation)
       
@@ -184,10 +185,10 @@ export class ConsoleCase extends Component {
   }
    // 设置当前通话时间
   setActiveCommationTimer = () => {
+    console.log(333333333333)
     const {commationInfomation} = this.state
     const nowTime = getNowTime()
     const timer = nowTime - getNowTime(commationInfomation.talkStartTime)
-    console.log(88888, timer)
     this.setState({
       commationInfomation: {...commationInfomation, timer: formatSeconds(timer), timerSecond: parseInt(timer/1000) }
     })
@@ -208,19 +209,23 @@ export class ConsoleCase extends Component {
     this.setState({
       commationInfomation: {...commationInfomation, talkStartTime: nowData, callStatus: 'CALL_ONLINE'}
     },()=>{
+      // 转接的时候会执行两次
+      if(this.timer)clearInterval(this.timer)
       this.timer = setInterval(()=>{this.setActiveCommationTimer()}, 1000)
     })
   }
   // 完成时挂断时回调
   onHookChangedEvent = async ({status}) => {
+    console.log(11111111111111111111111)
     if(status === '1') {
       const nowData = getNowDate()
       const {callId, timer, callStatus, timerSecond} = this.state.commationInfomation
       if(callStatus !== 'CALL_ONLINE' ) return
       try {
-        const {data} = await answerCall({callId, callStatus: 'CALL_HANGUP', hangupDate: nowData, callDuration: timer})
+        const {data} = await answerCall({callId, callStatus: 'CALL_HANGUP', hangupDate: nowData, callDuration: timerSecond})
         if(data.code === 0) {
           console.log('接听记录成功')
+          clearInterval(this.timer)
         }
        } catch (error) {
          throw new Error(error)
@@ -289,6 +294,7 @@ export class ConsoleCase extends Component {
   }
   // 显示司机违章记录弹窗
   breakRuleShowEvent = (dirverName) => {
+    console.log(111, dirverName)
     const {breakRuleIsShow}  = this.state
     this.setState({
       breakRuleIsShow: !breakRuleIsShow,

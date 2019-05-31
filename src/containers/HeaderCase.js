@@ -63,6 +63,8 @@ export class HeaderCase extends Component {
     })
   }
   componentDidMount() {
+    console.log(window.UMO._token)
+    if(window.UMO._token) return
     const {userInfo} = this.props
     console.log(userInfo)
     userLoginACD(userInfo, {
@@ -186,6 +188,7 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
+        window.UMO.exit()
         sessionStorage.clear()
         this.props.history.push('login')
       }
@@ -199,7 +202,7 @@ export class HeaderCase extends Component {
       title: '签到',
       content:(
         <div>
-          <div style={modalItemStyle}>工号： <strong>{userInfo.extNumber}</strong></div>
+          <div style={modalItemStyle}>工号： <strong>{userInfo.extNumber||userInfo.userName}</strong></div>
           <div style={modalItemStyle}>姓名： <strong>{userInfo.userName}</strong></div>
           <div style={modalItemStyle}>职位： <strong>{userInfo.userPost}</strong></div>
           <div style={modalItemStyle}>时间： <strong>{nowData}</strong></div>
@@ -208,7 +211,7 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        sign({userId: '1001'}).then(
+        sign({userId: userInfo.userName}).then(
           res => {
             const {data} = res
             if(data.code === 0) {

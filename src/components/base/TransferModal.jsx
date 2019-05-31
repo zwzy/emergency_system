@@ -35,13 +35,17 @@ export default class TransferModal extends Component {
     ]
     this.state = {
       TransferData: [
-        {key: 1, username: '张三', userdept: '开发三部', mobile: '18765747343'},
-        {key: 2, username: '张三', userdept: '开发三部', mobile: '18765747343'},
-        {key: 3, username: '张三', userdept: '开发三部', mobile: '18765747343'},
-        {key: 4, username: '张三', userdept: '开发三部', mobile: '18765747343'},
-        {key: 5, username: '张三', userdept: '开发三部', mobile: '18765747343'},
-        {key: 6, username: '张三', userdept: '开发三部', mobile: '18765747343'},
-        {key: 7, username: '张三', userdept: '开发三部', mobile: '18765747343'}
+        {key: 1, username: '张三', userdept: '开发三部', mobile: '1000'},
+        {key: 2, username: '李四', userdept: '技术部', mobile: '1001'},
+        {key: 3, username: '王五', userdept: '运营部', mobile: '1002'},
+        {key: 4, username: '李蛋', userdept: '行政部', mobile: '1003'},
+        {key: 5, username: '池子', userdept: '咨询部', mobile: '1004'},
+        {key: 6, username: '梁海源', userdept: '产品部', mobile: '1005'},
+        {key: 7, username: '赵钱', userdept: '测试部', mobile: '1006'},
+        {key: 8, username: '孙膑', userdept: '外购部', mobile: '1007'},
+        {key: 9, username: '卫通', userdept: '应急部', mobile: '1008'},
+        {key: 10, username: '高杰', userdept: '处理事宜部', mobile: '1009'},
+        {key: 11, username: '鲍旺', userdept: '运营部', mobile: '1010'},
       ]
     }
   }

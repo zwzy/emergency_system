@@ -1,5 +1,5 @@
-const jsonUserInformation = sessionStorage.getItem('userInformation') ? JSON.parse(sessionStorage.getItem('userInformation')) : {}
-
+const jsonUserInformation = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : {}
+console.log(jsonUserInformation)
 const initUserState = {
   userName: jsonUserInformation.userName || '',
   extNumber: jsonUserInformation.extNumber || '',

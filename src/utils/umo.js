@@ -25,6 +25,7 @@ function setEvtHandler (event){
   // bno:”” 被叫号码 
   // uud:”” 业务数据
   onTalked: (ano, bno, uud) => {
+    // 转接的时候会执行两次， 1次是18755666677打给78897378483， 这个再转给2000队列，2000队列转到1000。
     event.onTalked(ano, bno, uud)
     console.log("onTalked: ano=" + ano + " bno=" + bno + " uud=" + uud);
   },
@@ -158,7 +159,7 @@ function _umoStart(params,
   okCallback = () => {},
   noCallback = () => {})
   {
-    okCallback()
+    // okCallback()
     const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
     UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {
       if(result.errno === 0) {

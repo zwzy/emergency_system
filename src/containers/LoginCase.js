@@ -41,9 +41,9 @@ export class LoginCase extends Component {
     if(localStorage.getItem('userInfo')) {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.props.form.setFieldsValue({
-        password: userInfo.password,
+        password: userInfo.passWord,
         remember: true,
-        userName: userInfo.user,
+        userName: userInfo.userName,
         domain: userInfo.domain
       })
     }
@@ -55,9 +55,10 @@ export class LoginCase extends Component {
         console.log('Received values of form: ', values);
         if (values.remember === true) {
           const userInfo = {
-            user: values.userName,
-            password: values.password,
-            domain: values.domain
+            userName: values.userName,
+            passWord: values.password,
+            domain: values.domain,
+            userPost: '应急人员'
           }
           localStorage.setItem('userInfo',JSON.stringify(userInfo))
         } else {
@@ -75,12 +76,12 @@ export class LoginCase extends Component {
           extNumber: values.userName
         })
         // 登录成功
-        // this.loginUmoSystem(userInfo)
+        this.loginUmoSystem(userInfo)
         this.setState({
           loading: false
         })
-        sessionStorage.setItem('isLogin', true)
-        this.props.history.push('/')
+        // sessionStorage.setItem('isLogin', true)
+        // this.props.history.push('/')
       } else {
         
       }
@@ -194,8 +195,11 @@ export class LoginCase extends Component {
       this.setState({
         loading: false
       })
-      sessionStorage.setItem('isLogin', true)
-      this.props.history.push('/')
+      message.success('登录成功，1s后跳转控制台')
+      setTimeout (()=>{
+        sessionStorage.setItem('isLogin', true)
+        this.props.history.push('/')
+      }, 1000)
     }, (msg) => {
       this.setState({
         loading: false
