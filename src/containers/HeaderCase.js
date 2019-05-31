@@ -3,17 +3,14 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
-
-import {updateCommationInformation} from '../actions/call'
-import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
-
 import Header from '../components/Header'
 import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
-// umo
-import {userLoginACD, hangUpPhone} from '../utils/umo'
-import { getNowDate, formatSeconds, getNowTime } from '../utils/common'
+import { callRecord } from '../api/call'
+
+import {hangUpPhone} from '../utils/umo'
+
 const modalItemStyle = {margin: '8px 0'}
 const callOutColumns = [
   {
@@ -30,17 +27,17 @@ const callOutColumns = [
 const callInListColumns = [
   {
     title: '联系电话',
-    dataIndex: 'phoneNumber',
+    dataIndex: 'mobile',
     width: 250
   },
   {
     title: '来电时间',
-    dataIndex: 'time',
+    dataIndex: 'callDate',
     width: 250
   },
   {
     title: '状态',
-    dataIndex: 'status',
+    dataIndex: 'callStatus',
     width: 250
   }
 ];
@@ -63,6 +60,7 @@ export class HeaderCase extends Component {
   constructor(props) {
     super(props)
     this.timer = null
+    this.timer1 = null
     this.state = {
       commationInfomation:{
         phoneNumber:'--', // 号码
@@ -80,16 +78,16 @@ export class HeaderCase extends Component {
       callOutIsShow: false,
       callOutData: {
         callHistoryData: [
-          { userName: '张三', userPhone: '1001', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张大', userPhone: '1009', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
-          { userName: '张二', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
-          { userName: '张四', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},
-          { userName: '张五', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '采购部'},
-          { userName: '张六', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '市场部'},
-          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-          { userName: '张七', userPhone: '18755489161', time: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张三', mobile: '1001', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张大', mobile: '1009', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
+          { userName: '张二', mobile: '1002', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
+          { userName: '张四', mobile: '1003', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},
+          { userName: '张五', mobile: '1004', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '采购部'},
+          { userName: '张六', mobile: '1005', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '市场部'},
+          { userName: '张七', mobile: '1006', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张七', mobile: '1007', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张七', mobile: '1008', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
+          { userName: '张七', mobile: '1010', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
         ]
       },
       // 转接
@@ -97,7 +95,7 @@ export class HeaderCase extends Component {
       callOtherData: [],
       // 队列
       callInListData: [],
-      callInListIsShow: false,         // 来电通知modal
+      callInListIsShow: false, // 来电通知modal
     }
   }
   // 显示拨出
@@ -122,107 +120,38 @@ export class HeaderCase extends Component {
     })
   }
   componentDidMount() {
-    userLoginACD({}, {
-      onReadyState: (status)=>{
-        console.log(status)
-        const {id} = this.props.umoEvent.onReadyState
-        this.props.updateUmoEventState({
-          onReadyState: {
-            id: id+1, 
-            status: status
-          }
-        })
-      },
-      onCallincome: (ano, bno ,uud) => {
-        const {id} = this.props.umoEvent.onCallincome
-        this.props.updateUmoEventState({
-          onCallincome: {
-            id: id+1, 
-            ano,
-            bno,
-            uud
-          }
-        })
-      }, 
-      onTalked: (ano, bno ,uud) => {
-        const {id} = this.props.umoEvent.onTalked
-        this.props.updateUmoEventState({
-          onTalked: {
-            id: id+1, 
-            ano,
-            bno,
-            uud
-          }
-        })
-      },
-      onRingStoped: () => {
-        const {id} = this.props.umoEvent.onRingStoped
-        this.props.updateUmoEventState({
-          onRingStoped: {
-            id: id+1
-          }
-        })
-      },
-      onHookChanged: (status) => {
-        const {id} = this.props.umoEvent.onHookChanged
-        this.props.updateUmoEventState({
-          onHookChanged: {
-            id: id+1,
-            status
-          }
-        })
-      },
-      onAgentChanged: (status) => {
-        const {id} = this.props.umoEvent.onAgentChanged
-        this.props.updateUmoEventState({
-          onAgentChanged: {
-            id: id+1,
-            status
-          }
-        })
-      },
-      onAsyncFinished: (atype, taskid, ret, desc) => {
-        const {id} = this.props.umoEvent.onAsyncFinished
-        this.props.updateUmoEventState({
-          onAsyncFinished: {
-            id: id+1,
-            atype,
-            taskid,
-            ret,
-            desc
-          }
-        })
-      },
-      onAllBusy: () => {
-        const {id} = this.props.umoEvent.onAllBusy
-        this.props.updateUmoEventState({
-          onAllBusy: {
-            id: id+1
-          }
-        })
-      },
-      onQuelen: () => {
-        const {id} = this.props.umoEvent.onQuelen
-        this.props.updateUmoEventState({
-          onQuelen: {
-            id: id+1
-          }
-        })
-      },
-      onSmsincome: (dtime, from, content, slot) => {
-        const {id} = this.props.umoEvent.onSmsincome
-        this.props.updateUmoEventState({
-          onSmsincome: {
-            id: id+1,
-            dtime,
-            from,
-            content,
-            slot
-          }
+    this.getCallRecord()
+    // this.getHandUpCallRecord()
+  }
+  getHandUpCallRecord = async() => {
+    clearTimeout(this.timer)
+    try {
+      const {data} = await callRecord({callStatus: 'CALL_HANGUP'})
+      if(data.code === 0) {
+        this.setState({
+          callHistoryData: data.content
         })
       }
+      this.timer = setTimeout(()=>{this.getHandUpCallRecord()}, 5000)
+    } catch (error) {
+      throw new Error(error)
     }
-    )
+  }
+  getCallRecord = async() => {
+   clearTimeout(this.timer1)
+   try {
+    const {data} = await callRecord({callStatus: 'CALL_FAILURE'})
+    if(data.code === 0) {
+      this.setState({
+        callInListData: data.content
+      })
+    } else {
+    }
+    this.timer = setTimeout(()=>{this.getCallRecord()}, 5000)
+   } catch (error) {
+     throw new Error(error)
+   }
+   
   }
   // 登出
   logOutEvent = () => {
@@ -233,7 +162,6 @@ export class HeaderCase extends Component {
       cancelText: '取消',
       onOk:()=>{
         sessionStorage.clear()
-        localStorage.clear()
         this.props.history.push('login')
       }
     });
@@ -391,13 +319,8 @@ export class HeaderCase extends Component {
 
 
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
-  umoEvent: state.umoEvent
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
-  updateCommationInformationEvent: (commationInfo)=>dispatch(updateCommationInformation(commationInfo)),
-  updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
-  // resetCommationInformationEvent: ()=>dispatch(resetCommationInformation())
-  resetUmoEventState: ()=>dispatch(resetUmoEventState())
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderCase))

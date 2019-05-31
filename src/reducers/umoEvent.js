@@ -50,6 +50,7 @@ const initUmoEventState = {
   }
 }
 const umoEvent = (state = initUmoEventState, action) => {
+  console.log(action)
   switch (action.type) {
     case 'UPDATE_UMOEVENT_STATE':
       return {

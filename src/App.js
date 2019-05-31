@@ -49,6 +49,10 @@ import './styles/common.css';
 
 
 function getBreadCrumdArray (history) {
+  const isLogin = sessionStorage.getItem('isLogin')
+  if(!isLogin) {
+   history.push({pathname: '/login'})
+  } 
   // 1、获取当前路径
   // 如果没有父菜单： 即没有 pathname.split('_')[1] = undefined
   const pathname = history.location.pathname  // 当前路径
@@ -67,11 +71,13 @@ function getBreadCrumdArray (history) {
       return item.id === pathname.slice(1)
     })
     breadCrumdArr.push({name: childArray[0].name, path: '/' + childArray[0].id})
-  } else {
+  } else if(parentMenu){
     const array = menuList.filter((item) => {
       return item.subId === parentMenu.slice(1)
     })
-    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+    if(array.length) {
+      breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+    }
   }
   return breadCrumdArr
 } 
