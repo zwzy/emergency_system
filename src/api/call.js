@@ -51,7 +51,16 @@ export function addGroup (data = {}) {
 export function findUserByDept (data = {}) {
   return fetch({
     baseURL: baseCallUrl,
-    url: '/addGroup',
+    url: '/findUserByDept',
+    method: 'GET',
+    params: data
+  })
+} 
+// 根据部门与关键字搜索
+export function findAllDeptInfo (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/findAllDeptInfo',
     method: 'GET',
     params: data
   })

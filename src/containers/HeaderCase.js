@@ -7,55 +7,14 @@ import Header from '../components/Header'
 import {Modal, message} from 'antd'
 
 import { btnlist } from '../utils/config'
-import { callRecord } from '../api/call'
+import { callRecord} from '../api/call'
 
-import {hangUpPhone} from '../utils/umo'
+import {hangUpPhone, userLoginACD} from '../utils/umo'
 
 const modalItemStyle = {margin: '8px 0'}
-const callOutColumns = [
-  {
-    title: '群组名',
-    dataIndex: 'groupName',
-    width: 250
-  },
-  {
-    title: '拨打',
-    dataIndex: '',
-    width: 250
-  }
-];
-const callInListColumns = [
-  {
-    title: '联系电话',
-    dataIndex: 'mobile',
-    width: 250
-  },
-  {
-    title: '来电时间',
-    dataIndex: 'callDate',
-    width: 250
-  },
-  {
-    title: '状态',
-    dataIndex: 'callStatus',
-    width: 250
-  }
-];
-const callOtherColumns = [
-  {
-    title: '群组名',
-    dataIndex: 'groupName',
-    width: 250
-  },
-  {
-    title: '拨打',
-    dataIndex: '',
-    width: 250
-  }
-];
+
 export class HeaderCase extends Component {
   static propTypes = {
-    userInformation: PropTypes.object
   }
   constructor(props) {
     super(props)
@@ -70,8 +29,6 @@ export class HeaderCase extends Component {
         handupTime: '--', // 挂断时间
         talkTimer: '--' // 通话时长
       },
-      type: 'hold',
-      handleBtnlist: btnlist,
       // 来电弹窗
       callInModalIsShow: false,
       // 拨出
@@ -94,7 +51,6 @@ export class HeaderCase extends Component {
       callOtherIsShow: false,
       callOtherData: [],
       // 队列
-      callInListData: [],
       callInListIsShow: false, // 来电通知modal
     }
   }
@@ -120,9 +76,11 @@ export class HeaderCase extends Component {
     })
   }
   componentDidMount() {
-    this.getCallRecord()
-    // this.getHandUpCallRecord()
   }
+  componentWillUnmount() {
+    alert(11)
+  }
+  // 得到顺利挂断记录
   getHandUpCallRecord = async() => {
     clearTimeout(this.timer)
     try {
@@ -137,22 +95,7 @@ export class HeaderCase extends Component {
       throw new Error(error)
     }
   }
-  getCallRecord = async() => {
-   clearTimeout(this.timer1)
-   try {
-    const {data} = await callRecord({callStatus: 'CALL_FAILURE'})
-    if(data.code === 0) {
-      this.setState({
-        callInListData: data.content
-      })
-    } else {
-    }
-    this.timer = setTimeout(()=>{this.getCallRecord()}, 5000)
-   } catch (error) {
-     throw new Error(error)
-   }
-   
-  }
+ 
   // 登出
   logOutEvent = () => {
     Modal.confirm({
@@ -229,22 +172,7 @@ export class HeaderCase extends Component {
   callQueueEvent = () => {
     // acd 指定的队列号， 为空返回所有 (acd, cb)
    this.callInListShowEvent()
-    window.UMO.calllist((cmd, result)=>{
-      if (result.errno == 0)
-      {
-        const callInListData = result.calllist;
-        this.setState({
-          callInListData
-        })
-      }
-    }, null);
   }
-
-  // 部门选择
-  handleSelectChange = (value) => {
-    console.log(`selected ${value}`);
-  }
-  
   goToRouter = () => {
     this.props.history.push('/emergency_telegram')
   }
@@ -260,10 +188,9 @@ export class HeaderCase extends Component {
     }
     const {
       callInModalIsShow,
-      type, 
       callOtherData, callOtherIsShow,
-      callOutData, callOutIsShow,
-      callInListIsShow, callInListData,
+      callOutIsShow, callOutData,
+      callInListIsShow,
     } = this.state
     return (
       <Header 
@@ -302,15 +229,13 @@ export class HeaderCase extends Component {
          callInModalIsShow, callinInfo,
          // 头部菜单列表
          btnlist, 
-         // 挂机恢复
-         type, 
          modalItemStyle, 
         //  拨出
-         callOutIsShow, callOutData, callOutColumns,
+         callOutIsShow, callOutData,
         //  转接
-         callOtherColumns, callOtherIsShow, callOtherData,
+         callOtherIsShow, callOtherData,
         //  队列
-         callInListIsShow, callInListColumns, callInListData,
+         callInListIsShow
         } } 
        ></Header>  
     )

@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import color from '../utils/color'
 import config from '../utils/config'
 import BaseCommunication from '../components/base/BaseCommunication'
+import BaseCallOnLineList from '../components/base/BaseCallOnLineList'
 import PropTypes from 'prop-types'
 import {callOutPhone, startTransferPhone} from '../utils/umo'
-import { Icon, Button, Modal, Table, } from 'antd';
+import { Icon, Button, Modal} from 'antd';
 
 const MyIcon = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
@@ -215,6 +216,7 @@ function Header({event, data}) {
       <Modal
         /* 拨出modal */
         width={800}
+        maskClosable = {false}
         title='拨打'
         visible={data.callOutIsShow}
         onCancel={()=>event.callOutShowEvent()}
@@ -241,7 +243,9 @@ function Header({event, data}) {
           </div>
           <div className="rt-box">
              <BaseCommunication 
-              callHistoryData={data.callOutData.callHistoryData} 
+              activeDept ={data.activeDept}
+              callOutDept={data.callOutAllDept}
+              callOutBook={data.callOutBook} 
               handleSelectChange={event.handleSelectChange}
               onSearch={event.searchBykeyWord}>
               </BaseCommunication>
@@ -253,6 +257,7 @@ function Header({event, data}) {
       <Modal
         /* 转接modal */
         title='今日执班列表'
+        maskClosable = {false}
         visible={data.callOtherIsShow}
         onCancel={()=>event.callOtherShowEvent()}
         footer={null}>
@@ -321,11 +326,12 @@ function Header({event, data}) {
       <Modal
         /* 队列列表modal */
         width={900}
+        maskClosable = {false}
         title='呼叫队列'
         visible={data.callInListIsShow}
         onCancel={()=>event.callInListShowEvent()}
         footer={null}>
-        <Table columns={data.callInListColumns} dataSource={data.callInListData} scroll={{y: 265}} pagination={false} />
+        {data.callInListIsShow && <BaseCallOnLineList></BaseCallOnLineList>}
       </Modal>
       {
         data.callInModalIsShow && <CallInModal>

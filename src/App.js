@@ -75,6 +75,7 @@ function getBreadCrumdArray (history) {
     const array = menuList.filter((item) => {
       return item.subId === parentMenu.slice(1)
     })
+    console.log(array)
     if(array.length) {
       breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
     }

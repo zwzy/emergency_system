@@ -149,14 +149,16 @@ export function userLoginACD(data = {},
     epwd: window.hex_md5(''),                      // 企业密码
     EvtHandler: setEvtHandler(event),                   // 回调方法
   }
-  umoStart(params,
+  _umoStart(params,
     okCallback ,
     noCallback)
 }
-export function umoStart(params,
+function _umoStart(params,
   okCallback = () => {},
   noCallback = () => {})
   {
+    console.log(111)
+    okCallback()
     const {apihost, bizhost, eid, aid, adn, apwd, epwd, EvtHandler} = params
     UMO.start(apihost, bizhost, EvtHandler, eid, epwd, aid, apwd,adn, function(cmd, result) {
       if(result.errno === 0) {
