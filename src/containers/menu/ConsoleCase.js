@@ -321,7 +321,7 @@ export class ConsoleCase extends Component {
 
         {/* 通话历史 Modal*/}
         <Modal
-          title={<div>通话历史（<span style={{color: color.$primary}}>18755489161</span>）</div>}
+          title={<div>通话历史（<span style={{color: color.$primary}}>{commationInfomation.phoneNumber}</span>）</div>}
           visible={callHistoryIsShow}
           onCancel={()=>this.historyShowEvent()}
           footer={null}
