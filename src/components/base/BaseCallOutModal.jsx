@@ -181,7 +181,7 @@ export default class BaseCallOutModal extends Component {
                   <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
               </div>
               <div className="rt-item">
-                <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.userPhone, uud: '4555', gid: '@0'})} />
+                <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.mobile, uud: '4555', gid: '@0'})} />
               </div>
             </div>
           )

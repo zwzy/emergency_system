@@ -16,6 +16,7 @@ const commationInfo = (state = commationInfoState, action) => {
         ...action.commationInfo
       }
     case 'RESEET_COMMATION_INFORMATION':
+      console.log(999)
       return commationInfoState
     default:
       return state

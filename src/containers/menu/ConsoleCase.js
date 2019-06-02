@@ -138,9 +138,11 @@ export class ConsoleCase extends Component {
     }
   }
   componentWillReceiveProps(props) {
-    if(props.commationInfomation.mobile !== this.props.commationInfomation.mobile) {
-      this.saveUserInfoByphoneNumber(props.commationInfomation.mobile)
-      this.showHistoryCallByPhone(props.commationInfomation.mobile)
+    if(props.commationInfomation.callId !== this.props.commationInfomation.callId) {
+      if(props.commationInfomation.mobile !== '--') {
+        this.saveUserInfoByphoneNumber(props.commationInfomation.mobile)
+        this.showHistoryCallByPhone(props.commationInfomation.mobile)
+      }
     }
     if(props.commationInfomation.callStatus !== this.props.commationInfomation.callStatus) {
       if(props.commationInfomation.callStatus === 'CALL_ONLINE'){
