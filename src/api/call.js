@@ -46,11 +46,29 @@ export function findCallBook (data = {}) {
     params: data
   })
 } 
-// 添加通讯录
+// 添加通讯群组
 export function addGroup (data = {}) {
   return fetch({
     baseURL: baseCallUrl,
     url: '/addGroup',
+    method: 'GET',
+    params: data
+  })
+}
+// 修改通讯群组
+export function updateGroup (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/updateGroup',
+    method: 'GET',
+    params: data
+  })
+}
+// 查询通讯群组
+export function listGroup (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/listGroup',
     method: 'GET',
     params: data
   })
