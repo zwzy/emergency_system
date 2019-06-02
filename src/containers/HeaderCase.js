@@ -103,15 +103,14 @@ export class HeaderCase extends Component {
     const nowData = getNowDate()
     // 1、 显示电话信息
     // 2、 设置来电时间
-    this.updateCommationInformation({
-      callDate: nowData, mibile: ano
+    this.props.updateCommationInformation({
+      callDate: nowData, mobile: ano
     })
-    this.saveCallHistory()
+    this.saveCallHistory(ano, nowData)
   }
   // 2、保存通话号码与通话来电时间，获取id
-  saveCallHistory = async () => {
+  saveCallHistory = async (mobile, callDate) => {
     try {
-      const {mobile, callDate} = this.props.commationInfomation
       const {data} = await findCallUser({mobile, callDate})
       if(data.code === 0) {
         const {callId} = data.content 
@@ -154,7 +153,7 @@ export class HeaderCase extends Component {
         throw new Error(error)
       }
       this.props.updateCommationInformation({
-        callId, answerDate: nowDate, callStatus: 'CALL_FAILURE'
+        callId, answerDate: nowDate, callStatus: 'CALL_ONLINE'
       })
       // 转接的时候会执行两次
   }
@@ -162,6 +161,7 @@ export class HeaderCase extends Component {
   onHookChangedEvent = async ({status}) => {
     if(status === '1') {
       const {callId, callStatus, answerDate} = this.props.commationInfomation
+      console.log(8888, callId, callStatus, answerDate)
       const nowDate = getNowDate()
       const nowTime = getNowTime()
       const timer = nowTime - getNowTime(answerDate)

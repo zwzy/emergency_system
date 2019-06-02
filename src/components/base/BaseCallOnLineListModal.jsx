@@ -58,7 +58,7 @@ export default class BaseCallOnLineListModal extends Component {
   render() {
     const { callInListData} = this.state
     return (
-      <Table columns={callInListColumns} dataSource={callInListData} scroll={{y: 265}} pagination={false} />
+      <Table columns={callInListColumns} rowKey={(record)=>record.mobile + record.callDate} dataSource={callInListData} scroll={{y: 265}} pagination={false} />
     )
   }
 }

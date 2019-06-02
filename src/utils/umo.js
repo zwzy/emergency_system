@@ -25,9 +25,9 @@ function setEvtHandler (event){
   // bno:”” 被叫号码 
   // uud:”” 业务数据
   onTalked: (ano, bno, uud) => {
+    console.log('onTalked', ano, bno, uud)
     // 转接的时候会执行两次， 1次是18755666677打给78897378483， 这个再转给2000队列，2000队列转到1000。
     event.onTalked(ano, bno, uud)
-    console.log("onTalked: ano=" + ano + " bno=" + bno + " uud=" + uud);
   },
   // 振铃停止
   // 在来话接接听或久叫不应用户端挂断时触发。
@@ -49,8 +49,8 @@ function setEvtHandler (event){
   // 在话务员示忙、示闲、接听电话或挂断电话时触发。
   // 话务员状态:1 未登录 2 空闲 3 离开 4 工作
   onAgentChanged: (status) => {
-      event.onAgentChanged(status)
       console.log("onAgentChanged: status=" + status);
+      event.onAgentChanged(status)
   },
   // 异步任务结束
   // 在异步呼叫结束时触发。

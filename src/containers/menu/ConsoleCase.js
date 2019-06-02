@@ -4,18 +4,19 @@ import { connect } from 'react-redux'                           // 用来连接r
 import { Modal, Table } from 'antd' 
 import Console from '../../components/menu/Console'                 // 引用的ui组件
 import color from '../../utils/color'
+import {formatSeconds, getNowTime} from '../../utils/common'
 import {findCallUser, callRecordMobile} from '../../api/call'
 
 // 历史记录表格数据
-const callHistoryColumns = [
+const historyCallColumns = [
   {
     title: '来电时间',
-    dataIndex: 'time',
+    dataIndex: 'callDate',
     width: 250
   },
   {
     title: '通话时长',
-    dataIndex: 'timeLonger',
+    dataIndex: 'callDuration',
   }
 ];
 const callHistoryData = [];
@@ -107,6 +108,7 @@ export class ConsoleCase extends Component {
       trainInfoIsShow: false,        // 违章记录是否显示
       dirverName: '',                // 选中的司机名
       timer: '00:00:00',             // 通话时长
+      historyCallByPhoneData: [],    // 某个人的通话记录
       trainValueInfo: {
         driverCode: '--',
         driverName: '--',
@@ -135,16 +137,37 @@ export class ConsoleCase extends Component {
       ]
     }
   }
-  componentDidMount () {
-    this.showHistoryCallByPhone()
-  }
   componentWillReceiveProps(props) {
-    console.log('commationInfomation', props)
+    if(props.commationInfomation.mobile !== this.props.commationInfomation.mobile) {
+      this.saveUserInfoByphoneNumber(props.commationInfomation.mobile)
+      this.showHistoryCallByPhone(props.commationInfomation.mobile)
+    }
+    if(props.commationInfomation.callStatus !== this.props.commationInfomation.callStatus) {
+      if(props.commationInfomation.callStatus === 'CALL_ONLINE'){
+        console.log(1111111111, props.commationInfomation)
+        this.setTimer(props.commationInfomation.answerDate)
+      }
+      if(props.commationInfomation.callStatus === 'CALL_HANGUP') {
+        clearTimeout(this.timer)
+      }
+    }
+  }
+  // 设置通话时长 1s中刷新一次
+  setTimer = (answerDate) => {
+    const nowTime = getNowTime()
+    const timer = nowTime - getNowTime(answerDate)
+    const timerSecond = formatSeconds(timer)
+    console.log(timerSecond)
+    this.setState({
+      timer: timerSecond
+    })
+    this.timer = setTimeout(()=>{
+      this.setTimer(answerDate)
+    }, 1000)
   }
   // 填充来的人的信息
-  saveUserInfoByphoneNumber = async () => {
+  saveUserInfoByphoneNumber = async (mobile) => {
      try {
-       const {mobile} = this.props.commationInfomation
        const {data} = await findCallUser({mobile})
        const trainValueInfo = data.content
        const newTrainValueInfo = {...trainValueInfo, model_trainCode: trainValueInfo.model+'/'+trainValueInfo.trainCode}
@@ -155,10 +178,13 @@ export class ConsoleCase extends Component {
      } catch (error) {
      }
   }
-  showHistoryCallByPhone = async() => {
+  showHistoryCallByPhone = async(mobile) => {
     try {
-     const {data} =  callRecordMobile({mobile: '1000'})
+     const {data} =  callRecordMobile({mobile})
      if(data.code === 0) {
+       this.setState({
+         historyCallByPhoneData: data.content
+       })
      }
     } catch (error) {
       
@@ -189,7 +215,7 @@ export class ConsoleCase extends Component {
   }
 
   render() {
-    const {timer, trainData, dirverName, trainValueInfo, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow} = this.state
+    const {historyCallByPhoneData, timer, trainData, dirverName, trainValueInfo, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow} = this.state
     const {commationInfomation} = this.props
     return (
       <div>
@@ -205,7 +231,6 @@ export class ConsoleCase extends Component {
             trainInfoShowEvent: this.trainInfoShowEvent,
           }}
         />
-
         {/* 通话历史 Modal*/}
         <Modal
           title={<div>通话历史（<span style={{color: color.$primary}}>{this.props.commationInfomation.mobile}</span>）</div>}
@@ -213,7 +238,7 @@ export class ConsoleCase extends Component {
           onCancel={()=>this.historyShowEvent()}
           footer={null}
         >
-          <Table columns={callHistoryColumns} dataSource={callHistoryData} scroll={{y: 265}} pagination={false} />
+          <Table columns={historyCallColumns} dataSource={historyCallByPhoneData} scroll={{y: 265}} pagination={false} />
         </Modal>
 
         {/* 司机违章信息 Modal */}
