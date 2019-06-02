@@ -70,7 +70,7 @@ const CallOutBox = styled.div`
     box-sizing: border-box;
     overflow: auto;
   }
-`
+  `
 export default class BaseCallOutModal extends Component {
   static propTypes = {
     // prop: PropTypes
@@ -177,7 +177,7 @@ export default class BaseCallOutModal extends Component {
           return (
             <div className="callout-item" key={index}>
               <div className="lf-item">
-                  <div><span className='right-divider'>{item.userName}</span> <span>{item.mobile}</span></div>
+                  <div><span className='right-divider'>{item.name}</span> <span>{item.mobile}</span></div>
                   <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
               </div>
               <div className="rt-item">

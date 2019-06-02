@@ -19,7 +19,15 @@ export function answerCall (data = {}) {
     params: data
   })
 } 
-
+// 回复通话状态
+export function callRecordMobile (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/callRecordMobile',
+    method: 'GET',
+    params: data
+  })
+} 
 // 根据状态查记录
 export function callRecord (data = {}) {
   return fetch({
