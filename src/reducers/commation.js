@@ -1,12 +1,12 @@
 // 通话概括信息
-
 const commationInfoState = {
-  phoneNumber:'--', // 号码
-  timer: '--',  // 当前通话时长
-  comeTime: '--', // 来电时间
-  talkStartTime: '--',  // 接听时间
-  handupTime: '--', // 挂断时间
-  talkTimer: '--' // 通话时长
+  callId: '',           // 通话id
+  mobile:'--',          // 号码
+  callDate: '--',       // 来电时间
+  answerDate: '--',     // 接听时间
+  hangupDate: '--',     // 挂断时间
+  callDuration: '--',   // 通话时长
+  callStatus: '--'      // 通话状态
 }
 const commationInfo = (state = commationInfoState, action) => {
   switch (action.type) {

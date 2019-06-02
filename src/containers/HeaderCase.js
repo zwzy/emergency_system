@@ -5,10 +5,14 @@ import { connect } from 'react-redux'                           // 用来连接r
 
 import Header from '../components/Header'
 import {Modal, message} from 'antd'
-import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
+import {updateUmoEventState} from '../actions/umo'
+import {updateCommationInformation, resetCommationInformation} from '../actions/call'
 import { btnlist } from '../utils/config'
+
 import { sign } from '../api/user'
-import {getNowDate} from '../utils/common'
+import { answerCall, findCallUser } from '../api/call'
+
+import { getNowDate, getNowTime } from '../utils/common'
 
 import {hangUpPhone, userLoginACD} from '../utils/umo'
 
@@ -22,14 +26,6 @@ export class HeaderCase extends Component {
     this.timer = null
     this.timer1 = null
     this.state = {
-      commationInfomation:{
-        phoneNumber:'--', // 号码
-        timer: '--',  // 当前通话时长
-        comeTime: '--', // 来电时间
-        talkStartTime: '--',  // 接听时间
-        handupTime: '--', // 挂断时间
-        talkTimer: '--' // 通话时长
-      },
       // 来电弹窗
       callInModalIsShow: false,
       // 拨出
@@ -62,6 +58,129 @@ export class HeaderCase extends Component {
       callInListIsShow: !callInListIsShow
     })
   }
+  
+  componentWillReceiveProps(props) {
+    if(props.umoEventState.onAgentChanged.id !== this.props.umoEventState.onAgentChanged.id) {
+      if(props.umoEventState.onAgentChanged.status ==='4') {
+        this.props.history.push('/')
+      }
+    }
+    if(props.umoEventState.onCallincome.id !== this.props.umoEventState.onCallincome.id) {
+      this.onCallincomeEvent(props.umoEventState.onCallincome)
+    }
+    if(props.umoEventState.onHookChanged.id !== this.props.umoEventState.onHookChanged.id) {
+      this.onHookChangedEvent(props.umoEventState.onHookChanged)
+    }
+    if(props.umoEventState.onTalked.id !== this.props.umoEventState.onTalked.id) {
+      this.onTalkedEvent(props.umoEventState.onTalked)
+    }
+    if(props.umoEventState.onRingStoped.id !== this.props.umoEventState.onRingStoped.id){
+      this.onRingStopedEvent()
+    } 
+  }
+  // callId: '',           // 通话id
+  // mibile:'--',          // 号码
+  // callDate: '--',       // 来电时间
+  // answerDate: '--',     // 接听时间
+  // hangupDate: '--',     // 挂断时间
+  // callDuration: '--',   // 通话时长
+  // callStatus: '--'      // 通话状态
+
+  // 1、接听时回调
+  onCallincomeEvent = (data) => {
+    const {ano} = data
+    // const initCommationInfomation = {
+    //   callId: '',           // 通话id
+    //   mibile:'--',          // 来电号码
+    //   callDate: '--',       // 来电时间
+    //   answerDate: '--',     // 接听时间
+    //   hangupDate: '--',     // 挂断时间
+    //   callDuration: '--',   // 通话时长
+    //   callStatus: '--'      // 通话状态
+    // }
+    //  重置通话概况
+    this.props.resetCommationInformation()
+    const nowData = getNowDate()
+    // 1、 显示电话信息
+    // 2、 设置来电时间
+    this.updateCommationInformation({
+      callDate: nowData, mibile: ano
+    })
+    this.saveCallHistory()
+  }
+  // 2、保存通话号码与通话来电时间，获取id
+  saveCallHistory = async () => {
+    try {
+      const {mobile, callDate} = this.props.commationInfomation
+      const {data} = await findCallUser({mobile, callDate})
+      if(data.code === 0) {
+        const {callId} = data.content 
+        this.props.updateCommationInformation({
+          callId
+        })
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+ } 
+
+  // 3、挂断时的回调，改变电话状态
+  onRingStopedEvent = async () => {
+    const {callId} = this.props.commationInfomation
+    const nowDate = getNowDate()
+    try {
+      const {data} = await answerCall({callId, callStatus: 'CALL_FAILURE', hangupDate: nowDate})
+      if(data.code === 0) {
+        console.log('挂断记录成功')
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+    this.props.updateCommationInformation({
+      callId, hangupDate: nowDate, callStatus: 'CALL_FAILURE'
+    })
+  } 
+ 
+  // 4、接听时回调
+  onTalkedEvent = async () => {
+    const {callId} = this.props.commationInfomation
+    const nowDate = getNowDate()
+    try {
+      const {data} = await answerCall({callId, callStatus: 'CALL_ONLINE', answerDate: nowDate})
+      if(data.code === 0) {
+        console.log('接听记录成功')
+      }
+      } catch (error) {
+        throw new Error(error)
+      }
+      this.props.updateCommationInformation({
+        callId, answerDate: nowDate, callStatus: 'CALL_FAILURE'
+      })
+      // 转接的时候会执行两次
+  }
+  // 5、完成时挂断时回调
+  onHookChangedEvent = async ({status}) => {
+    if(status === '1') {
+      const {callId, callStatus, answerDate} = this.props.commationInfomation
+      const nowDate = getNowDate()
+      const nowTime = getNowTime()
+      const timer = nowTime - getNowTime(answerDate)
+      const timerSecond = parseInt(timer/1000)
+      if(callStatus !== 'CALL_ONLINE' ) return
+      try {
+        const {data} = await answerCall({callId, callStatus: 'CALL_HANGUP', hangupDate: nowDate, callDuration: timerSecond})
+        if(data.code === 0) {
+          console.log('接听记录成功')
+        }
+      } catch (error) {
+        throw new Error(error)
+      }
+      this.props.updateCommationInformation({
+        callId, hangupDate: nowDate, callStatus: 'CALL_HANGUP', callDuration: timerSecond
+      })
+    }
+  }
+
   componentDidMount() {
     console.log(window.UMO._token)
     if(window.UMO._token) return
@@ -70,7 +189,7 @@ export class HeaderCase extends Component {
     userLoginACD(userInfo, {
       onReadyState: (status)=>{
         console.log(status)
-        const {id} = this.props.umoEvent.onReadyState
+        const {id} = this.props.umoEventState.onReadyState
         this.props.updateUmoEventState({
           onReadyState: {
             id: id+1, 
@@ -79,7 +198,7 @@ export class HeaderCase extends Component {
         })
       },
       onCallincome: (ano, bno ,uud) => {
-        const {id} = this.props.umoEvent.onCallincome
+        const {id} = this.props.umoEventState.onCallincome
         this.props.updateUmoEventState({
           onCallincome: {
             id: id+1, 
@@ -90,7 +209,7 @@ export class HeaderCase extends Component {
         })
       }, 
       onTalked: (ano, bno ,uud) => {
-        const {id} = this.props.umoEvent.onTalked
+        const {id} = this.props.umoEventState.onTalked
         this.props.updateUmoEventState({
           onTalked: {
             id: id+1, 
@@ -101,7 +220,7 @@ export class HeaderCase extends Component {
         })
       },
       onRingStoped: () => {
-        const {id} = this.props.umoEvent.onRingStoped
+        const {id} = this.props.umoEventState.onRingStoped
         this.props.updateUmoEventState({
           onRingStoped: {
             id: id+1
@@ -109,7 +228,7 @@ export class HeaderCase extends Component {
         })
       },
       onHookChanged: (status) => {
-        const {id} = this.props.umoEvent.onHookChanged
+        const {id} = this.props.umoEventState.onHookChanged
         console.log(2222222, status)
         this.props.updateUmoEventState({
           onHookChanged: {
@@ -119,7 +238,7 @@ export class HeaderCase extends Component {
         })
       },
       onAgentChanged: (status) => {
-        const {id} = this.props.umoEvent.onAgentChanged
+        const {id} = this.props.umoEventState.onAgentChanged
         this.props.updateUmoEventState({
           onAgentChanged: {
             id: id+1,
@@ -128,7 +247,7 @@ export class HeaderCase extends Component {
         })
       },
       onAsyncFinished: (atype, taskid, ret, desc) => {
-        const {id} = this.props.umoEvent.onAsyncFinished
+        const {id} = this.props.umoEventState.onAsyncFinished
         this.props.updateUmoEventState({
           onAsyncFinished: {
             id: id+1,
@@ -140,7 +259,7 @@ export class HeaderCase extends Component {
         })
       },
       onAllBusy: () => {
-        const {id} = this.props.umoEvent.onAllBusy
+        const {id} = this.props.umoEventState.onAllBusy
         this.props.updateUmoEventState({
           onAllBusy: {
             id: id+1
@@ -148,7 +267,7 @@ export class HeaderCase extends Component {
         })
       },
       onQuelen: () => {
-        const {id} = this.props.umoEvent.onQuelen
+        const {id} = this.props.umoEventState.onQuelen
         this.props.updateUmoEventState({
           onQuelen: {
             id: id+1
@@ -156,7 +275,7 @@ export class HeaderCase extends Component {
         })
       },
       onSmsincome: (dtime, from, content, slot) => {
-        const {id} = this.props.umoEvent.onSmsincome
+        const {id} = this.props.umoEventState.onSmsincome
         this.props.updateUmoEventState({
           onSmsincome: {
             id: id+1,
@@ -195,7 +314,7 @@ export class HeaderCase extends Component {
     });
   }
   // 签到
-  signEvent =  () => {
+  signEvent = () => {
     const nowData = getNowDate()
     const {userInfo} = this.props
     Modal.confirm({
@@ -230,6 +349,7 @@ export class HeaderCase extends Component {
       }
     });
   }
+
   // 挂断
   hangUpEvent = () => {
     Modal.confirm({
@@ -255,8 +375,6 @@ export class HeaderCase extends Component {
     console.log('转接')
     //  呼叫ID,或-1表示当前呼叫, 主叫显示, 目标号码, 用户数据 ,callback
   }
-
- 
   // 队列
   callQueueEvent = () => {
     // acd 指定的队列号， 为空返回所有 (acd, cb)
@@ -332,11 +450,14 @@ export class HeaderCase extends Component {
 }
 
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
-  umoEvent: state.umoEvent,
-  userInfo: state.user
+  umoEventState: state.umoEvent,
+  userInfo: state.user,
+  commationInfomation: state.commation
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
   updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
+  updateCommationInformation: (commationInfo) => dispatch(updateCommationInformation(commationInfo)),
+  resetCommationInformation: ()=>dispatch(resetCommationInformation())
 })
 
 
