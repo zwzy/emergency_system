@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Divider, Button,Empty } from 'antd'
+import { Divider, Button,Empty,Input,Table,Modal,Tag,Select } from 'antd'
 import Group from '../../components/communication/Group'                 // 引用的ui组件
 import { addGroup, updateGroup, listGroup, findAllDeptInfo, findUserByDept } from '../../api/call'
-
+import styled from 'styled-components'
+const Search = Input.Search
+const Option = Select.Option
 export class GroupCase extends Component {
   static propTypes = {
     // prop: PropTypes
@@ -112,7 +114,7 @@ export class GroupCase extends Component {
       console.log('getListGroup==',data)
       let grouplist = data.content.list
       grouplist.forEach((item,index)=>{
-        item.username = ''
+        item.key = index
       })
       this.setState({
         tableData: grouplist
@@ -150,29 +152,114 @@ export class GroupCase extends Component {
   }
   render() {
     let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,deptParams} = this.state
+    const ModalWrap = styled.div `
+      .modal-item {
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        .modal-txt {
+          width: 90px;
+        }
+        .taglist {
+          width: 360px;
+        }
+      }
+    `
+    const BaseCommunicationBox = styled.div `
+      .filter-box{
+        display: flex;
+        align-items: center;
+        padding-bottom: 8px;
+        .rt-box-title {
+          width: 90px;
+        }
+      }
+      .address-box{
+        height: 357px;
+        overflow: auto;
+        .address-item{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          border-bottom: 1px solid #eee;
+        }
+      }
+    `
     return (
       <div>
         <Group 
           data = {{
             tableData,
-            tableColumns,
-            addGroupModal,
-            callOutBook,
-            callOutAllDept,
-            deptParams
+            tableColumns
           }}
           event = {{
             handleInputVal: this.handleInputVal,
             clickSearch:this.clickSearch,
             handleConfrimAdd: this.handleConfrimAdd,
             handleCancelAdd: this.handleCancelAdd,
-            clickAdd: this.clickAdd,
-            searchBykeyWord: this.searchBykeyWord,
-            handleSelectChange: this.handleSelectChange,
-            getCallBook: this.getCallBook,
-            getAllDeptInfo: this.getAllDeptInfo
+            clickAdd: this.clickAdd
           }}
         />
+        <Modal
+          title="新增通讯群组"
+          visible={addGroupModal}
+          onOk={this.handleConfrimAdd}
+          onCancel={this.handleCancelAdd}
+          cancelText="取消"
+          okText="确定"
+        > 
+          <ModalWrap>
+            <div className='modal-item'>
+              <div className='modal-txt'>群组名：</div>
+              <div>
+                <Input onChange={(e) => this.handleInputVal(e)}  style={{width:'360px'}}/> 
+              </div>
+            </div>
+            <div className='modal-item'>
+              <div className='modal-txt'>已选择成员：</div>
+              <div className='taglist'>
+                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
+                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
+                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
+                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
+              </div>
+            </div>
+            <BaseCommunicationBox>
+              <div className="filter-box">
+                <div className='rt-box-title'>查询通讯录：</div>
+                <Select 
+                  placeholder="请选择部门"
+                  style={{ width: 150 }} 
+                  onChange={ this.handleSelectChange }
+                  >
+                    {callOutAllDept.map((item)=>{
+                      return(
+                        <Option key={item.deptNo} value={item.deptNo}>{item.deptName}</Option>
+                      )
+                    })}
+                  </Select>
+                <Search
+                  placeholder="关键字搜索"
+                  onSearch={this.searchBykeyWord}
+                  style={{ width: 150,marginLeft:'20px' }}
+                />
+              </div>
+              <div className='address-box'>
+                { callOutBook.map((item, index)=>{
+                  return (
+                    <div className="address-item" key={index}>
+                      <div><span className='right-divider'>{item.userName}</span></div>
+                      <div><span className='right-divider'>{item.work}</span></div>
+                    </div>
+                  )
+                  })
+                }
+                {!callOutBook.length && <Empty style={{marginTop: '100px' }} image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
+              </div>
+            </BaseCommunicationBox>
+          </ModalWrap>
+        </Modal>
       </div>
     )
   }
