@@ -111,7 +111,6 @@ export class GroupCase extends Component {
   getListGroup = async() =>{
     try {
       const {data} = await listGroup(this.searchParams)
-      console.log('getListGroup==',data)
       let grouplist = data.content.list
       grouplist.forEach((item,index)=>{
         item.key = index
@@ -128,8 +127,8 @@ export class GroupCase extends Component {
     console.log(`selected ${value}`);
     const {deptParams} = this.state
     this.setState({
-      deptParams: {...deptParams, deptNo: value},
-      activeDept: value
+      deptParams: {...deptParams, deptNo: value}
+      // activeDept: value
     }, ()=>{
       this.getCallBook()
     })
@@ -151,7 +150,6 @@ export class GroupCase extends Component {
     console.log('searchParams=',this.searchParams)
   }
   render() {
-    let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,deptParams} = this.state
     const ModalWrap = styled.div `
       .modal-item {
         margin-bottom: 10px;
@@ -186,6 +184,7 @@ export class GroupCase extends Component {
         }
       }
     `
+    let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept} = this.state
     return (
       <div>
         <Group 
@@ -200,7 +199,7 @@ export class GroupCase extends Component {
             handleCancelAdd: this.handleCancelAdd,
             clickAdd: this.clickAdd
           }}
-        />
+        ></Group>
         <Modal
           title="新增通讯群组"
           visible={addGroupModal}
@@ -232,17 +231,17 @@ export class GroupCase extends Component {
                   placeholder="请选择部门"
                   style={{ width: 150 }} 
                   onChange={ this.handleSelectChange }
-                  >
-                    {callOutAllDept.map((item)=>{
-                      return(
-                        <Option key={item.deptNo} value={item.deptNo}>{item.deptName}</Option>
-                      )
-                    })}
-                  </Select>
+                >
+                  {callOutAllDept.map((item)=>{
+                    return(
+                      <Option key={item.deptNo} value={item.deptNo}>{item.deptName}</Option>
+                    )
+                  })}
+                </Select>
                 <Search
                   placeholder="关键字搜索"
                   onSearch={this.searchBykeyWord}
-                  style={{ width: 150,marginLeft:'20px' }}
+                  style={{ width: 150,marginLeft:'20px'}}
                 />
               </div>
               <div className='address-box'>
@@ -250,7 +249,6 @@ export class GroupCase extends Component {
                   return (
                     <div className="address-item" key={index}>
                       <div><span className='right-divider'>{item.userName}</span></div>
-                      <div><span className='right-divider'>{item.work}</span></div>
                     </div>
                   )
                   })
