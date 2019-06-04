@@ -135,9 +135,13 @@ export class GroupCase extends Component {
     const {deptParams} = this.state
     try {
       const {data} = await findUserByDept(deptParams)
+      data.content.forEach((item,index)=>{
+        item.isSec = false
+      })
       this.setState({
         callOutBook: data.content
       })
+      console.log(555,this.state.callOutBook)
     } catch (error) {
       throw new Error(error)
     }
@@ -176,6 +180,25 @@ export class GroupCase extends Component {
     }, ()=>{
       this.getCallBook()
     })
+  }
+  // 选择通讯录人员加入群组
+  clickToSec = (index) => {
+    let temp = this.state.callOutBook
+    temp[index].isSec = !temp[index].isSec
+    let secTemp = [] // 这有问题 如果切换了部门 就callOutBook更新了
+    temp.forEach((item,idx)=>{
+      if(item.isSec) {
+        secTemp.push(item)
+      }
+    })
+    this.setState({
+      callOutBook: temp,
+      secUserlist : secTemp
+    })
+  }
+  // tag 标签的删除
+  delSeclist = (index) => {
+    console.log(index)
   }
   // 输入框
   handleInputVal = (e) => {
@@ -220,13 +243,13 @@ export class GroupCase extends Component {
               <div className='modal-txt'>已选择成员：</div>
               <div className='taglist'>
               {
-                secUserlist.map((item)=>{
+                secUserlist.map((item,index)=>{
                   return (
-                    <Tag style={{marginBottom:'6px'}} closable>张三</Tag>
+                    <Tag key={index} style={{marginBottom:'6px'}} closable onClose={() => this.delSeclist(index)}>{item.userName}</Tag>
                   )
                 })
               }
-              {!secUserlist.length && <span>无</span>}
+              {!secUserlist.length && <span style={{display:'inline-block' ,marginBottom:'6px'}}>无</span>}
               </div>
             </div>
             <BaseCommunicationBox>
@@ -252,7 +275,7 @@ export class GroupCase extends Component {
               <div className='address-box'>
                 { callOutBook.map((item, index)=>{
                   return (
-                    <div className="address-item" style={{cursor:'pointer'}} key={index}>
+                    <div className="address-item" style={{cursor:'pointer'}} key={index} onClick={() => this.clickToSec(index)}>
                       <div><span className='right-divider'>{item.userName}</span></div>
                       <div>
                         {
