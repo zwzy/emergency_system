@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Divider, Button,Empty,Input,Table,Modal,Tag,Select } from 'antd'
+import { Divider, Button,Empty,Input,Table,Modal,Tag,Select,Icon } from 'antd'
 import Group from '../../components/communication/Group'                 // 引用的ui组件
 import { addGroup, updateGroup, listGroup, findAllDeptInfo, findUserByDept } from '../../api/call'
 import styled from 'styled-components'
@@ -95,7 +95,8 @@ export class GroupCase extends Component {
       deptParams: {
         deptNo: '',
         keyword: ''
-      }
+      },
+      secUserlist: [] // 选择的列表
     }
   }
   componentDidMount(){
@@ -184,7 +185,7 @@ export class GroupCase extends Component {
     console.log('searchParams=',this.searchParams)
   }
   render() {
-    let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,deptParams} = this.state
+    let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,secUserlist} = this.state
     return (
       <div>
         <Group 
@@ -218,10 +219,14 @@ export class GroupCase extends Component {
             <div className='modal-item'>
               <div className='modal-txt'>已选择成员：</div>
               <div className='taglist'>
-                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
-                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
-                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
-                <Tag style={{marginBottom:'6px'}} closable>Tag 2</Tag>
+              {
+                secUserlist.map((item)=>{
+                  return (
+                    <Tag style={{marginBottom:'6px'}} closable>张三</Tag>
+                  )
+                })
+              }
+              {!secUserlist.length && <span>无</span>}
               </div>
             </div>
             <BaseCommunicationBox>
@@ -247,8 +252,14 @@ export class GroupCase extends Component {
               <div className='address-box'>
                 { callOutBook.map((item, index)=>{
                   return (
-                    <div className="address-item" key={index}>
+                    <div className="address-item" style={{cursor:'pointer'}} key={index}>
                       <div><span className='right-divider'>{item.userName}</span></div>
+                      <div>
+                        {
+                          item.isSec ? <Icon type="check-circle" theme="twoTone" twoToneColor="#40a9ff"/> :
+                          <Icon type="check-circle" theme="twoTone" twoToneColor="#cacaca"/>
+                        }
+                      </div>
                     </div>
                   )
                   })
