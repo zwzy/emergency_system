@@ -7,6 +7,40 @@ import { addGroup, updateGroup, listGroup, findAllDeptInfo, findUserByDept } fro
 import styled from 'styled-components'
 const Search = Input.Search
 const Option = Select.Option
+const ModalWrap = styled.div `
+.modal-item {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  .modal-txt {
+    width: 90px;
+  }
+  .taglist {
+    width: 360px;
+  }
+}
+`
+const BaseCommunicationBox = styled.div `
+.filter-box{
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+  .rt-box-title {
+    width: 90px;
+  }
+}
+.address-box{
+  height: 357px;
+  overflow: auto;
+  .address-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+}
+`
 export class GroupCase extends Component {
   static propTypes = {
     // prop: PropTypes
@@ -152,40 +186,6 @@ export class GroupCase extends Component {
   }
   render() {
     let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,deptParams} = this.state
-    const ModalWrap = styled.div `
-      .modal-item {
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: row;
-        .modal-txt {
-          width: 90px;
-        }
-        .taglist {
-          width: 360px;
-        }
-      }
-    `
-    const BaseCommunicationBox = styled.div `
-      .filter-box{
-        display: flex;
-        align-items: center;
-        padding-bottom: 8px;
-        .rt-box-title {
-          width: 90px;
-        }
-      }
-      .address-box{
-        height: 357px;
-        overflow: auto;
-        .address-item{
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px;
-          border-bottom: 1px solid #eee;
-        }
-      }
-    `
     return (
       <div>
         <Group 
