@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Divider, Button,Empty,Input,Table,Modal,Tag,Select,Icon } from 'antd'
+import { Divider, Button,Empty,Input,Modal,Select,Icon,message } from 'antd'
 import Group from '../../components/communication/Group'                 // 引用的ui组件
 import { addGroup, updateGroup, listGroup, findAllDeptInfo, findUserByDept } from '../../api/call'
 import styled from 'styled-components'
@@ -17,6 +17,20 @@ const ModalWrap = styled.div `
   }
   .taglist {
     width: 360px;
+    .tags {
+      box-sizing: border-box;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 14px;
+      display: inline-block;
+      margin-right: 8px;
+      margin-bottom: 6px;
+      padding: 0 7px;
+      font-size: 12px;
+      line-height: 20px;
+      background: #fafafa;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+    }
   }
 }
 `
@@ -96,7 +110,8 @@ export class GroupCase extends Component {
         deptNo: '',
         keyword: ''
       },
-      secUserlist: [] // 选择的列表
+      secUserlist: [], // 选择的列表
+      newGroupName: ''
     }
   }
   componentDidMount(){
@@ -118,7 +133,34 @@ export class GroupCase extends Component {
   }
   // 弹窗确认
   handleConfrimAdd = () => {
-
+    if(this.state.newGroupName === ''){
+      message.error('请输入群组名');
+      return false
+    }
+    if(this.state.secUserlist.length === 0){
+      message.error('请选择群组成员');
+      return false
+    }
+    let ids = []
+    this.state.secUserlist.forEach((item,index) => {
+      ids.push(item.userId)
+    })
+    console.log(this.state.newGroupName)
+    console.log(ids)
+    let postParams = {
+      ids:ids,
+      groupName:this.state.newGroupName
+    }
+    this.postGropAdd(postParams)
+  }
+  // 新增群组的接口
+  postGropAdd = async(params) => {
+    try {
+      const {data} = await addGroup(params)
+      console.log('新增是否成功？',data)
+    } catch (error) {
+      throw new Error(error)
+    }
   }
   // 得到部门
   getAllDeptInfo = async() => {
@@ -128,20 +170,27 @@ export class GroupCase extends Component {
         callOutAllDept: data.content
       })
     } catch (error) {
+      throw new Error(error)
     }
   }
   // 通讯录
   getCallBook = async() =>{
-    const {deptParams} = this.state
+    const {deptParams,secUserlist} = this.state
     try {
       const {data} = await findUserByDept(deptParams)
-      data.content.forEach((item,index)=>{
-        item.isSec = false
+      data.content.forEach((item)=>{
+        let hasit = secUserlist.find((itemfind) => {
+          return item.userId === itemfind.userId
+        })
+        if(hasit === undefined) {
+          item.isSec = false  // 没选择
+        } else {
+          item.isSec = true
+        }
       })
       this.setState({
         callOutBook: data.content
       })
-      console.log(555,this.state.callOutBook)
     } catch (error) {
       throw new Error(error)
     }
@@ -183,32 +232,66 @@ export class GroupCase extends Component {
   }
   // 选择通讯录人员加入群组
   clickToSec = (index) => {
-    let temp = this.state.callOutBook
-    temp[index].isSec = !temp[index].isSec
-    let secTemp = [] // 这有问题 如果切换了部门 就callOutBook更新了
-    temp.forEach((item,idx)=>{
-      if(item.isSec) {
-        secTemp.push(item)
+    let {callOutBook,secUserlist} = this.state
+    callOutBook[index].isSec = !callOutBook[index].isSec
+    callOutBook.forEach((item,idx)=>{
+      let hasit = secUserlist.find((itemfind) => {
+        return item.userId === itemfind.userId
+      })
+      if(hasit === undefined && item.isSec) { // 如果原本里面没有,但是现在选中了，就push
+        secUserlist.push(item)
+      }
+      if(hasit !== undefined && !item.isSec) { // 如果里面存在，但是现在取消选择了，就要从里面删掉  
+        let indexfind = secUserlist.findIndex(itemfind => {
+          return item.userId === itemfind.userId
+        })
+        secUserlist.splice(indexfind ,1)
       }
     })
     this.setState({
-      callOutBook: temp,
-      secUserlist : secTemp
+      callOutBook: callOutBook,
+      secUserlist : secUserlist
     })
   }
   // tag 标签的删除
-  delSeclist = (index) => {
-    console.log(index)
+  delSeclist = (item,index) => {
+    console.log('index==',index)
+    let {callOutBook,secUserlist} = this.state
+    let hasit = callOutBook.find((itemfind) => {
+      return item.userId === itemfind.userId
+    })
+    if(hasit !== undefined) { 
+      // 如果当前通讯列表中存在它，修改那一条选中状态标记，再把已选列表里面那条删除
+      let indexfind = callOutBook.findIndex(itemfind => {
+        return item.userId === itemfind.userId
+      })
+      callOutBook[indexfind].isSec = false
+      secUserlist.splice(index,1)
+    } else {
+      // 如果当前通讯列表中没它 表示搜索了或者筛选部门了，直接把已选列表里面那条删除
+      secUserlist.splice(index,1)
+    }
+    console.log('996==',secUserlist)
+    this.setState({
+      callOutBook:callOutBook,
+      secUserlist:secUserlist
+    })
   }
   // 输入框
   handleInputVal = (e) => {
     this.searchParams.keyword = e.target.value
   }
+  // 新增的群组名
+  handleNewGroup = (e) => {
+    this.setState({
+      newGroupName: e.target.value 
+    })
+  }
   clickSearch= ()=>{
     console.log('searchParams=',this.searchParams)
   }
   render() {
-    let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,secUserlist} = this.state
+    let {tableColumns,tableData,addGroupModal,callOutBook,callOutAllDept,secUserlist,newGroupName} = this.state
     return (
       <div>
         <Group 
@@ -236,7 +319,7 @@ export class GroupCase extends Component {
             <div className='modal-item'>
               <div className='modal-txt'>群组名：</div>
               <div>
-                <Input onChange={(e) => this.handleInputVal(e)}  style={{width:'360px'}}/> 
+                <Input value={newGroupName} onChange={(e) => this.handleNewGroup(e)}  style={{width:'360px'}}/> 
               </div>
             </div>
             <div className='modal-item'>
@@ -245,11 +328,14 @@ export class GroupCase extends Component {
               {
                 secUserlist.map((item,index)=>{
                   return (
-                    <Tag key={index} style={{marginBottom:'6px'}} closable onClose={() => this.delSeclist(index)}>{item.userName}</Tag>
+                    <span className='tags' key={index}>
+                      {item.userName}
+                      <Icon type="close" onClick={() => this.delSeclist(item,index)} style={{backgroundGround:'#cacaca',marginLeft:'4px'}}/>
+                    </span>
                   )
                 })
               }
-              {!secUserlist.length && <span style={{display:'inline-block' ,marginBottom:'6px'}}>无</span>}
+              {!secUserlist.length && <span style={{display:'inline-block' ,marginBottom:'7px'}}>无</span>}
               </div>
             </div>
             <BaseCommunicationBox>
@@ -257,6 +343,7 @@ export class GroupCase extends Component {
                 <div className='rt-box-title'>查询通讯录：</div>
                 <Select 
                   placeholder="请选择部门"
+                  allowClear
                   style={{ width: 150 }} 
                   onChange={ this.handleSelectChange }
                 >
