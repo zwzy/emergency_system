@@ -91,9 +91,9 @@ export class GroupCase extends Component {
         {
           title: '操作',
           dataIndex: 'operate',
-          render: (text, record) => (
+          render: (text) => (
             <span>
-              <Button type='primary'>修改</Button>
+              <Button type='primary' onClick={(text) => this.toEditGroup()}>修改</Button>
               <Divider type="vertical" />
               <Button type='danger'>删除</Button>
               <Divider type="vertical" />
@@ -111,7 +111,8 @@ export class GroupCase extends Component {
         keyword: ''
       },
       secUserlist: [], // 选择的列表
-      newGroupName: ''
+      newGroupName: '',
+      groupId: '' // 选择修改的群组id
     }
   }
   componentDidMount(){
@@ -124,6 +125,10 @@ export class GroupCase extends Component {
     this.setState({
       addGroupModal: true
     })
+  }
+  // 修改按钮
+  toEditGroup = (id) => {
+    console.log(11,id)
   }
   // 弹窗取消
   handleCancelAdd = () => {
@@ -147,17 +152,36 @@ export class GroupCase extends Component {
     })
     console.log(this.state.newGroupName)
     console.log(ids)
-    let postParams = {
-      ids:ids,
-      groupName:this.state.newGroupName
+    let postParams = null
+    if(this.state.groupId !== '') { // 编辑
+      postParams = {
+        ids:ids,
+        groupId: this.state.groupId,
+        groupName:this.state.newGroupName
+      }
+      this.updateGroupOfOne(postParams)
+    } else { // 新增
+      postParams = {
+        ids:ids,
+        groupName:this.state.newGroupName
+      }
+      this.postGropAdd(postParams)
     }
-    this.postGropAdd(postParams)
   }
   // 新增群组的接口
   postGropAdd = async(params) => {
     try {
       const {data} = await addGroup(params)
       console.log('新增是否成功？',data)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  // 更新某个分组
+  updateGroupOfOne = async(params) => {
+    try {
+      const {data} = await updateGroup(params)
+      console.log('更新是否成功？',data)
     } catch (error) {
       throw new Error(error)
     }
