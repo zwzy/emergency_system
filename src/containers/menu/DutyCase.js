@@ -252,16 +252,17 @@ export class DutyCase extends Component {
     if (index === 1) {
       return {
         children: <div style={{display:'flex',flexDirection:'row'}}>
-          <div style={{width:'72px',height:'108px',overflow:'hidden', textAlign:'center', borderRight:'1px solid #e8e8e8',boxSizing:'border-box'}}>
-            <div style={{height:'20px',overflow:'hidden',marginTop:'4px'}}>段</div>
-            <div style={{height:'20px',overflow:'hidden'}}>值</div>
-            <div style={{height:'20px',overflow:'hidden'}}>班</div>
-            <div style={{height:'20px',overflow:'hidden'}}>领</div>
-            <div style={{height:'20px',overflow:'hidden'}}>导</div>
+          <div style={{width:'72px',height:'130px',overflow:'hidden', textAlign:'center', borderRight:'1px solid #e8e8e8',boxSizing:'border-box'}}>
+            <div style={{height:'20px',overflow:'hidden',marginTop:'4px'}}>应</div>
+            <div style={{height:'20px',overflow:'hidden'}}>急</div>
+            <div style={{height:'20px',overflow:'hidden'}}>指</div>
+            <div style={{height:'20px',overflow:'hidden'}}>挥</div>
+            <div style={{height:'20px',overflow:'hidden'}}>干</div>
+            <div style={{height:'20px',overflow:'hidden'}}>部</div>
           </div>
           <div style={{display:'flex',flexDirection:'column',width:'160px'}}>
-            <div style={{textAlign:'center',height: '54px',lineHeight: '54px',borderBottom:'1px solid #e8e8e8'}}>运用专业</div>
-            <div style={{textAlign:'center',height: '54px',lineHeight: '54px'}}>技术专业</div>
+            <div style={{textAlign:'center',height: '65px',lineHeight: '65px',borderBottom:'1px solid #e8e8e8'}}>运用专业</div>
+            <div style={{textAlign:'center',height: '65px',lineHeight: '65px'}}>技术专业</div>
           </div>
         </div>,
         props: {
