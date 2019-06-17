@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -24,6 +25,7 @@ ReactDOM.render(
         </Switch>
       </BrowserRouter>
   </Provider>,
+  // <div>123456</div>,
   document.getElementById('root')
 );
 

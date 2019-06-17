@@ -5,7 +5,7 @@ import { Modal, Table } from 'antd'
 import Console from '../../components/menu/Console'                 // 引用的ui组件
 import color from '../../utils/color'
 import {formatSeconds, getNowTime} from '../../utils/common'
-import {findCallUser, callRecordMobile} from '../../api/call'
+import {findCallUser, callRecordMobile, trainUpdateInfo, driverBreakRuleInfo } from '../../api/call'
 
 // 历史记录表格数据
 const historyCallColumns = [

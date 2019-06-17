@@ -330,7 +330,7 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        sign({userId: userInfo.userName}).then(
+        sign({workno: userInfo.userName, password: '123456'}).then(
           res => {
             const {data} = res
             if(data.code === 0) {

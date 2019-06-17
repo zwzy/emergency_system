@@ -9,3 +9,21 @@ export function sign (data = {}) {
     params: data
   })
 } 
+// 签到总览
+export function signView (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/signShow',
+    method: 'GET',
+    params: data
+  })
+}
+// 签到记录
+export function signList (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/signList',
+    method: 'GET',
+    params: data
+  })
+}
