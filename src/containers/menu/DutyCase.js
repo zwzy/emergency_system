@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 import Duty from '../../components/menu/Duty'                 // 引用的ui组件
-
+import { signList, signShow } from '../../api/user'
 export class DutyCase extends Component {
   static propTypes = {
     // prop: PropTypes
@@ -19,6 +19,7 @@ export class DutyCase extends Component {
       worktime: ''
     }
     this.state = {
+      signDate: '', // 日期参数
       tableColumns: [ // 签到记录表头
         {
           title: '序号',
@@ -252,16 +253,17 @@ export class DutyCase extends Component {
     if (index === 1) {
       return {
         children: <div style={{display:'flex',flexDirection:'row'}}>
-          <div style={{width:'72px',height:'108px',overflow:'hidden', textAlign:'center', borderRight:'1px solid #e8e8e8',boxSizing:'border-box'}}>
-            <div style={{height:'20px',overflow:'hidden',marginTop:'4px'}}>段</div>
-            <div style={{height:'20px',overflow:'hidden'}}>值</div>
-            <div style={{height:'20px',overflow:'hidden'}}>班</div>
-            <div style={{height:'20px',overflow:'hidden'}}>领</div>
-            <div style={{height:'20px',overflow:'hidden'}}>导</div>
+          <div style={{width:'72px',height:'130px',overflow:'hidden', textAlign:'center', borderRight:'1px solid #e8e8e8',boxSizing:'border-box'}}>
+            <div style={{height:'20px',overflow:'hidden',marginTop:'4px'}}>应</div>
+            <div style={{height:'20px',overflow:'hidden'}}>急</div>
+            <div style={{height:'20px',overflow:'hidden'}}>指</div>
+            <div style={{height:'20px',overflow:'hidden'}}>挥</div>
+            <div style={{height:'20px',overflow:'hidden'}}>干</div>
+            <div style={{height:'20px',overflow:'hidden'}}>部</div>
           </div>
           <div style={{display:'flex',flexDirection:'column',width:'160px'}}>
-            <div style={{textAlign:'center',height: '54px',lineHeight: '54px',borderBottom:'1px solid #e8e8e8'}}>运用专业</div>
-            <div style={{textAlign:'center',height: '54px',lineHeight: '54px'}}>技术专业</div>
+            <div style={{textAlign:'center',height: '65px',lineHeight: '65px',borderBottom:'1px solid #e8e8e8'}}>运用专业</div>
+            <div style={{textAlign:'center',height: '65px',lineHeight: '65px'}}>技术专业</div>
           </div>
         </div>,
         props: {
@@ -274,31 +276,46 @@ export class DutyCase extends Component {
     }
   }
   componentDidMount(){
-    let tempData = []
-    for (let i = 0; i < 5; i++) {
-      tempData.push({
-        key: i,
-        id: i,
-        apartment: 'haha',
-        job: 'hhhh',
-        name: 'dez',
-        ipnum:'2222',
-        createtime: `no. ${i}`
-      })
-    }
-    this.setState({
-      tableData: tempData
-    })
+    this.getSignShow()
   }
   changeDutyType = (index) => {
     this.setState({
       dutyType: index
+    },()=>{
+      if(index == 0) {
+        this.getSignShow()
+      } else {
+        this.getSignList()
+      }
     })
   }
   setClass = (item,index)=> {
     console.log('item===',item)
     if(index === 1){
       return 'tdnopad'
+    }
+  }
+  getSignList = async() => {
+    try {
+      let params = {// 筛选条件
+        pageSize: this.searchParams.pageSize,
+        pageNum: this.searchParams.pageIndex,
+        deptName: this.searchParams.apartment,
+        roleName:this.searchParams.job,
+        userName:this.searchParams.username,
+        date: this.searchParams.worktime
+      }
+      const {data} = await signList(params)
+      console.log('signlist==',data)
+    } catch (error) {
+    }
+  }
+  getSignShow = async() => {
+    try {
+      const {data} = await signShow({date:this.state.signDate})
+      console.log('signshow==',data)
+      
+    } catch (error) {
     }
   }
   // 输入框筛选条件
