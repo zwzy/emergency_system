@@ -27,6 +27,7 @@ for (let i = 0; i < 100; i++) {
     time: `2019-05-1${i} 10:23:${i}`,
   });
 }
+
 // 违章记录表格数据
 const breakRuleColumns = [
   {
@@ -41,59 +42,36 @@ const breakRuleColumns = [
   },
   {
     title: '详情',
-    dataIndex: 'details',
+    dataIndex: 'message',
   },
   {
     title: '时间',
-    dataIndex: 'time',
+    dataIndex: 'breakTime',
     width: 250
   }
 ];
-const breakRuleData = [];
-for (let i = 0; i < 5; i++) {
-  breakRuleData.push({
-    key: i,
-    index: i,
-    trainNum: `${i}号线`,
-    details: `${i}--喯术有专攻地大概都是 术有专攻是v那是豆腐水电费 哈根斯栽不sfsd好想吃 开始的粉丝 术有专攻 以呆水电费圣诞节`,
-    time: `2019-05-1${i} 10:23:${i}`,
-  });
-}
-
 // 违章记录表格数据
 const trainInfoColumns = [
   {
     title: '机车',
-    dataIndex: 'trainName',
+    dataIndex: 'trainCode',
     width: 150
   },
   {
     title: '机型',
-    dataIndex: 'trainType',
+    dataIndex: 'model',
     width: 150
   },
   {
     title: '故障维修',
-    dataIndex: 'trainQustion',
+    dataIndex: 'maintain',
   },
   {
     title: '时间',
-    dataIndex: 'time',
+    dataIndex: 'maintainTime',
     width: 250
   }
 ];
-const trainInfoData = [];
-for (let i = 0; i < 5; i++) {
-  trainInfoData.push({
-    key: i,
-    trainName: `上海机车${i}`,
-    trainType: `T${i}系列`,
-    trainQustion: `${i}--喯术有专攻地大概都是 术有专攻是v那是豆腐水电费 哈根斯栽不sfsd好想吃 开始的粉丝 术有专攻 以呆水电费圣诞节`,
-    time: `2019-05-1${i} 10:23:${i}`,
-  });
-}
-
-
 
 export class ConsoleCase extends Component {
   static propTypes = {
@@ -122,6 +100,8 @@ export class ConsoleCase extends Component {
         activePosition: '--',
         outDate: '--',
       },
+      trainInfoData: [],
+      breakRuleData: [],
       trainData:[
         {name: '司机工号', id: 'driverCode', event: ''},
         {name: '司机姓名', id: 'driverName', event: 'breakRuleShowEvent'},
@@ -176,10 +156,50 @@ export class ConsoleCase extends Component {
        this.setState({
         trainValueInfo: newTrainValueInfo,
        }, () => {
+        this.getTrainUpdateInfo(trainValueInfo.trainCode)
        })
      } catch (error) {
      }
   }
+
+  getTrainUpdateInfo = async (trainCode) => {
+    try {
+      const {data} = await trainUpdateInfo({trainCode}) 
+      if(data.code === 0) {
+        if(data.content.length) {
+          const trainInfoData = data.content.map((item, index)=>{
+            return {...item, key: index }
+          })
+          this.setState({
+            trainInfoData
+          })
+        }
+      }
+    } catch (error) {
+    }
+   
+  }
+  // 0 司机  1： 副司机
+  getDriverBreakRuleInfo = async (driverCode = '2121212') => {
+    try {
+      const {data} = await driverBreakRuleInfo({driverNo: driverCode})
+      if(data.code === 0) {
+        if(data.content.length) {
+          const breakRuleData = data.content.map((item, index)=>{
+            return {...item, index, key: index }
+          })
+          this.setState({
+            breakRuleData
+          })
+        }
+      }
+    } catch (error) {
+       
+    }
+  }
+  // driverBreakRuleInfo
+
+  // 展示与某个人的通话记录
   showHistoryCallByPhone = async(mobile) => {
     try {
      const {data} =  callRecordMobile({mobile})
@@ -200,12 +220,21 @@ export class ConsoleCase extends Component {
     })
   }
   // 显示司机违章记录弹窗
-  breakRuleShowEvent = (dirverName) => {
+  breakRuleShowEvent = (dirverName, key) => {
     console.log(111, dirverName)
     const {breakRuleIsShow}  = this.state
     this.setState({
       breakRuleIsShow: !breakRuleIsShow,
       dirverName: dirverName
+    }, ()=>{
+      const {driverCode, assisCode} = this.state.trainValueInfo
+      // 司机
+      if(key === 'driverCode') {
+        this.getDriverBreakRuleInfo(driverCode)
+      // 副司机
+      } else {
+        this.getDriverBreakRuleInfo(assisCode)
+      }
     })
   }
   // 显示机车维护信息弹窗
@@ -251,7 +280,7 @@ export class ConsoleCase extends Component {
           onCancel={()=>this.breakRuleShowEvent()}
           footer={null}
         >
-          <Table columns={breakRuleColumns} dataSource={breakRuleData}  pagination={false} />
+          <Table columns={breakRuleColumns} dataSource={this.state.breakRuleData}  pagination={false} />
         </Modal>
         
         {/* 机车维护信息 Modal */}
@@ -262,7 +291,7 @@ export class ConsoleCase extends Component {
           onCancel={()=>this.trainInfoShowEvent()}
           footer={null}
         >
-        <Table columns={trainInfoColumns} dataSource={trainInfoData}  pagination={false} />
+        <Table columns={trainInfoColumns} dataSource={this.state.trainInfoData}  pagination={false} />
         </Modal>
       </div>
     )
