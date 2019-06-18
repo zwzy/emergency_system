@@ -19,31 +19,31 @@ export class DutyCase extends Component {
       worktime: ''
     }
     this.state = {
-      signDate: '', // 日期参数
+      signDate: '2019-6-13', // 日期参数
       tableColumns: [ // 签到记录表头
         {
           title: '序号',
-          dataIndex: 'id',
+          dataIndex: 'key',
         },
         {
           title: '部门',
-          dataIndex: 'apartment',
+          dataIndex: 'deptName',
         },
         {
           title: '职位',
-          dataIndex: 'job'
+          dataIndex: 'roleName'
         },
         {
           title: '姓名',
-          dataIndex: 'name',
+          dataIndex: 'userName',
         },
         {
           title: 'IP',
-          dataIndex: 'ipnum',
+          dataIndex: 'ip',
         },
         {
           title: '签到时间',
-          dataIndex: 'createtime'
+          dataIndex: 'signTime'
         }
       ],
       tableData: [], // 签到记录表数据
@@ -52,27 +52,22 @@ export class DutyCase extends Component {
         {
           key: '1',
           apart: '段值班领导',
-          name: '11'
+          name: ''
         },
         {
           key: '2',
           apart: '运用专业',
-          name: '22'
+          name: ''
         },
         {
           key: '3',
           apart: '技术专业',
-          name: '33'
+          name: ''
         },
         {
           key: '4',
           apart: '应急指挥专员',
-          name: '44'
-        },
-        {
-          key: '5',
-          apart: '应急指挥专员',
-          name: '55'
+          name: ''
         }
       ],
       allTablecolumns: [ // 签到总览表表头
@@ -92,116 +87,7 @@ export class DutyCase extends Component {
           dataIndex: 'name'
         }
       ],
-      allTabledata1: [ // 签到总览表数据（下半部分）
-        {
-          key: '1',
-          apart: '合肥东运用',
-          name: '11',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '2',
-          apart: '合肥西运用',
-          name: '22',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '3',
-          apart: '动车运用',
-          name: '33',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '4',
-          apart: '合肥运用',
-          name: '44',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '5',
-          apart: '芜湖运用',
-          name: '55',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '6',
-          apart: '阜阳运用',
-          name: '11',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '7',
-          apart: '淮南运用',
-          name: '22',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '8',
-          apart: '绩溪运用',
-          name: '33',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '9',
-          apart: '青龙山运用',
-          name: '44',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '10',
-          apart: '合肥检修',
-          name: '55',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '11',
-          apart: '阜阳检修',
-          name: '44',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '12',
-          apart: '芜湖检修',
-          name: '55',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        }
-      ],
+      allTabledata1: [],// 签到总览表数据（下半部分）
       allTablecolumns1: [ // 签到总览表表头（下半部分）
         {
           title: '',
@@ -296,6 +182,7 @@ export class DutyCase extends Component {
     }
   }
   getSignList = async() => {
+    let { tableData } = this.state
     try {
       let params = {// 筛选条件
         pageSize: this.searchParams.pageSize,
@@ -307,14 +194,62 @@ export class DutyCase extends Component {
       }
       const {data} = await signList(params)
       console.log('signlist==',data)
+      if(data.code == 0){
+        tableData = data.content.list
+        tableData.forEach((item,index)=>{
+          item.key = index + 1
+        })
+      }
+      this.setState({
+        tableData:tableData
+      },()=>{
+        console.log(this.state.tableData)
+      })
     } catch (error) {
     }
   }
   getSignShow = async() => {
+    let {allTabledata} = this.state
     try {
       const {data} = await signShow({date:this.state.signDate})
-      console.log('signshow==',data)
-      
+      // console.log('signshow==',data)
+      if(data.code == 0) {
+        let allTabledata1 = data.content.workplace
+        // console.log(temp)
+        allTabledata.forEach((item,index)=>{
+          item.name = data.content.all[index].userName
+        })
+        let temp = []
+        allTabledata1.forEach((item,index)=>{
+          let obj = {
+            key: index + 1,
+            apart: item.deptName,
+            dayname: '',
+            dayname1:'',
+            nightname:'',
+            nightname1:''
+          }
+          if(item.roleName === '应急值守人员' && item.shifts === 'DAY') {
+            obj.dayname = item.userName
+          }
+          if(item.roleName === '应急值守人员' && item.shifts === 'NIGHT') {
+            obj.nightname = item.userName
+          }
+          if(item.roleName === '值班人员' && item.shifts === 'DAY') {
+            obj.dayname1 = item.userName
+          }
+          if(item.roleName === '值班人员' && item.shifts === 'NIGHT') {
+            obj.nightname1 = item.userName
+          }
+          temp.push(obj) 
+        })
+        this.setState({
+          allTabledata:allTabledata,
+          allTabledata1: temp
+        },()=>{
+          console.log('haddd=',this.state.allTabledata1)
+        })
+      }
     } catch (error) {
     }
   }
@@ -324,6 +259,7 @@ export class DutyCase extends Component {
   }
   clickSearch= ()=>{
     console.log('searchParams=',this.searchParams)
+    this.getSignList()
   }
   render() {
     let {tableColumns,tableData, dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
