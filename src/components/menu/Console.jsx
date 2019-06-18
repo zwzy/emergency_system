@@ -109,7 +109,7 @@ function Console({data,event}) {
                 <div className="view-item" 
                   key={item.id} 
                   style={{color: item.event ? color.$primary : ''}} 
-                  onClick={()=>{item.event && event[item.event](data.trainValueInfo[item.id])}}
+                  onClick={()=>{item.event && event[item.event](data.trainValueInfo[item.id], item.id)}}
                 >
                   {item.name}: <Bold>{data.trainValueInfo[item.id]}</Bold>   
                 </div>
