@@ -1,14 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types'
-
-
-import { Button, Input, Table } from 'antd' 
-
+// import PropTypes from 'prop-types'
+import { Button,Table } from 'antd' 
 import styled from 'styled-components'
-
+import DutySearch from '../duty/DutySearch'
 // import color from '../../utils/color'
-
-
 
 function Duty({data, event}) {
   const DutyBox = styled.div `
@@ -54,30 +49,7 @@ function Duty({data, event}) {
             <Table bordered size="middle" pagination={false} columns={data.allTablecolumns1} dataSource={data.allTabledata1} />
           </div>
         ):(
-          <div className='duty-wrap'>
-            <ul className='input-ul'>
-              <li>
-                <span className='input-tit'>部门:</span>
-                <Input onChange={(e) => event.handleInputVal(e,'apartment')} style={{width:'188px'}}/>
-              </li>
-              <li>
-                <span className='input-tit'>职位:</span>
-                <Input onChange={(e) => event.handleInputVal(e,'job')} style={{width:'188px'}}/>
-              </li>
-              <li>
-                <span className='input-tit'>姓名:</span>
-                <Input onChange={(e) => event.handleInputVal(e,'username')} style={{width:'188px'}}/>
-              </li>
-              <li>
-                <span className='input-tit'>值班时间:</span>
-                <Input onChange={(e) => event.handleInputVal(e,'worktime')} style={{width:'188px'}}/>
-              </li>
-              <li>
-                <Button type="primary" onClick={() => event.clickSearch()}>搜索</Button>
-              </li>
-            </ul>
-            <Table bordered columns={data.tableColumns} dataSource={data.tableData} />
-          </div>
+         <DutySearch></DutySearch>
         )
       }
     </DutyBox>

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 import Duty from '../../components/menu/Duty'                 // 引用的ui组件
-import { signList, signShow } from '../../api/user'
+import { signShow } from '../../api/user'
 export class DutyCase extends Component {
-  static propTypes = {
+  // static propTypes = {
     // prop: PropTypes
-  }
+  // }
   constructor(props) {
     super(props)
     this.searchParams = {// 筛选条件
@@ -20,33 +20,6 @@ export class DutyCase extends Component {
     }
     this.state = {
       signDate: '2019-6-13', // 日期参数
-      tableColumns: [ // 签到记录表头
-        {
-          title: '序号',
-          dataIndex: 'key',
-        },
-        {
-          title: '部门',
-          dataIndex: 'deptName',
-        },
-        {
-          title: '职位',
-          dataIndex: 'roleName'
-        },
-        {
-          title: '姓名',
-          dataIndex: 'userName',
-        },
-        {
-          title: 'IP',
-          dataIndex: 'ip',
-        },
-        {
-          title: '签到时间',
-          dataIndex: 'signTime'
-        }
-      ],
-      tableData: [], // 签到记录表数据
       dutyType: 0, // 0 签到总览， 1 签到记录
       allTabledata: [ // 签到总览表数据
         {
@@ -164,56 +137,26 @@ export class DutyCase extends Component {
   componentDidMount(){
     this.getSignShow()
   }
-  changeDutyType = (index) => {
-    this.setState({
-      dutyType: index
-    },()=>{
-      if(index == 0) {
-        this.getSignShow()
-      } else {
-        this.getSignList()
-      }
-    })
-  }
   setClass = (item,index)=> {
-    console.log('item===',item)
     if(index === 1){
       return 'tdnopad'
     }
   }
-  getSignList = async() => {
-    let { tableData } = this.state
-    try {
-      let params = {// 筛选条件
-        pageSize: this.searchParams.pageSize,
-        pageNum: this.searchParams.pageIndex,
-        deptName: this.searchParams.apartment,
-        roleName:this.searchParams.job,
-        userName:this.searchParams.username,
-        date: this.searchParams.worktime
+  changeDutyType = (index) => {
+    this.setState({
+      dutyType: index
+    },()=>{
+      if(index === 0) {
+        this.getSignShow()
       }
-      const {data} = await signList(params)
-      console.log('signlist==',data)
-      if(data.code == 0){
-        tableData = data.content.list
-        tableData.forEach((item,index)=>{
-          item.key = index + 1
-        })
-      }
-      this.setState({
-        tableData:tableData
-      },()=>{
-        console.log(this.state.tableData)
-      })
-    } catch (error) {
-    }
+    })
   }
   getSignShow = async() => {
     let {allTabledata} = this.state
     try {
       const {data} = await signShow({date:this.state.signDate})
       // console.log('signshow==',data)
-      if(data.code == 0) {
+      if(data.code === 0) {
         let allTabledata1 = data.content.workplace
         // console.log(temp)
         allTabledata.forEach((item,index)=>{
@@ -253,22 +196,12 @@ export class DutyCase extends Component {
     } catch (error) {
     }
   }
-  // 输入框筛选条件
-  handleInputVal = (e, type) => {
-    this.searchParams[type] = e.target.value
-  }
-  clickSearch= ()=>{
-    console.log('searchParams=',this.searchParams)
-    this.getSignList()
-  }
   render() {
-    let {tableColumns,tableData, dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
+    let { dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
     return (
       <div>
         <Duty
          data={{
-          tableData,
-          tableColumns,
           dutyType,
           allTabledata,
           allTablecolumns,
@@ -277,9 +210,7 @@ export class DutyCase extends Component {
          }}
          event={{
           changeDutyType: this.changeDutyType,
-          setClass: this.setClass,
-          handleInputVal: this.handleInputVal,
-          clickSearch:this.clickSearch
+          setClass: this.setClass
          }}
         />
       </div>
