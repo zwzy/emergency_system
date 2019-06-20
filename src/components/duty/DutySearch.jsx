@@ -59,7 +59,7 @@ export default class DutySearch extends Component {
       }
       const {data} = await signList(params)
       console.log('signlist==',data)
-      if(data.code == 0) {
+      if(data.code === 0) {
         tableData = data.content.list
         tableData.forEach((item,index) => {
           item.key = index + 1

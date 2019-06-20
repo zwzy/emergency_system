@@ -1,6 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types'
-import { Button,Input,Table,Modal,Tag,Select,Empty } from 'antd'
+import { Button,Input,Table } from 'antd'
 import styled from 'styled-components'
 // import color from '../../utils/color'
 
