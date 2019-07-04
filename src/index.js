@@ -12,7 +12,7 @@ import App from './App';
 import LoginCase from './containers/LoginCase';
 
 import * as serviceWorker from './serviceWorker';
-
+import './styles/icon.css'
 let store = createStore(rootReducer)
 ReactDOM.render(
   <Provider store={store}>

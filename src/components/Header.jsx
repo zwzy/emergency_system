@@ -7,10 +7,6 @@ import BaseCallOutModal from './base/BaseCallOutModal'
 import TransferModal from './base/TransferModal'
 import PropTypes from 'prop-types'
 import { Icon, Button, Modal} from 'antd';
-const MyIcon = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
-});
-
 const logoImg = require('../images/avatar.png')
 
 function Header({event, data}) {
@@ -122,7 +118,7 @@ function Header({event, data}) {
               return (
                 <div className='item' key={index} onClick={() => { event[btn.eventName]() }}>
                   <div className='icon'>
-                    <MyIcon type={btn.cla}/>
+                    <span className={`${btn.cla} iconfont`}></span>
                   </div>
                   <div>{btn.tit}</div>
                 </div>
