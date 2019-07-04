@@ -182,7 +182,7 @@ export class HeaderCase extends Component {
   }
 
   componentDidMount() {
-    console.log(window.UMO._token)
+    console.log(888, window.UMO._token)
     if(window.UMO._token) return
     const {userInfo} = this.props
     console.log(userInfo)
@@ -290,7 +290,7 @@ export class HeaderCase extends Component {
       this.setState({
         loading: false
       })
-      sessionStorage.setItem('isLogin', true)
+      // sessionStorage.setItem('isLogin', true)
       this.props.history.push('/')
     }, (msg) => {
       this.setState({
