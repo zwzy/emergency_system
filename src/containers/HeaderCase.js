@@ -119,7 +119,7 @@ export class HeaderCase extends Component {
         })
       }
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
  } 
 
@@ -133,7 +133,7 @@ export class HeaderCase extends Component {
         console.log('挂断记录成功')
       }
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
     this.props.updateCommationInformation({
       callId, hangupDate: nowDate, callStatus: 'CALL_FAILURE'
@@ -150,7 +150,7 @@ export class HeaderCase extends Component {
         console.log('接听记录成功')
       }
       } catch (error) {
-        throw new Error(error)
+        console.log(error)
       }
       this.props.updateCommationInformation({
         callId, answerDate: nowDate, callStatus: 'CALL_ONLINE'
@@ -173,7 +173,7 @@ export class HeaderCase extends Component {
           console.log('接听记录成功')
         }
       } catch (error) {
-        throw new Error(error)
+        console.log(error)
       }
       this.props.updateCommationInformation({
         callId, hangupDate: nowDate, callStatus: 'CALL_HANGUP', callDuration: timerSecond
@@ -342,7 +342,7 @@ export class HeaderCase extends Component {
         ).catch(
           (error) => {
             message.error('接口故障，请重试...')
-            throw new Error(error)
+            console.log(error)
           }
         )
         this.props.history.push('/attendance')

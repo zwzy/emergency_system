@@ -174,7 +174,7 @@ export class GroupCase extends Component {
       const {data} = await addGroup(params)
       console.log('新增是否成功？',data)
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
   }
   // 更新某个分组
@@ -183,7 +183,7 @@ export class GroupCase extends Component {
       const {data} = await updateGroup(params)
       console.log('更新是否成功？',data)
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
   }
   // 得到部门
@@ -194,7 +194,7 @@ export class GroupCase extends Component {
         callOutAllDept: data.content
       })
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
   }
   // 通讯录
@@ -216,7 +216,7 @@ export class GroupCase extends Component {
         callOutBook: data.content
       })
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
   }
   // 通讯群组
@@ -231,7 +231,7 @@ export class GroupCase extends Component {
         tableData: grouplist
       })
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
   }
   // 部门选择
