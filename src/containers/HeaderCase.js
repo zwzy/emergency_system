@@ -185,7 +185,7 @@ export class HeaderCase extends Component {
     console.log(888, window.UMO._token)
     if(window.UMO._token) return
     const {userInfo} = this.props
-    console.log(userInfo)
+    console.log(888, userInfo)
     userLoginACD(userInfo, {
       onReadyState: (status)=>{
         console.log(status)

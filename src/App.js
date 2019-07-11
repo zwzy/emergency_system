@@ -48,7 +48,6 @@ import './styles/common.css';
 
 function getBreadCrumdArray (history) {
   const isLogin = sessionStorage.getItem('isLogin')
-  console.log(11111, history)
   if(!isLogin) {
    history.push({pathname: '/login'})
   } 
