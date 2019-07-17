@@ -147,6 +147,12 @@ export class ConsoleCase extends Component {
       this.setTimer(answerDate)
     }, 1000)
   }
+  componentDidMount() {
+    const {mobile} = this.props.commationInfomation
+    if(mobile) {
+      this.getDriverBreakRuleInfo(mobile)
+    }
+  }
   // 填充来的人的信息
   saveUserInfoByphoneNumber = async (mobile) => {
      try {

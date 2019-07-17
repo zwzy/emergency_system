@@ -117,7 +117,8 @@ function Console({data,event}) {
             })}
           </div>
         </Card>
-        <Card hoverable className='search-card'>
+        {/* 这版本不上 */}
+        {/* <Card hoverable className='search-card'>
           <div className="search-box">
             <Search placeholder="看板查询" className='search-input' onSearch={value => console.log(value)} enterButton />
             <Search placeholder="通讯录查询" onSearch={value => console.log(value)} enterButton />
@@ -125,7 +126,7 @@ function Console({data,event}) {
         </Card>
         <Card hoverable className='video-card'>
          
-        </Card>
+        </Card> */}
       </RtBox>
     </ConsoleBox>
   );

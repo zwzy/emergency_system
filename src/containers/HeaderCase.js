@@ -430,7 +430,7 @@ export class HeaderCase extends Component {
           // 路由跳转
           goToRouter: this.goToRouter, 
         }
-       } 
+       }  
        data = { {
          // 来电信息 来电显示  
          callInModalIsShow, callinInfo,

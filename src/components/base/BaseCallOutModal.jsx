@@ -170,27 +170,27 @@ export default class BaseCallOutModal extends Component {
     const {callOutAllDept, callOutBook, callOutHistoryCall} = this.state
     return (
       <CallOutBox>
-      <div className="lf-box">
-        <div className='lf-box-title'>历史通话记录</div>
-        <div className='history-box'>
-        { callOutHistoryCall.map((item, index)=>{
-          return (
-            <div className="callout-item" key={index}>
-              <div className="lf-item">
-                  <div><span className='right-divider'>{item.name}</span> <span>{item.mobile}</span></div>
-                  <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
+        <div className="lf-box">
+          <div className='lf-box-title'>历史通话记录</div>
+          <div className='history-box'>
+          {callOutHistoryCall.map((item, index)=>{
+            return (
+              <div className="callout-item" key={index}>
+                <div className="lf-item">
+                    <div><span className='right-divider'>{item.name}</span> <span>{item.mobile}</span></div>
+                    <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
+                </div>
+                <div className="rt-item">
+                  <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.mobile, uud: '4555', gid: '@0'})} />
+                </div>
               </div>
-              <div className="rt-item">
-                <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.mobile, uud: '4555', gid: '@0'})} />
-              </div>
-            </div>
-          )
-          })
-        }
-        {!callOutHistoryCall.length && <Empty style={{marginTop: '140px' }} image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
+            )
+            })
+          }
+          {!callOutHistoryCall.length && <Empty style={{marginTop: '140px' }} image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
+          </div>
         </div>
-      </div>
-      <div className="rt-box">
+        <div className="rt-box">
         <BaseCommunicationBox>
           <div className='rt-box-title'>通讯录</div>
             <div className="filter-box">
@@ -215,8 +215,9 @@ export default class BaseCallOutModal extends Component {
               return (
                 <div className="address-item" key={index}>
                   <div><span className='right-divider'>{item.userName}</span></div>
-                  <div><span className='right-divider'>{item.work}</span></div>
-                  <Button type="primary" shape="circle" icon="phone" />
+                  <div><span className='right-divider'>{item.deptName}</span></div>
+                  <div><span className='right-divider'>{item.mobile}</span></div>
+                  <Button type="primary" shape="circle" icon="phone"  onClick={() => callOutPhone({phoneNumber: item.mobile, uud: '4555', gid: '@0'})} />
                 </div>
               )
               })
@@ -225,8 +226,7 @@ export default class BaseCallOutModal extends Component {
           </div>
         </BaseCommunicationBox>
       </div>
-    </CallOutBox>  
-    
+     </CallOutBox>  
     )
   }
 }
