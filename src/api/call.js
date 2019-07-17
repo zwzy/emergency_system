@@ -19,7 +19,7 @@ export function answerCall (data = {}) {
     params: data
   })
 } 
-// 回复通话状态
+// 获取与某个号码的通话记录
 export function callRecordMobile (data = {}) {
   return fetch({
     baseURL: baseCallUrl,
@@ -87,6 +87,27 @@ export function findAllDeptInfo (data = {}) {
   return fetch({
     baseURL: baseCallUrl,
     url: '/findAllDeptInfo',
+    method: 'GET',
+    params: data
+  })
+} 
+
+
+// GET /sys/call/locoMaintains
+// 机车维护信息
+export function trainUpdateInfo (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/locoMaintains',
+    method: 'GET',
+    params: data
+  })
+} 
+// 司机违章信息
+export function driverBreakRuleInfo (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/driverBreakRules',
     method: 'GET',
     params: data
   })

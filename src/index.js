@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -11,7 +12,7 @@ import App from './App';
 import LoginCase from './containers/LoginCase';
 
 import * as serviceWorker from './serviceWorker';
-
+import './styles/icon.css'
 let store = createStore(rootReducer)
 ReactDOM.render(
   <Provider store={store}>
@@ -24,6 +25,7 @@ ReactDOM.render(
         </Switch>
       </BrowserRouter>
   </Provider>,
+  // <div>123456</div>,
   document.getElementById('root')
 );
 

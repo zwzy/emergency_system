@@ -119,7 +119,7 @@ export class HeaderCase extends Component {
         })
       }
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
  } 
 
@@ -133,7 +133,7 @@ export class HeaderCase extends Component {
         console.log('挂断记录成功')
       }
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
     this.props.updateCommationInformation({
       callId, hangupDate: nowDate, callStatus: 'CALL_FAILURE'
@@ -150,7 +150,7 @@ export class HeaderCase extends Component {
         console.log('接听记录成功')
       }
       } catch (error) {
-        throw new Error(error)
+        console.log(error)
       }
       this.props.updateCommationInformation({
         callId, answerDate: nowDate, callStatus: 'CALL_ONLINE'
@@ -173,7 +173,7 @@ export class HeaderCase extends Component {
           console.log('接听记录成功')
         }
       } catch (error) {
-        throw new Error(error)
+        console.log(error)
       }
       this.props.updateCommationInformation({
         callId, hangupDate: nowDate, callStatus: 'CALL_HANGUP', callDuration: timerSecond
@@ -182,7 +182,7 @@ export class HeaderCase extends Component {
   }
 
   componentDidMount() {
-    console.log(window.UMO._token)
+    console.log(888, window.UMO._token)
     if(window.UMO._token) return
     const {userInfo} = this.props
     console.log(userInfo)
@@ -290,7 +290,7 @@ export class HeaderCase extends Component {
       this.setState({
         loading: false
       })
-      sessionStorage.setItem('isLogin', true)
+      // sessionStorage.setItem('isLogin', true)
       this.props.history.push('/')
     }, (msg) => {
       this.setState({
@@ -330,7 +330,7 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        sign({userId: userInfo.userName}).then(
+        sign({workno: userInfo.userName, password: '123456'}).then(
           res => {
             const {data} = res
             if(data.code === 0) {
@@ -342,7 +342,7 @@ export class HeaderCase extends Component {
         ).catch(
           (error) => {
             message.error('接口故障，请重试...')
-            throw new Error(error)
+            console.log(error)
           }
         )
         this.props.history.push('/attendance')

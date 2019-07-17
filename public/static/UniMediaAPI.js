@@ -55,7 +55,7 @@ var UMO = {
          * 话机状态变化
          * @param status  1挂机 2摘机
          */
-        onHookChanged: function(status){},
+        onHookChanged: function(status){}, 
 
         /**
          * 话务员状态变化

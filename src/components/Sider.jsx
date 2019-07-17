@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Menu, Icon } from 'antd';
+import { Menu } from 'antd';
 
 import config from '../utils/config'
 
-const MyIcon = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1185107_8eej21cbtne.js', // 在 iconfont.cn 上生成
-});
+
 const SubMenu = Menu.SubMenu;
 
 function Sider({openKey, handleClick, menu, menuList, onOpenChange}) {
@@ -25,12 +23,15 @@ function Sider({openKey, handleClick, menu, menuList, onOpenChange}) {
         const menuItem = (
           // style样式 解决 移入存在抖动的bug
           <Menu.Item  key={subItem.subId} style={{width: "auto"}}>
-            <MyIcon  type={subItem.subIcon} />
+             <span className={`${subItem.subIcon} iconfont`}></span>
             {subItem.subName}
           </Menu.Item>
         )
         const subMenu = (
-          <SubMenu key={subItem.subId} title={<span><MyIcon type={subItem.subIcon} /><span>{subItem.subName}</span></span>}>
+          <SubMenu key={subItem.subId} title={<span>
+              <span className={`${subItem.subIcon} iconfont icon`}></span>
+              <span>{subItem.subName}</span>
+            </span>}>
             {
               subItem.menus.map((item) => {
                 return(

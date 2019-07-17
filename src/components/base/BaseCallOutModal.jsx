@@ -120,7 +120,7 @@ export default class BaseCallOutModal extends Component {
       }
       this.timer = setTimeout(()=>{this.getHandUpCallRecord()}, 5000)
     } catch (error) {
-      throw new Error(error)
+      console.log(error)
     }
   }
   getCallBook = async() =>{
@@ -131,7 +131,7 @@ export default class BaseCallOutModal extends Component {
         callOutBook: data.content
       })
     } catch (error) {
-      throw new Error(error)
+       console.log(error)
     }
   }
 

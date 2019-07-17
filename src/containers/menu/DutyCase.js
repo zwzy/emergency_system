@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 import Duty from '../../components/menu/Duty'                 // 引用的ui组件
-import { signList, signShow } from '../../api/user'
+import { signShow } from '../../api/user'
 export class DutyCase extends Component {
-  static propTypes = {
+  // static propTypes = {
     // prop: PropTypes
-  }
+  // }
   constructor(props) {
     super(props)
     this.searchParams = {// 筛选条件
@@ -19,60 +19,28 @@ export class DutyCase extends Component {
       worktime: ''
     }
     this.state = {
-      signDate: '', // 日期参数
-      tableColumns: [ // 签到记录表头
-        {
-          title: '序号',
-          dataIndex: 'id',
-        },
-        {
-          title: '部门',
-          dataIndex: 'apartment',
-        },
-        {
-          title: '职位',
-          dataIndex: 'job'
-        },
-        {
-          title: '姓名',
-          dataIndex: 'name',
-        },
-        {
-          title: 'IP',
-          dataIndex: 'ipnum',
-        },
-        {
-          title: '签到时间',
-          dataIndex: 'createtime'
-        }
-      ],
-      tableData: [], // 签到记录表数据
+      signDate: '2019-6-13', // 日期参数
       dutyType: 0, // 0 签到总览， 1 签到记录
       allTabledata: [ // 签到总览表数据
         {
           key: '1',
           apart: '段值班领导',
-          name: '11'
+          name: ''
         },
         {
           key: '2',
           apart: '运用专业',
-          name: '22'
+          name: ''
         },
         {
           key: '3',
           apart: '技术专业',
-          name: '33'
+          name: ''
         },
         {
           key: '4',
           apart: '应急指挥专员',
-          name: '44'
-        },
-        {
-          key: '5',
-          apart: '应急指挥专员',
-          name: '55'
+          name: ''
         }
       ],
       allTablecolumns: [ // 签到总览表表头
@@ -92,116 +60,7 @@ export class DutyCase extends Component {
           dataIndex: 'name'
         }
       ],
-      allTabledata1: [ // 签到总览表数据（下半部分）
-        {
-          key: '1',
-          apart: '合肥东运用',
-          name: '11',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '2',
-          apart: '合肥西运用',
-          name: '22',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '3',
-          apart: '动车运用',
-          name: '33',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '4',
-          apart: '合肥运用',
-          name: '44',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '5',
-          apart: '芜湖运用',
-          name: '55',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '6',
-          apart: '阜阳运用',
-          name: '11',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '7',
-          apart: '淮南运用',
-          name: '22',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '8',
-          apart: '绩溪运用',
-          name: '33',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '9',
-          apart: '青龙山运用',
-          name: '44',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '10',
-          apart: '合肥检修',
-          name: '55',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '11',
-          apart: '阜阳检修',
-          name: '44',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        },
-        {
-          key: '12',
-          apart: '芜湖检修',
-          name: '55',
-          dayname:'',
-          dayname1:'',
-          nightname:'',
-          nightname1:''
-        }
-      ],
+      allTabledata1: [],// 签到总览表数据（下半部分）
       allTablecolumns1: [ // 签到总览表表头（下半部分）
         {
           title: '',
@@ -278,61 +137,71 @@ export class DutyCase extends Component {
   componentDidMount(){
     this.getSignShow()
   }
-  changeDutyType = (index) => {
-    this.setState({
-      dutyType: index
-    },()=>{
-      if(index == 0) {
-        this.getSignShow()
-      } else {
-        this.getSignList()
-      }
-    })
-  }
   setClass = (item,index)=> {
-    console.log('item===',item)
     if(index === 1){
       return 'tdnopad'
     }
   }
-  getSignList = async() => {
-    try {
-      let params = {// 筛选条件
-        pageSize: this.searchParams.pageSize,
-        pageNum: this.searchParams.pageIndex,
-        deptName: this.searchParams.apartment,
-        roleName:this.searchParams.job,
-        userName:this.searchParams.username,
-        date: this.searchParams.worktime
+  changeDutyType = (index) => {
+    this.setState({
+      dutyType: index
+    },()=>{
+      if(index === 0) {
+        this.getSignShow()
       }
-      const {data} = await signList(params)
-      console.log('signlist==',data)
-    } catch (error) {
-    }
+    })
   }
   getSignShow = async() => {
+    let {allTabledata} = this.state
     try {
       const {data} = await signShow({date:this.state.signDate})
-      console.log('signshow==',data)
-      
+      // console.log('signshow==',data)
+      if(data.code === 0) {
+        let allTabledata1 = data.content.workplace
+        // console.log(temp)
+        allTabledata.forEach((item,index)=>{
+          item.name = data.content.all[index].userName
+        })
+        let temp = []
+        allTabledata1.forEach((item,index)=>{
+          let obj = {
+            key: index + 1,
+            apart: item.deptName,
+            dayname: '',
+            dayname1:'',
+            nightname:'',
+            nightname1:''
+          }
+          if(item.roleName === '应急值守人员' && item.shifts === 'DAY') {
+            obj.dayname = item.userName
+          }
+          if(item.roleName === '应急值守人员' && item.shifts === 'NIGHT') {
+            obj.nightname = item.userName
+          }
+          if(item.roleName === '值班人员' && item.shifts === 'DAY') {
+            obj.dayname1 = item.userName
+          }
+          if(item.roleName === '值班人员' && item.shifts === 'NIGHT') {
+            obj.nightname1 = item.userName
+          }
+          temp.push(obj) 
+        })
+        this.setState({
+          allTabledata:allTabledata,
+          allTabledata1: temp
+        },()=>{
+          console.log('haddd=',this.state.allTabledata1)
+        })
+      }
     } catch (error) {
     }
   }
-  // 输入框筛选条件
-  handleInputVal = (e, type) => {
-    this.searchParams[type] = e.target.value
-  }
-  clickSearch= ()=>{
-    console.log('searchParams=',this.searchParams)
-  }
   render() {
-    let {tableColumns,tableData, dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
+    let { dutyType, allTabledata, allTablecolumns,allTabledata1, allTablecolumns1} = this.state
     return (
       <div>
         <Duty
          data={{
-          tableData,
-          tableColumns,
           dutyType,
           allTabledata,
           allTablecolumns,
@@ -341,9 +210,7 @@ export class DutyCase extends Component {
          }}
          event={{
           changeDutyType: this.changeDutyType,
-          setClass: this.setClass,
-          handleInputVal: this.handleInputVal,
-          clickSearch:this.clickSearch
+          setClass: this.setClass
          }}
         />
       </div>
