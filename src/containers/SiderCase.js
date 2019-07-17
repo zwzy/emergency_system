@@ -25,6 +25,7 @@ export class SiderCase extends Component {
     // 则需要把当前路由联系的SubMenu展开
     if(activeMenu === subMenu) {
       if(activeMenu === '') {
+      console.log(8888, activeMenu)
         this.setState({
           menu: 'console'
         })
@@ -34,7 +35,7 @@ export class SiderCase extends Component {
         })
       }
     } else {
-      console.log(activeMenu, subMenu)
+      console.log(999, activeMenu, subMenu)
       if(activeMenu === '/') {
         this.setState({
           menu: 'console'

@@ -62,7 +62,7 @@ export class LoginCase extends Component {
           }
           localStorage.setItem('userInfo',JSON.stringify(userInfo))
         } else {
-          localStorage.removeItem('userInfo')
+          localStorage.setItem('userInfo',JSON.stringify(userInfo))
         }
         const userInfo = {
           userName: values.userName,
