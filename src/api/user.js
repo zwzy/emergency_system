@@ -27,3 +27,12 @@ export function signShow (data = {}) {
     params: data
   })
 } 
+// 登录
+export function login (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/login',
+    method: 'POST',
+    data: data
+  })
+} 

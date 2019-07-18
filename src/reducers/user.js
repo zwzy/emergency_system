@@ -2,10 +2,10 @@ const jsonUserInformation = localStorage.getItem('userInfo') ? JSON.parse(localS
 console.log(jsonUserInformation)
 const initUserState = {
   userName: jsonUserInformation.userName || '',
-  extNumber: jsonUserInformation.extNumber || '',
-  passWord: jsonUserInformation.passWord || '',
-  domain: jsonUserInformation.domain || '',
-  userPost: jsonUserInformation.userPost || ''
+  extNum: jsonUserInformation.extNum || '',
+  roleList: jsonUserInformation.roleList || [],
+  workno:  jsonUserInformation.workno || '',
+  deptName: jsonUserInformation.deptName || ''
 }
 const user = (state = initUserState, action) => {
   switch (action.type) {

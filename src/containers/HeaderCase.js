@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 import Header from '../components/Header'
-import {Modal, message} from 'antd'
+import {Modal, message, Select} from 'antd'
 import {updateUmoEventState} from '../actions/umo'
 import {updateCommationInformation, resetCommationInformation} from '../actions/call'
 import { btnlist } from '../utils/config'
@@ -17,7 +17,7 @@ import { getNowDate, getNowTime } from '../utils/common'
 import {hangUpPhone, userLoginACD} from '../utils/umo'
 
 const modalItemStyle = {margin: '8px 0'}
-
+const { Option } = Select;
 export class HeaderCase extends Component {
   static propTypes = {
   }
@@ -35,6 +35,10 @@ export class HeaderCase extends Component {
       callOtherData: [],
       // 队列
       callInListIsShow: false, // 来电通知modal
+      signParams: { // 签到的入参
+        roleId: this.props.userInfo.roleList[0].id,
+        roleName: this.props.userInfo.roleList[0].roleName
+      }
     }
   }
   // 显示拨出
@@ -183,10 +187,15 @@ export class HeaderCase extends Component {
 
   componentDidMount() {
     console.log(888, window.UMO._token)
-    if(window.UMO._token) return
+    // 防止未登录时，在登录页面登录umo
+    if(window.UMO._token || !sessionStorage.getItem('isLogin') ) return
     const {userInfo} = this.props
-    console.log(888, userInfo)
-    userLoginACD(userInfo, {
+    const loginUmoInfo = {
+      ...userInfo,
+      domain: '10.131.172.82',
+      passWord: '123456'
+    }
+    userLoginACD(loginUmoInfo, {
       onReadyState: (status)=>{
         console.log(status)
         const {id} = this.props.umoEventState.onReadyState
@@ -321,35 +330,61 @@ export class HeaderCase extends Component {
       title: '签到',
       content:(
         <div>
-          <div style={modalItemStyle}>工号： <strong>{userInfo.extNumber||userInfo.userName}</strong></div>
+          <div style={modalItemStyle}>工号： <strong>{userInfo.workno}</strong></div>
           <div style={modalItemStyle}>姓名： <strong>{userInfo.userName}</strong></div>
-          <div style={modalItemStyle}>职位： <strong>{userInfo.userPost}</strong></div>
+          <div style={modalItemStyle}>职位： 
+            <strong> 
+            <Select defaultValue={userInfo.roleList[0].id}  style={{ width: 150 }} size='small' onChange={this.handleChange}>
+              {userInfo.roleList.map((item)=>{
+                  return (
+                    <Option value={item.id}>{item.roleName}</Option>
+                  )
+              })}
+            </Select>
+            </strong>
+          
+          </div>
           <div style={modalItemStyle}>时间： <strong>{nowData}</strong></div>
         </div>
       ),
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        sign({workno: userInfo.userName, password: '123456'}).then(
-          res => {
-            const {data} = res
-            if(data.code === 0) {
-              message.success(data.message)
-            } else {
-              message.error(data.message)
+        const {deptName, userName, workno} = this.props.userInfo
+
+        this.setState({
+          signParams: { ...this.state.signParams, deptName, userName, workno, signTime: nowData}
+        }, () => {
+          sign(this.state.signParams).then(
+            res => {
+              const {data} = res
+              if(data.code === 0) {
+                message.success(data.message)
+              } else {
+                message.error(data.message)
+              }
             }
-          }
-        ).catch(
-          (error) => {
-            message.error('接口故障，请重试...')
-            console.log(error)
-          }
-        )
-        this.props.history.push('/attendance')
+          ).catch(
+            (error) => {
+              message.error('接口故障，请重试...')
+              console.log(error)
+            }
+          )
+          this.props.history.push('/attendance')
+        }) 
       }
     });
   }
-
+  handleChange = (value) => {
+    console.log(`selected ${value}`);
+    const  activeObj = this.props.userInfo.roleList.find((item)=>{
+      return item.id == value
+    })
+    this.setState({
+      signParams: { ...this.state.signParams, roleId: value, roleName: activeObj.roleName}
+    }) 
+  }
+  
   // 挂断
   hangUpEvent = () => {
     Modal.confirm({

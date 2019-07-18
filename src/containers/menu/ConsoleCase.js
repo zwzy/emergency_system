@@ -149,8 +149,8 @@ export class ConsoleCase extends Component {
   }
   componentDidMount() {
     const {mobile} = this.props.commationInfomation
-    if(mobile) {
-      this.getDriverBreakRuleInfo(mobile)
+    if(mobile && mobile !== '--') {
+      this.saveUserInfoByphoneNumber(mobile)
     }
   }
   // 填充来的人的信息
