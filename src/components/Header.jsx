@@ -105,7 +105,7 @@ function Header({event, data}) {
         <LArea>
         <div className='logo'></div>
           <div className='logo-info'>
-            <div>应急处置值守人员：<strong>王五</strong></div>
+            <div>{data.userInfo.roleList.length ? data.userInfo.roleList[0].roleName : ''}：<strong>{data.userInfo.userName}}</strong></div>
             <div className='btn-wrap'>
               <Button className='btn-icon' icon='calendar' size="small" onClick={()=>event.signEvent()}>签到</Button>
               <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>event.logOutEvent()}>退出</Button>

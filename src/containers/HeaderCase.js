@@ -434,6 +434,7 @@ export class HeaderCase extends Component {
       callOutIsShow, callOutData,
       callInListIsShow,
     } = this.state
+    const {userInfo} = this.props
     return (
       <Header 
        event = {
@@ -467,6 +468,7 @@ export class HeaderCase extends Component {
         }
        }  
        data = { {
+         userInfo,
          // 来电信息 来电显示  
          callInModalIsShow, callinInfo,
          // 头部菜单列表
