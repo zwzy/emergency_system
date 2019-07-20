@@ -337,7 +337,7 @@ export class HeaderCase extends Component {
             <Select defaultValue={userInfo.roleList[0].id}  style={{ width: 150 }} size='small' onChange={this.handleChange}>
               {userInfo.roleList.map((item)=>{
                   return (
-                    <Option value={item.id}>{item.roleName}</Option>
+                    <Option key={item.id} value={item.id}>{item.roleName}</Option>
                   )
               })}
             </Select>

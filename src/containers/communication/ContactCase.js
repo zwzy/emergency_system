@@ -1,13 +1,37 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Divider, Button } from 'antd'
-import Contact from '../../components/communication/Contact'                 // 引用的ui组件
+import { Button , Input , Table } from 'antd'
+import { findUserByDept } from '../../api/call'
+import {callOutPhone} from '../../utils/umo'
+import styled from 'styled-components'
 
+const Contact = styled.div `
+.search-wrap {
+  width: 100%;
+  height: 79px;
+  line-height: 79px;
+  background-color: rgba(229, 229, 229, 1);
+  border-radius: 5px;
+  padding: 0 26px;
+  margin-bottom: 20px;
+  .search-tit {
+    font-size: 16px;
+  }
+}
+.btn-wrap {
+  margin-top: 14px;
+  margin-bottom: 14px;
+  Button {
+    margin-right: 20px;
+  }
+}
+`
 export class ContactCase extends Component {
   static propTypes = {
     // prop: PropTypes
   }
+
   constructor(props) {
     super(props)
     this.searchParams = {// 筛选条件
@@ -19,63 +43,84 @@ export class ContactCase extends Component {
       tableColumns: [
         {
           title: '联系人姓名',
-          dataIndex: 'age',
+          dataIndex: 'userName',
+          key: 'userName'
         },
         {
           title: '联系人号码',
-          dataIndex: 'address',
+          dataIndex: 'mobile',
+          key: 'mobile'
+
         },
         {
           title: '操作',
           dataIndex: 'operate',
           render: (text, record) => (
             <span>
-              <Button type='primary'>修改</Button>
-              <Divider type="vertical" />
-              <Button type='danger'>删除</Button>
-              <Divider type="vertical" />
-              <Button type='primary'>拨打</Button>
+              <Button type='primary' onClick={
+                () => {
+                  console.log(1111, text, record.mobile)
+                  callOutPhone({phoneNumber: record.mobile, uud: '4555', gid: '@0'} )
+              }
+              }
+              >拨打</Button>
             </span>
-          )
+          ),
+          key: ''
         }
       ],
-      tableData:[]
+      tableData: [{userName: '张三', mobile: '18756548922'},{userName: '一套', mobile: '3234234324'}],
+      deptParams: {
+        deptNo: '',
+        keyword: ''
+      },
     }
   }
   componentDidMount(){
-    let tempData = []
-    for (let i = 0; i < 46; i++) {
-      tempData.push({
-        key: i,
-        age: 32,
-        address: `London, Park Lane no. ${i}`
+    this.getCallBook()
+  }
+  // 得到通讯录，根据条件
+  getCallBook = async() =>{
+    const {deptParams} = this.state
+    try {
+      const {data} = await findUserByDept(deptParams)
+      // const data = {
+      //   content : [...this.state.tableData, ...this.state.tableData]
+      // }
+      this.setState({
+        tableData: data.content
+      })
+    } catch (error) {
+       console.log(error)
+    }
+  }
+
+    // 输入框
+    handleInputVal = (e) => {
+      this.setState({
+        deptParams: {
+          ...this.state.deptParams, keyword: e.target.value
+        }
       })
     }
-    this.setState({
-      tableData: tempData
-    })
-  }
-  // 输入框
-  handleInputVal = (e) => {
-    this.searchParams.keyword = e.target.value
-  }
-  clickSearch= ()=>{
-    console.log('searchParams=',this.searchParams)
-  }
+    clickSearch= ()=>{
+      this.getCallBook()
+      console.log('deptParams=',this.state.deptParams)
+    }
   render() {
     let {tableColumns,tableData} = this.state
     return (
       <div>
-        <Contact 
-          data = {{
-            tableData,
-            tableColumns
-          }}
-          event = {{
-            handleInputVal: this.handleInputVal,
-            clickSearch:this.clickSearch
-          }}
-        />
+        <Contact>
+          <div className='search-wrap'>
+            <span className='search-tit'>快速搜索：</span>
+            <Input onChange={(e) => this.handleInputVal(e)}  style={{width:'500px',marginLeft:'23px',marginRight:'35px'}}/>
+            <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
+          </div>
+          <div>
+            <Table bordered columns={tableColumns} dataSource={tableData} />
+          </div>
+        </Contact> 
       </div>
     )
   }

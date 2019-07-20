@@ -105,7 +105,7 @@ function Header({event, data}) {
         <LArea>
         <div className='logo'></div>
           <div className='logo-info'>
-            <div>{data.userInfo.roleList.length ? data.userInfo.roleList[0].roleName : ''}：<strong>{data.userInfo.userName}}</strong></div>
+            <div>{data.userInfo.roleList.length ? data.userInfo.roleList[0].roleName : ''}：<strong>{data.userInfo.userName}</strong></div>
             <div className='btn-wrap'>
               <Button className='btn-icon' icon='calendar' size="small" onClick={()=>event.signEvent()}>签到</Button>
               <Button className='btn-icon'  size="small"  icon='logout' type='danger' onClick={()=>event.logOutEvent()}>退出</Button>
@@ -127,7 +127,7 @@ function Header({event, data}) {
           }
         </CArea>
         <RArea>
-        <Button icon='edit' onClick={()=>{event.goToRouter()}}>填写台账</Button>
+        {/* <Button icon='edit' onClick={()=>{event.goToRouter()}}>填写台账</Button> */} 
       </RArea>
       </Header>
       

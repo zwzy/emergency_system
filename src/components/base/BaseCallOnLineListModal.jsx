@@ -28,7 +28,7 @@ export default class BaseCallOnLineListModal extends Component {
     this.timer = null
     this.state = {
       callInListData: [
-        {mobile: '1001', callDate: '2019-02-01 04:02:32', callStatus: '未接通'}
+        // {mobile: '1001', callDate: '2019-02-01 04:02:32', callStatus: '未接通'}
       ],
     }
   }

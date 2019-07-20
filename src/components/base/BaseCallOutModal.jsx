@@ -86,16 +86,6 @@ export default class BaseCallOutModal extends Component {
       },
       callOutBook: [],
       callOutHistoryCall: [
-        { userName: '张三', mobile: '1001', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-        { userName: '张大', mobile: '1009', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '运维部'},
-        { userName: '张二', mobile: '1002', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '测试部'},
-        { userName: '张四', mobile: '1003', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '营销部'},
-        { userName: '张五', mobile: '1004', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '采购部'},
-        { userName: '张六', mobile: '1005', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '市场部'},
-        { userName: '张七', mobile: '1006', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-        { userName: '张七', mobile: '1007', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-        { userName: '张七', mobile: '1008', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
-        { userName: '张七', mobile: '1010', callDate: '2019-08-03 20:08:02', timeLong: '00:02:34', work: '技术部'},
       ]
     }
   }

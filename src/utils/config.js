@@ -37,21 +37,21 @@ export const menuList = [
     subIcon: 'icon-Sign',
     menus:[]
   },
-  // {
-  //   subId: 'communication',
-  //   subName: '应急通讯录',
-  //   subIcon: 'icon-tongxunlu',
-  //   menus: [
-  //     {
-  //       id: 'communication_contact',
-  //       name: '通讯录',
-  //     },
-  //     {
-  //       id: 'communication_group',
-  //       name: '通讯群组',
-  //     }
-  //   ]
-  // },
+  {
+    subId: 'communication',
+    subName: '应急通讯录',
+    subIcon: 'icon-tongxunlu',
+    menus: [
+      {
+        id: 'communication_contact',
+        name: '通讯录',
+      },
+      // {
+      //   id: 'communication_group',
+      //   name: '通讯群组',
+      // }
+    ]
+  },
   // {
   //   subId: 'rules',
   //   path: 'rules',

@@ -260,7 +260,8 @@ export class ConsoleCase extends Component {
           data={{
             commationInfomation,
             trainData, trainValueInfo,
-            timer
+            timer,
+            callHistoryLength: historyCallByPhoneData.length
           }}
           event={{
             historyShowEvent: this.historyShowEvent,

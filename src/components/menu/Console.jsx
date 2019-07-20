@@ -93,7 +93,7 @@ function Console({data,event}) {
         <Title>当前通话概况</Title>
         <div className='phone'>{mobile}</div>
         <div className='timer'>{data.timer}</div>
-        <div className='call-history'><Button type="link" onClick={()=>{event.historyShowEvent()}}> <span className='text'>通话历史（9）</span>  点击查看</Button></div>
+        <div className='call-history'><Button type="link" onClick={()=>{event.historyShowEvent()}}> <span className='text'>通话历史（{data.callHistoryLength}）</span>  点击查看</Button></div>
         <Title>来电详情</Title>
         <Timer>来电时间：{callDate}</Timer>  
         <Timer>接听时间：{answerDate}</Timer>  
