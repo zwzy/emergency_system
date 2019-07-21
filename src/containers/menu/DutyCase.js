@@ -19,7 +19,7 @@ export class DutyCase extends Component {
       worktime: ''
     }
     this.state = {
-      signDate: '2019-6-13', // 日期参数
+      signDate: (new Date()).toISOString().substr(0,10), // 日期参数,今天 'xxxx-xx-xx'
       dutyType: 0, // 0 签到总览， 1 签到记录
       allTabledata: [ // 签到总览表数据
         {
