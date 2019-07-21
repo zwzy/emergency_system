@@ -117,9 +117,16 @@ export default class BaseCallOutModal extends Component {
     const {deptParams} = this.state
     try {
       const {data} = await findUserByDept(deptParams)
-      this.setState({
-        callOutBook: data.content
-      })
+      if(data.content.length> 100) {
+        this.setState({
+          callOutBook: data.content.slice(0, 100)
+        })
+      } else {
+        this.setState({
+          callOutBook: data.content
+        })
+      }
+      
     } catch (error) {
        console.log(error)
     }

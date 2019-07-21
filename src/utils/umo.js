@@ -144,7 +144,7 @@ export function userLoginACD(data = {},
     apihost: 'http://' + domain + ':8181/IPServer',  // 域名
     bizhost: null,                                 // 
     eid: '0',                                      // 企业密码
-    aid: workno,                                   // 工号
+    aid: extNum,                                   // 工号
     adn: extNum,                                   // 绑定分机
     apwd: window.hex_md5(passWord),                // 密码
     epwd: window.hex_md5(''),                      // 企业密码
