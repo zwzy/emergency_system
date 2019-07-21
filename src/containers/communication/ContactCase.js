@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Button , Input , Table } from 'antd'
+import { Button , Input , Table, message } from 'antd'
 import { findUserByDept } from '../../api/call'
 import {callOutPhone} from '../../utils/umo'
 import styled from 'styled-components'
@@ -69,7 +69,7 @@ export class ContactCase extends Component {
           key: ''
         }
       ],
-      tableData: [{userName: '张三', mobile: '18756548922'},{userName: '一套', mobile: '3234234324'}],
+      tableData: [],
       deptParams: {
         deptNo: '',
         keyword: ''
@@ -77,7 +77,7 @@ export class ContactCase extends Component {
     }
   }
   componentDidMount(){
-    this.getCallBook()
+    // this.getCallBook()
   }
   // 得到通讯录，根据条件
   getCallBook = async() =>{
@@ -104,8 +104,13 @@ export class ContactCase extends Component {
       })
     }
     clickSearch= ()=>{
-      this.getCallBook()
-      console.log('deptParams=',this.state.deptParams)
+      const {deptParams} = this.state 
+      if(deptParams.keyword) {
+        this.getCallBook()
+      } else {
+        message.error('关键字不能为空')
+      }
+
     }
   render() {
     let {tableColumns,tableData} = this.state
@@ -114,7 +119,7 @@ export class ContactCase extends Component {
         <Contact>
           <div className='search-wrap'>
             <span className='search-tit'>快速搜索：</span>
-            <Input onChange={(e) => this.handleInputVal(e)}  style={{width:'500px',marginLeft:'23px',marginRight:'35px'}}/>
+            <Input onChange={(e) => this.handleInputVal(e)} placeholder='请输入关键字搜索'  style={{width:'500px',marginLeft:'23px',marginRight:'35px'}}/>
             <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
           </div>
           <div>
