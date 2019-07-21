@@ -56,6 +56,7 @@ function Header({event, data}) {
         align-items: center;
         .btn-icon{
           font-size: 13px;
+          margin-right: 5px;
         }
       }
     }
