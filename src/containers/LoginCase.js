@@ -56,16 +56,16 @@ export class LoginCase extends Component {
         console.log('Received values of form: ', values);
         const {workno, password} = values
         try {
-          // const {data} = await login({workno, password})
-          const data = {
-            code: 0,
-            content: {
-              deptName: '上海',
-              roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
-              extNum: 1001,
-              userName: '张太胖'
-            }
-          }
+          const {data} = await login({workno, password})
+          // const data = {
+          //   code: 0,
+          //   content: {
+          //     deptName: '上海',
+          //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+          //     extNum: 1001,
+          //     userName: '张太胖'
+          //   }
+          // }
           if(data.code === 0) {
             const {roleList, extNum, userName, deptName} = data.content
             // 保存状态
