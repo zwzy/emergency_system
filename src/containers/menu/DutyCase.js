@@ -21,7 +21,8 @@ export class DutyCase extends Component {
     this.state = {
       signDate: (new Date()).toISOString().substr(0,10), // 日期参数,今天 'xxxx-xx-xx'
       dutyType: 0, // 0 签到总览， 1 签到记录
-      allTabledata: [ // 签到总览表数据
+      // 签到总览表数据
+      allTabledata: [
         {
           key: '1',
           apart: '段值班领导',
@@ -43,7 +44,8 @@ export class DutyCase extends Component {
           name: ''
         }
       ],
-      allTablecolumns: [ // 签到总览表表头
+      // 签到总览表表头
+      allTablecolumns: [
         {
           title: '序号',
           dataIndex: 'key',
@@ -60,8 +62,8 @@ export class DutyCase extends Component {
           dataIndex: 'name'
         }
       ],
-      allTabledata1: [],// 签到总览表数据（下半部分）
-      allTablecolumns1: [ // 签到总览表表头（下半部分）
+      // 签到总览表表头（下半部分）
+      allTablecolumns1: [
         {
           title: '',
           dataIndex: 'key',
@@ -98,7 +100,8 @@ export class DutyCase extends Component {
             }
           ]
         }
-      ]
+      ],
+      allTabledata1: []// 签到总览表数据（下半部分）
     }
   }
   renderContent = (value, row, index) => {
@@ -158,9 +161,14 @@ export class DutyCase extends Component {
       // console.log('signshow==',data)
       if(data.code === 0) {
         let allTabledata1 = data.content.workplace
-        // console.log(temp)
-        allTabledata.forEach((item,index)=>{
-          item.name = data.content.all[index].userName
+        let role_name = ['段值班领导','应急指挥干部(运用)','应急指挥干部(技术)','应急指挥专员']
+        // 角色匹配
+        data.content.all.forEach((item)=>{
+          role_name.forEach((itemin,indexin)=>{
+            if(item.roleName === itemin) {
+              allTabledata[indexin].name = item.userName
+            }
+          })
         })
         let temp = []
         allTabledata1.forEach((item,index)=>{
