@@ -54,9 +54,10 @@ export class LoginCase extends Component {
     this.props.form.validateFields( async (err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        const {workno, password} = values
+        const {workno, password, extnum} = values
+        console.log(values)
         try {
-          const {data} = await login({workno, password})
+          const {data} = await login({workno, password, extnum})
           // const data = {
           //   code: 0,
           //   content: {
@@ -71,7 +72,7 @@ export class LoginCase extends Component {
             // 保存状态
             const userInfo = {
               userName, // 工号
-              extNum, // 密码
+              extNum, //  分机
               roleList: roleList,
               deptName,
               workno,
@@ -251,6 +252,13 @@ export class LoginCase extends Component {
                 rules: [{ required: true, message: '请输入工号!' }],
               })(
                 <Input size='large' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="工号" />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('extnum', {
+                rules: [{ required: true, message: '请输入分机号!' }],
+              })(
+                <Input size='large' prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}  placeholder="分机号" />
               )}
             </Form.Item>
             <Form.Item>

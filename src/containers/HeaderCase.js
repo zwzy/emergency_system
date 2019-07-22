@@ -334,7 +334,7 @@ export class HeaderCase extends Component {
           <div style={modalItemStyle}>姓名： <strong>{userInfo.userName}</strong></div>
           <div style={modalItemStyle}>职位： 
             <strong> 
-            <Select defaultValue={userInfo.roleList[0].id}  style={{ width: 150 }} size='small' onChange={this.handleChange}>
+            <Select defaultValue={userInfo.roleList.length > 0 ? userInfo.roleList[0].id : ''}  style={{ width: 150 }} size='small' onChange={this.handleChange}>
               {userInfo.roleList.map((item)=>{
                   return (
                     <Option key={item.id} value={item.id}>{item.roleName}</Option>

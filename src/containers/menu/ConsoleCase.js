@@ -170,7 +170,8 @@ export class ConsoleCase extends Component {
 
   getTrainUpdateInfo = async (trainCode) => {
     try {
-      const {data} = await trainUpdateInfo({trainCode}) 
+      const code = trainCode.padStart(4, '0')
+      const {data} = await trainUpdateInfo({trainCode: code}) 
       if(data.code === 0) {
         if(data.content.length) {
           const trainInfoData = data.content.map((item, index)=>{
