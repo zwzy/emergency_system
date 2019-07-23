@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import color from '../utils/color'
+import {GetQueryString} from '../utils/common'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import {userLoginACD} from '../utils/umo'
 import {login} from '../api/user'
@@ -39,86 +40,124 @@ export class LoginCase extends Component {
     }
   }
   componentDidMount() {
-    if(localStorage.getItem('userInfo')) {
-      // const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      // this.props.form.setFieldsValue({
-      //   password: userInfo.passWord,
-      //   remember: true,
-      //   userName: userInfo.userName,
-      //   domain: userInfo.domain
-      // })
-    }
+    this.handleLogin()
   }
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    this.props.form.validateFields( async (err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-        const {workno, password} = values
-        try {
-          const {data} = await login({workno, password})
-          // const data = {
-          //   code: 0,
-          //   content: {
-          //     deptName: '上海',
-          //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
-          //     extNum: 1001,
-          //     userName: '张太胖'
-          //   }
-          // }
-          if(data.code === 0) {
-            const {roleList, extNum, userName, deptName} = data.content
-            // 保存状态
-            const userInfo = {
-              userName, // 工号
-              extNum, // 密码
-              roleList: roleList,
-              deptName,
-              workno,
-            }
-
-            localStorage.setItem('userInfo',JSON.stringify(userInfo))
-
-            this.props.updateUserInformation({
-             ...userInfo
-            })
-            const loginUmoInfo = {
-              ...userInfo,
-              domain: '10.131.172.82',
-              passWord: '123456'
-            }
-            this.loginUmoSystem(loginUmoInfo)
-            this.setState({
-              loading: false
-            })
-             sessionStorage.setItem('isLogin', true)
-             this.props.history.push('/')
-          } else {
-
-          }
-        } catch (error) {
-          
+  handleLogin = async () => {
+    const workno = GetQueryString('workno')
+    const password = GetQueryString('password')
+    try {
+      const {data} = await login({workno, password})
+      // const data = {
+      //   code: 0,
+      //   content: {
+      //     deptName: '上海',
+      //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+      //     extNum: 1001,
+      //     userName: '张太胖'
+      //   }
+      // }
+      if(data.code === 0) {
+        const {roleList, extNum, userName, deptName} = data.content
+        // 保存状态
+        const userInfo = {
+          userName, // 工号
+          extNum, // 密码
+          roleList: roleList,
+          deptName,
+          workno,
         }
+
+        localStorage.setItem('userInfo',JSON.stringify(userInfo))
+
+        this.props.updateUserInformation({
+         ...userInfo
+        })
+        const loginUmoInfo = {
+          ...userInfo,
+          domain: '10.131.172.82',
+          passWord: '123456'
+        }
+        this.loginUmoSystem(loginUmoInfo)
+        this.setState({
+          loading: false
+        })
+         sessionStorage.setItem('isLogin', true)
+         this.props.history.push('/')
+      } else {
+      }
+    } catch (error) {
+      console.log(error)
+    } 
+  }
+  // handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   this.props.form.validateFields( async (err, values) => {
+  //     if (!err) {
+  //       console.log('Received values of form: ', values);
+  //       const {workno, password} = values
+  //       try {
+  //         // const data = {
+  //         //   code: 0,
+  //         //   content: {
+  //         //     deptName: '上海',
+  //         //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+  //         //     extNum: 1001,
+  //         //     userName: '张太胖'
+  //         //   }
+  //         // }
+  //         if(data.code === 0) {
+  //           const {roleList, extNum, userName, deptName} = data.content
+  //           // 保存状态
+  //           const userInfo = {
+  //             userName, // 工号
+  //             extNum, // 密码
+  //             roleList: roleList,
+  //             deptName,
+  //             workno,
+  //           }
+
+  //           localStorage.setItem('userInfo',JSON.stringify(userInfo))
+
+  //           this.props.updateUserInformation({
+  //            ...userInfo
+  //           })
+  //           const loginUmoInfo = {
+  //             ...userInfo,
+  //             domain: '10.131.172.82',
+  //             passWord: '123456'
+  //           }
+  //           this.loginUmoSystem(loginUmoInfo)
+  //           this.setState({
+  //             loading: false
+  //           })
+  //            sessionStorage.setItem('isLogin', true)
+  //            this.props.history.push('/')
+  //         } else {
+
+  //         }
+  //       } catch (error) {
+          
+  //       }
         
        
       
 
         
-        // userName: jsonUserInformation.userName || '',
-        // extNum: jsonUserInformation.extNum || '',
-        // roleList: jsonUserInformation.roleList || [],
-        // deptName:  jsonUserInformation.deptName || '',
-        // workno:  jsonUserInformation.workno || '',
-          // localStorage.setItem('userInfo',JSON.stringify(userInfo))
+  //       // userName: jsonUserInformation.userName || '',
+  //       // extNum: jsonUserInformation.extNum || '',
+  //       // roleList: jsonUserInformation.roleList || [],
+  //       // deptName:  jsonUserInformation.deptName || '',
+  //       // workno:  jsonUserInformation.workno || '',
+  //         // localStorage.setItem('userInfo',JSON.stringify(userInfo))
     
-        // 登录成功
+  //       // 登录成功
         
        
-      } else {
+  //     } else {
         
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
   loginUmoSystem = (userInfo) => {
     this.setState({
       loading: true
@@ -241,34 +280,7 @@ export class LoginCase extends Component {
   }
 
   render() {
-    const {getFieldDecorator} = this.props.form
-    return (
-      <LoginPage>
-        <Form onSubmit={this.handleSubmit}>
-          <LoginBox>
-            <Form.Item>
-              {getFieldDecorator('workno', {
-                rules: [{ required: true, message: '请输入工号!' }],
-              })(
-                <Input size='large' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="工号" />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: '请输入密码!' }],
-              })(
-                <Input size='large' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="密码" />
-              )}
-            </Form.Item>
-            <Form.Item>
-              <Button  size='large' type="primary" block htmlType="submit"  loading={this.state.loading} className="login-form-button">
-                登 录
-              </Button>
-            </Form.Item>            
-          </LoginBox>
-        </Form>
-      </LoginPage> 
-    )
+      return null
   }
 }
 
