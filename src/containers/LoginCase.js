@@ -45,17 +45,21 @@ export class LoginCase extends Component {
   handleLogin = async () => {
     const workno = GetQueryString('workno')
     const password = GetQueryString('password')
+    if(!workno || !password) {
+      message.info('url上没有带对应的参数')
+      return
+    }
     try {
-      const {data} = await login({workno, password})
-      // const data = {
-      //   code: 0,
-      //   content: {
-      //     deptName: '上海',
-      //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
-      //     extNum: 1001,
-      //     userName: '张太胖'
-      //   }
-      // }
+      // const {data} = await login({workno, password})
+      const data = {
+        code: 0,
+        content: {
+          deptName: '上海',
+          roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+          extNum: 1001,
+          userName: '张太胖'
+        }
+      }
       if(data.code === 0) {
         const {roleList, extNum, userName, deptName} = data.content
         // 保存状态
@@ -66,9 +70,7 @@ export class LoginCase extends Component {
           deptName,
           workno,
         }
-
         localStorage.setItem('userInfo',JSON.stringify(userInfo))
-
         this.props.updateUserInformation({
          ...userInfo
         })
@@ -77,7 +79,10 @@ export class LoginCase extends Component {
           domain: '10.131.172.82',
           passWord: '123456'
         }
-        this.loginUmoSystem(loginUmoInfo)
+        const isHasExtNum = roleList.findIndex((item)=>item.id == 1)
+        if(isHasExtNum !== -1) {
+          this.loginUmoSystem(loginUmoInfo)
+        }
         this.setState({
           loading: false
         })

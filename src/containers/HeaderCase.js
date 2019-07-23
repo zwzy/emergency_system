@@ -195,6 +195,12 @@ export class HeaderCase extends Component {
       domain: '10.131.172.82',
       passWord: '123456'
     }
+    const isHasExtNum = userInfo.roleList.findIndex((item)=>item.id == 1)
+    if(isHasExtNum !== -1) {
+      this.loginUmoSystem(loginUmoInfo)
+    } 
+  }
+  loginUmoSystem = (loginUmoInfo) => {
     userLoginACD(loginUmoInfo, {
       onReadyState: (status)=>{
         console.log(status)

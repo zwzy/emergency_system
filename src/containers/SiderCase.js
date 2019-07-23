@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import PropTypes from 'prop-types'
 import Sider from '../components/Sider'
 // router
@@ -16,6 +17,18 @@ export class SiderCase extends Component {
     openKey: ''
   }
   componentDidMount(){
+    const {userInfo} = this.props
+    console.log(this.props)
+    const isHasExtNum = userInfo.roleList.findIndex((item)=>item.id == 1)
+    if(isHasExtNum === -1) {
+      if(menuList[0].subId === 'console') {
+        menuList.splice(0,1)
+      }
+      if(this.props.location.pathname !== '/attendance') {
+        this.props.history.push({pathname: '/attendance'})
+      }
+    } 
+
     const activePath = this.props.location.pathname
     const activeMenu = activePath.slice(1)
     const subMenu = activeMenu.split('_')[0]
@@ -25,7 +38,6 @@ export class SiderCase extends Component {
     // 则需要把当前路由联系的SubMenu展开
     if(activeMenu === subMenu) {
       if(activeMenu === '') {
-      console.log(8888, activeMenu)
         this.setState({
           menu: 'console'
         })
@@ -47,6 +59,9 @@ export class SiderCase extends Component {
         })
       }
     }
+  }
+  componentWillReceiveProps(props) {
+    console.log(8883433, props, this.props)
   }
   handleClick = (e) => {
     if(this.state.menu === e.key) return 
@@ -71,6 +86,7 @@ export class SiderCase extends Component {
     const subMenu =  this.state.menu.split('_')[0]
     // 找到最新点击的subMenu的所对应的数组
     // 若前一个路由所在的subMenu不是点击的这个 即默认选中最新点击subMenu与它下面的第一个子菜单
+    
     const array = menuList.filter((item) => {
       return item.subId === selSubMenu
     })
@@ -100,4 +116,10 @@ export class SiderCase extends Component {
   }
 }
 
-export default withRouter(SiderCase)
+const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
+  userInfo: state.user
+})
+const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SiderCase))
