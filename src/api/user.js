@@ -33,6 +33,6 @@ export function login (data = {}) {
     baseURL: baseUserUrl,
     url: '/login',
     method: 'POST',
-    data: data
+    params: data
   })
 } 
