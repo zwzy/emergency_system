@@ -71,7 +71,7 @@ export class DutyCase extends Component {
         },
         {
           title: '车间',
-          dataIndex: 'apart',
+          dataIndex: 'deptName',
           width: '233px',
         },
         {
@@ -80,10 +80,38 @@ export class DutyCase extends Component {
           children: [
             {
               title: '白班',
-              dataIndex: 'dayname',
+              dataIndex: 'yjDay',
+              render: (value,row) => {
+                let rowlist = row.yjDay
+                return {
+                  children: <div>
+                    {
+                      rowlist.map((item,index) => {
+                        return (
+                          <span key={index}>{index == rowlist.length - 1 ? item : item + ' , '}</span>
+                        )
+                      })
+                    }   
+                  </div>
+                }
+              }
             },{
               title: '夜班',
-              dataIndex: 'nightname'
+              dataIndex: 'yjNight',
+              render: (value,row) => {
+                let rowlist = row.yjNight
+                return {
+                  children: <div>
+                    {
+                      rowlist.map((item,index) => {
+                        return (
+                          <span key={index}>{index == rowlist.length - 1 ? item : item + ' , '}</span>
+                        )
+                      })
+                    }   
+                  </div>
+                }
+              }
             }
           ]
         },
@@ -93,10 +121,39 @@ export class DutyCase extends Component {
           children: [
             {
               title: '白班',
-              dataIndex: 'dayname1'
+              dataIndex: 'zbDay',
+              render: (value,row) => {
+                let rowlist = row.zbDay
+                return {
+                  children: <div>
+                    {
+                      rowlist.map((item,index) => {
+                        return (
+                          <span key={index}>{index == rowlist.length - 1 ? item : item + ' , '}</span>
+                        )
+                      })
+                    }
+                    
+                  </div>
+                }
+              }
             },{
               title: '夜班',
-              dataIndex: 'nightname1'
+              dataIndex: 'zbNight',
+              render: (value,row) => {
+                let rowlist = row.zbNight
+                return {
+                  children: <div>
+                    {
+                      rowlist.map((item,index) => {
+                        return (
+                          <span key={index}>{index == rowlist.length - 1 ? item : item + ' , '}</span>
+                        )
+                      })
+                    }
+                  </div>
+                }
+              }
             }
           ]
         }
@@ -158,9 +215,26 @@ export class DutyCase extends Component {
     let {allTabledata} = this.state
     try {
       const {data} = await signShow({date:this.state.signDate})
-      // console.log('signshow==',data)
+      // const data = {
+      //   code: 0
+      // }
+      // let allTabledata1 = [
+      //   {
+      //     deptName: "合肥西运用",
+      //     yjDay: ["张武"],
+      //     yjNight: ["dez","hah"],
+      //     zbDay: ["zw","kkk"],
+      //     zbNight: ["张武"]
+      //   },
+      //   {
+      //     deptName: "合肥东运用",
+      //     yjDay: ["张四"],
+      //     yjNight: [],
+      //     zbDay: [],
+      //     zbNight: ["张四"]
+      //   }
+      // ]
       if(data.code === 0) {
-        let allTabledata1 = data.content.workplace
         let role_name = ['段值班领导','应急指挥干部(运用)','应急指挥干部(技术)','应急指挥专员']
         // 角色匹配
         data.content.all.forEach((item)=>{
@@ -170,35 +244,15 @@ export class DutyCase extends Component {
             }
           })
         })
-        let temp = []
+        let allTabledata1 = data.content.workplace || []
         allTabledata1.forEach((item,index)=>{
-          let obj = {
-            key: index + 1,
-            apart: item.deptName,
-            dayname: '',
-            dayname1:'',
-            nightname:'',
-            nightname1:''
-          }
-          if(item.roleName === '应急值守人员' && item.shifts === 'DAY') {
-            obj.dayname = item.userName
-          }
-          if(item.roleName === '应急值守人员' && item.shifts === 'NIGHT') {
-            obj.nightname = item.userName
-          }
-          if(item.roleName === '值班人员' && item.shifts === 'DAY') {
-            obj.dayname1 = item.userName
-          }
-          if(item.roleName === '值班人员' && item.shifts === 'NIGHT') {
-            obj.nightname1 = item.userName
-          }
-          temp.push(obj) 
+          item.key = index + 1
         })
         this.setState({
           allTabledata:allTabledata,
-          allTabledata1: temp
+          allTabledata1: allTabledata1
         },()=>{
-          console.log('haddd=',this.state.allTabledata1)
+          // console.log('haddd=',this.state.allTabledata1)
         })
       }
     } catch (error) {
