@@ -99,6 +99,9 @@ export class ConsoleCase extends Component {
         frontStation: '--',
         activePosition: '--',
         outDate: '--',
+        deptName: '--',
+        guideGroup: '--',
+        
       },
       trainInfoData: [],
       breakRuleData: [],
@@ -109,11 +112,12 @@ export class ConsoleCase extends Component {
         {name: '副司机工号', id: 'assisCode', event: ''},
         {name: '副司机姓名',  id: 'assisName', event: 'breakRuleShowEvent'},
         {name: '联系电话',  id: 'assisMobile', event: ''},
-        {name: '机型/车号', id: 'model_trainCode', event: 'trainInfoShowEvent'},
+        {name: '车间',  id: 'deptName', event: ''},
+        {name: '指导组',  id: 'guideGroup', event: ''},
         {name: '区段', id: 'zone', event: ''},
-        {name: '前方站信息', id: 'frontStation', event: ''},
-        {name: '当前定位', id: 'activePosition', event: ''},
-        {name: '出勤时间', id: 'outDate', event: ''}
+        {name: '机型/车号', id: 'model_trainCode', event: 'trainInfoShowEvent'},
+        {name: '出勤时间', id: 'outDate', event: ''},
+        {name: '当前定位', id: 'activePosition', event: ''}
       ]
     }
   }
