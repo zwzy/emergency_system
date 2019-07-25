@@ -307,3 +307,14 @@ export const getUmoData = () => {
 
  
 }
+
+export const getCDRId = (cbResult) => {
+  UMO.getcdrid(function(cmd, result){
+    if (result.errno == 0)
+    {
+        var msg = "get cdrid ok, cdrid=" + result.cdrid;
+        console.log(msg)
+        cbResult(result.cdrid);
+    }
+  }, null)
+}

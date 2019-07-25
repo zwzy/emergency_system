@@ -24,7 +24,7 @@ export class SiderCase extends Component {
       if(menuList[0].subId === 'console') {
         menuList.splice(0,1)
       }
-      if(this.props.location.pathname !== '/attendance') {
+      if(this.props.location.pathname === '/') {
         this.props.history.push({pathname: '/attendance'})
       }
     } 

@@ -14,7 +14,7 @@ import { answerCall, findCallUser } from '../api/call'
 
 import { getNowDate, getNowTime } from '../utils/common'
 
-import {hangUpPhone, userLoginACD} from '../utils/umo'
+import {hangUpPhone, userLoginACD, getCDRId} from '../utils/umo'
 
 const modalItemStyle = {margin: '8px 0'}
 const { Option } = Select;
@@ -26,6 +26,8 @@ export class HeaderCase extends Component {
     this.timer = null
     this.timer1 = null
     this.state = {
+      crdId: '',
+      btnlist,
       // 来电弹窗
       callInModalIsShow: false,
       // 拨出
@@ -118,6 +120,11 @@ export class HeaderCase extends Component {
       const {data} = await findCallUser({mobile, callDate})
       if(data.code === 0) {
         const {callId} = data.content 
+        // 每次电话来前清空电话 
+        this.setState({
+          crdId: ''
+        })
+
         this.props.updateCommationInformation({
           callId
         })
@@ -152,6 +159,14 @@ export class HeaderCase extends Component {
       const {data} = await answerCall({callId, callStatus: 'CALL_ONLINE', answerDate: nowDate})
       if(data.code === 0) {
         console.log('接听记录成功')
+         // 保存电话对应的话单id
+         getCDRId((crdId)=>{
+          if(crdId) {
+            this.setState({
+              crdId
+            })
+          }
+        })
       }
       } catch (error) {
         console.log(error)
@@ -172,7 +187,7 @@ export class HeaderCase extends Component {
       const timerSecond = parseInt(timer/1000)
       if(callStatus !== 'CALL_ONLINE' ) return
       try {
-        const {data} = await answerCall({callId, callStatus: 'CALL_HANGUP', hangupDate: nowDate, callDuration: timerSecond})
+        const {data} = await answerCall({recordId: this.state.crdId, callId, callStatus: 'CALL_HANGUP', hangupDate: nowDate, callDuration: timerSecond})
         if(data.code === 0) {
           console.log('接听记录成功')
         }
@@ -186,6 +201,7 @@ export class HeaderCase extends Component {
   }
 
   componentDidMount() {
+    console.log(11111)
     console.log(888, window.UMO._token)
     // 防止未登录时，在登录页面登录umo
     if(window.UMO._token || !sessionStorage.getItem('isLogin') ) return
@@ -195,10 +211,17 @@ export class HeaderCase extends Component {
       domain: '10.131.172.82',
       passWord: '123456'
     }
+    // 如果id不为1的话。即角色不是应急人员，不显示拨打号码按钮，且不显示控制台菜单
     const isHasExtNum = userInfo.roleList.findIndex((item)=>item.id == 1)
     if(isHasExtNum !== -1) {
       this.loginUmoSystem(loginUmoInfo)
-    } 
+    } else {
+      if(btnlist.length) {
+        this.setState({
+          btnlist: []
+        })
+      }
+    }
   }
   loginUmoSystem = (loginUmoInfo) => {
     userLoginACD(loginUmoInfo, {
@@ -356,10 +379,9 @@ export class HeaderCase extends Component {
       okText: '确认',
       cancelText: '取消',
       onOk:()=>{
-        const {deptName, userName, workno} = this.props.userInfo
-
+        const {deptName, userName, workno, mobile} = this.props.userInfo
         this.setState({
-          signParams: { ...this.state.signParams, deptName, userName, workno, signTime: nowData}
+          signParams: { ...this.state.signParams, deptName, userName, workno, signTime: nowData, mobile}
         }, () => {
           sign(this.state.signParams).then(
             res => {
@@ -439,6 +461,7 @@ export class HeaderCase extends Component {
       callOtherData, callOtherIsShow,
       callOutIsShow, callOutData,
       callInListIsShow,
+      btnlist
     } = this.state
     const {userInfo} = this.props
     return (

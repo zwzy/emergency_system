@@ -2,7 +2,7 @@
 // 单人通讯录
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {findAllDeptInfo, findUserByDept, callRecord } from '../../api/call'
+import {findAllDeptInfo, findUserByDept, callRecord, downLoadSoundFile } from '../../api/call'
 import {callOutPhone} from '../../utils/umo'
 
 import { Button, Select, Input, Empty } from 'antd' 
@@ -86,6 +86,15 @@ export default class BaseCallOutModal extends Component {
       },
       callOutBook: [],
       callOutHistoryCall: [
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s', recordId: '1233'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
+        {name: '张三', mobile: '178277323', callDate: '2018-09-09' ,timeLong: '120s'},
       ]
     }
   }
@@ -154,6 +163,7 @@ export default class BaseCallOutModal extends Component {
       this.getCallBook()
     })
   }
+  
   searchBykeyWord = (key) => {
     const {deptParams} = this.state
     this.setState({
@@ -162,7 +172,19 @@ export default class BaseCallOutModal extends Component {
       this.getCallBook()
     })
   }
-  
+
+  downLoadFile = async (recordId) => {
+    try {
+      const {data} = await downLoadSoundFile({recordId})
+      if(data.code === 0) {
+        　　window.open ('http://pic.ibaotu.com/00/36/51/63R888piCB5q.mp3')
+
+      }
+    } catch (error) {
+      
+    }
+    console.log("recordId", recordId)
+  }
   render() {
     const {callOutAllDept, callOutBook, callOutHistoryCall} = this.state
     return (
@@ -177,6 +199,9 @@ export default class BaseCallOutModal extends Component {
                     <div><span className='right-divider'>{item.name}</span> <span>{item.mobile}</span></div>
                     <div className='desc'><span className='right-divider'>{item.callDate}</span> <span>{item.timeLong}</span></div>
                 </div>
+                {/* <div className="rt-item">
+                  <Button type="primary"  icon="cloud-download" onClick={() => this.downLoadFile(item.recordId)} >录音</Button>
+                </div> */}
                 <div className="rt-item">
                   <Button type="primary" shape="circle" icon="phone" onClick={() => callOutPhone({phoneNumber: item.mobile, uud: '4555', gid: '@0'})} />
                 </div>

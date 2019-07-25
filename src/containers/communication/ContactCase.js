@@ -77,7 +77,7 @@ export class ContactCase extends Component {
     }
   }
   componentDidMount(){
-    // this.getCallBook()
+    this.getCallBook()
   }
   // 得到通讯录，根据条件
   getCallBook = async() =>{
@@ -87,9 +87,15 @@ export class ContactCase extends Component {
       // const data = {
       //   content : [...this.state.tableData, ...this.state.tableData]
       // }
-      this.setState({
-        tableData: data.content
-      })
+      if(data.content.length>100) {
+        this.setState({
+          tableData: data.content
+        })
+      } else {
+        this.setState({
+          tableData: data.content
+        })
+      }
     } catch (error) {
        console.log(error)
     }
@@ -123,7 +129,7 @@ export class ContactCase extends Component {
             <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
           </div>
           <div>
-            <Table bordered columns={tableColumns} dataSource={tableData} />
+            <Table bordered columns={tableColumns} dataSource={tableData}  pagination={{ pageSize: 5 }} />
           </div>
         </Contact> 
       </div>

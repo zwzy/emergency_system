@@ -50,18 +50,19 @@ export class LoginCase extends Component {
       return
     }
     try {
-      // const {data} = await login({workno, password})
-      const data = {
-        code: 0,
-        content: {
-          deptName: '上海',
-          roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
-          extNum: 1001,
-          userName: '张太胖'
-        }
-      }
+      const {data} = await login({workno, password})
+      // const data = {
+      //   code: 0,
+      //   content: {
+      //     deptName: '上海',
+      //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+      //     extNum: 1001,
+      //     userName: '张太胖',
+      //     mobile: '18755489161'
+      //   }
+      // }
       if(data.code === 0) {
-        const {roleList, extNum, userName, deptName} = data.content
+        const {roleList, extNum, userName, deptName, mobile} = data.content
         // 保存状态
         const userInfo = {
           userName, // 工号
@@ -69,6 +70,7 @@ export class LoginCase extends Component {
           roleList: roleList,
           deptName,
           workno,
+          mobile
         }
         localStorage.setItem('userInfo',JSON.stringify(userInfo))
         this.props.updateUserInformation({
