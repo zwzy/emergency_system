@@ -9,8 +9,6 @@ export default class DutySearch extends Component {
   constructor(props) {
     super(props)
     this.searchParams = {// 筛选条件
-      pageSize: 10,
-      pageIndex: 1,
       apartment:'',
       job:'',
       username:'',
@@ -43,15 +41,20 @@ export default class DutySearch extends Component {
           dataIndex: 'signTime'
         }
       ],
-      tableData: [] // 签到记录表数据
+      tableData: [], // 签到记录表数据
+      pagination: {
+        current: 1,
+        pageSize: 10
+      }
     }
   }
   getSignList = async() => {
     let { tableData } = this.state
+    let {current: pageNum , pageSize } = this.state.pagination
     try {
       let params = {// 筛选条件
-        pageSize: this.searchParams.pageSize,
-        pageNum: this.searchParams.pageIndex,
+        pageSize: pageSize,
+        pageNum: pageNum,
         deptName: this.searchParams.apartment,
         roleName:this.searchParams.job,
         userName:this.searchParams.username,
@@ -60,16 +63,18 @@ export default class DutySearch extends Component {
       const {data} = await signList(params)
       console.log('signlist==',data)
       if(data.code === 0) {
+        let pagination = {...this.state.pagination , total: data.content.total }
         tableData = data.content.list
         tableData.forEach((item,index) => {
           item.key = index + 1
         })
+        this.setState({
+          tableData:tableData,
+          pagination: pagination
+        },() => {
+          // console.log(this.state.tableData)
+        })
       }
-      this.setState({
-        tableData:tableData
-      },() => {
-        // console.log(this.state.tableData)
-      })
     } catch (error) {
     }
   }
@@ -86,6 +91,9 @@ export default class DutySearch extends Component {
   }
   componentDidMount() {
     this.getSignList()
+  }
+  handleTable = () => {
+
   }
   render() {
     return (
@@ -111,7 +119,7 @@ export default class DutySearch extends Component {
             <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
           </li>
         </ul>
-        <Table bordered columns={this.state.tableColumns} dataSource={this.state.tableData} />
+        <Table bordered columns={this.state.tableColumns} onChange={this.handleTable} pagination={this.state.pagination} dataSource={this.state.tableData} />
       </div>
     )
   }
