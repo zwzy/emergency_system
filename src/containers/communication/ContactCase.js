@@ -51,7 +51,6 @@ export class ContactCase extends Component {
           title: '联系人号码',
           dataIndex: 'mobile',
           key: 'mobile'
-
         },
         {
           title: '操作',
@@ -88,16 +87,16 @@ export class ContactCase extends Component {
     return new Promise((resolve, reject)=>{
       setTimeout(()=>{
         const data = [
-          {mobile: '18755489161', userName: '张三'+ pageNum +0},
-          {mobile: '18755489161', userName: '张三'+ pageNum +1},
-          {mobile: '18755489161', userName: '张三'+ pageNum +2},
-          {mobile: '18755489161', userName: '张三'+ pageNum +3},
-          {mobile: '18755489161', userName: '张三'+ pageNum +4},
-          {mobile: '18755489161', userName: '张三'+ pageNum +5},
-          {mobile: '18755489161', userName: '张三'+ pageNum +6},
-          {mobile: '18755489161', userName: '张三'+ pageNum +7},
-          {mobile: '18755489161', userName: '张三'+ pageNum +8},
-          {mobile: '18755489161', userName: '张三'+ pageNum +9}
+          {mobile: '18755489161', userName: '张三'+pageNum +0, userId:  '张'+pageNum +0},
+          {mobile: '18755489161', userName: '张三'+pageNum +1, userId:  '张'+pageNum +1},
+          {mobile: '18755489161', userName: '张三'+pageNum +2, userId:  '张'+pageNum +2},
+          {mobile: '18755489161', userName: '张三'+pageNum +3, userId:  '张'+pageNum +3},
+          {mobile: '18755489161', userName: '张三'+pageNum +4, userId:  '张'+ pageNum +4},
+          {mobile: '18755489161', userName: '张三'+pageNum +5, userId:  '张'+ pageNum +5},
+          {mobile: '18755489161', userName: '张三'+pageNum +6, userId:  '张'+ pageNum +6},
+          {mobile: '18755489161', userName: '张三'+pageNum +7, userId:  '张'+ pageNum +7},
+          {mobile: '18755489161', userName: '张三'+pageNum +8, userId:  '张'+ pageNum +8},
+          {mobile: '18755489161', userName: '张三'+pageNum +9, userId:  '张'+ pageNum +9}
       ]
       const obj = {
         data: {
@@ -119,8 +118,8 @@ export class ContactCase extends Component {
       this.setState({
         loading: true
       })
-      const {data} = await findCallBook({keyword, pageNum, pageSize})
-      // const {data}  = await this.promiseApi({keyword, pageNum, pageSize})
+      // const {data} = await findCallBook({keyword, pageNum, pageSize})
+      const {data}  = await this.promiseApi({keyword, pageNum, pageSize})
       if(data.code === 0) {
         const pagination = { ...this.state.pagination, total: data.count };
         this.setState({
@@ -175,7 +174,7 @@ export class ContactCase extends Component {
             <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
           </div>
           <div>
-            <Table  rowKey={record => record.userName} bordered columns={tableColumns}  loading={this.state.loading}  onChange={this.handleTableChange} pagination={this.state.pagination}  dataSource={tableData} />
+            <Table  rowKey={record => record.userId} bordered columns={tableColumns}  loading={this.state.loading}  onChange={this.handleTableChange} pagination={this.state.pagination}  dataSource={tableData} />
           </div>
         </Contact> 
       </div>
