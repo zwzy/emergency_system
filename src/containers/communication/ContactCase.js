@@ -76,7 +76,8 @@ export class ContactCase extends Component {
       },
       pagination: {
         current: 1,
-        pageSize: 10
+        pageSize: 5,
+        total:1,
       }
     }
   }
@@ -100,8 +101,26 @@ export class ContactCase extends Component {
       ]
       const obj = {
         data: {
-          content: data.slice(0, pageSize),
-          count: 100,
+          content:{
+            endRow: 1,
+            firstPage: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+            isFirstPage: true,
+            isLastPage: true,
+            lastPage: 1,
+            list: data.slice(0, pageSize),
+            navigatePages: 8,
+            navigatepageNums: [1],
+            nextPage: 0,
+            pageNum: 1,
+            pageSize: 10,
+            pages: 1,
+            prePage: 0,
+            size: 2,
+            startRow: 0,
+            total: 2
+          },
           code: 0
         }
       }
@@ -118,12 +137,12 @@ export class ContactCase extends Component {
       this.setState({
         loading: true
       })
-      // const {data} = await findCallBook({keyword, pageNum, pageSize})
-      const {data}  = await this.promiseApi({keyword, pageNum, pageSize})
+      const {data} = await findCallBook({keyword, pageNum, pageSize})
+      // const {data}  = await this.promiseApi({keyword, pageNum, pageSize})
       if(data.code === 0) {
-        const pagination = { ...this.state.pagination, total: data.count };
+        const pagination = { ...this.state.pagination, total: data.content.total };
         this.setState({
-          tableData:data.content,
+          tableData:data.content.list,
           pagination
         })
       }

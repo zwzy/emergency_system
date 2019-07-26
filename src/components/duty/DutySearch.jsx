@@ -15,6 +15,7 @@ export default class DutySearch extends Component {
       worktime: ''
     }
     this.state = {
+      loading: false, 
       tableColumns: [ // 签到记录表头
         {
           title: '序号',
@@ -43,12 +44,60 @@ export default class DutySearch extends Component {
       ],
       tableData: [], // 签到记录表数据
       pagination: {
-        current: 1,
-        pageSize: 10
+        current: 1, 
+        pageSize: 10,
+        total:1
       }
     }
   }
+  promiseApi = ({date,userName,roleName,deptName, pageNum, pageSize}) => {
+    return new Promise((resolve, reject)=>{
+      setTimeout(()=>{
+        const data = [
+          {mobile: '18755489161', userName: '张三'+pageNum +0, userId:  '张'+pageNum +0},
+          {mobile: '18755489161', userName: '张三'+pageNum +1, userId:  '张'+pageNum +1},
+          {mobile: '18755489161', userName: '张三'+pageNum +2, userId:  '张'+pageNum +2},
+          {mobile: '18755489161', userName: '张三'+pageNum +3, userId:  '张'+pageNum +3},
+          {mobile: '18755489161', userName: '张三'+pageNum +4, userId:  '张'+ pageNum +4},
+          {mobile: '18755489161', userName: '张三'+pageNum +5, userId:  '张'+ pageNum +5},
+          {mobile: '18755489161', userName: '张三'+pageNum +6, userId:  '张'+ pageNum +6},
+          {mobile: '18755489161', userName: '张三'+pageNum +7, userId:  '张'+ pageNum +7},
+          {mobile: '18755489161', userName: '张三'+pageNum +8, userId:  '张'+ pageNum +8},
+          {mobile: '18755489161', userName: '张三'+pageNum +9, userId:  '张'+ pageNum +9}
+      ]
+      const obj = {
+        data: {
+          content:{
+            endRow: 1,
+            firstPage: 1,
+            hasNextPage: false,
+            hasPreviousPage: false,
+            isFirstPage: true,
+            isLastPage: true,
+            lastPage: 1,
+            list: data.slice(0, pageSize),
+            navigatePages: 8,
+            navigatepageNums: [1],
+            nextPage: 0,
+            pageNum: 1,
+            pageSize: 10,
+            pages: 1,
+            prePage: 0,
+            size: 2,
+            startRow: 0,
+            total: 200
+          },
+          code: 0
+        }
+      }
+        resolve(obj)
+      }, 2000)
+    })
+  }
   getSignList = async() => {
+    this.setState({
+      loading: true
+    })
     let { tableData } = this.state
     let {current: pageNum , pageSize } = this.state.pagination
     try {
@@ -61,6 +110,10 @@ export default class DutySearch extends Component {
         date: this.searchParams.worktime
       }
       const {data} = await signList(params)
+      // const {data} = await this.promiseApi(params)
+      this.setState({
+        loading: false
+      })
       console.log('signlist==',data)
       if(data.code === 0) {
         let pagination = {...this.state.pagination , total: data.content.total }
@@ -92,8 +145,13 @@ export default class DutySearch extends Component {
   componentDidMount() {
     this.getSignList()
   }
-  handleTable = () => {
-
+  handleTable = (pagination, filters, sorter) => {
+      console.log(pagination)
+      this.setState({
+        pagination
+      }, ()=>{
+        this.getSignList()
+      })
   }
   render() {
     return (
@@ -119,7 +177,7 @@ export default class DutySearch extends Component {
             <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
           </li>
         </ul>
-        <Table bordered columns={this.state.tableColumns} onChange={this.handleTable} pagination={this.state.pagination} dataSource={this.state.tableData} />
+        <Table bordered loading={this.state.loading}  columns={this.state.tableColumns} onChange={this.handleTable} pagination={this.state.pagination} dataSource={this.state.tableData} />
       </div>
     )
   }
