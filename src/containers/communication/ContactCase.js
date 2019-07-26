@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import { Button , Input , Table, message } from 'antd'
-import { findUserByDept } from '../../api/call'
+import { findCallBook } from '../../api/call'
 import {callOutPhone} from '../../utils/umo'
 import styled from 'styled-components'
 
@@ -40,6 +40,7 @@ export class ContactCase extends Component {
       keyword:''
     }
     this.state = {
+      loading: false,
       tableColumns: [
         {
           title: '联系人姓名',
@@ -50,7 +51,6 @@ export class ContactCase extends Component {
           title: '联系人号码',
           dataIndex: 'mobile',
           key: 'mobile'
-
         },
         {
           title: '操作',
@@ -61,7 +61,7 @@ export class ContactCase extends Component {
                 () => {
                   console.log(1111, text, record.mobile)
                   callOutPhone({phoneNumber: record.mobile, uud: '4555', gid: '@0'} )
-              }
+                }
               }
               >拨打</Button>
             </span>
@@ -69,34 +69,71 @@ export class ContactCase extends Component {
           key: ''
         }
       ],
-      tableData: [],
-      deptParams: {
-        deptNo: '',
-        keyword: ''
+      tableData: [
+      ],
+      params: {
+        keyword: '',
       },
+      pagination: {
+        current: 1,
+        pageSize: 10
+      }
     }
   }
   componentDidMount(){
     this.getCallBook()
   }
+  promiseApi = ({keyword, pageNum, pageSize}) => {
+    return new Promise((resolve, reject)=>{
+      setTimeout(()=>{
+        const data = [
+          {mobile: '18755489161', userName: '张三'+pageNum +0, userId:  '张'+pageNum +0},
+          {mobile: '18755489161', userName: '张三'+pageNum +1, userId:  '张'+pageNum +1},
+          {mobile: '18755489161', userName: '张三'+pageNum +2, userId:  '张'+pageNum +2},
+          {mobile: '18755489161', userName: '张三'+pageNum +3, userId:  '张'+pageNum +3},
+          {mobile: '18755489161', userName: '张三'+pageNum +4, userId:  '张'+ pageNum +4},
+          {mobile: '18755489161', userName: '张三'+pageNum +5, userId:  '张'+ pageNum +5},
+          {mobile: '18755489161', userName: '张三'+pageNum +6, userId:  '张'+ pageNum +6},
+          {mobile: '18755489161', userName: '张三'+pageNum +7, userId:  '张'+ pageNum +7},
+          {mobile: '18755489161', userName: '张三'+pageNum +8, userId:  '张'+ pageNum +8},
+          {mobile: '18755489161', userName: '张三'+pageNum +9, userId:  '张'+ pageNum +9}
+      ]
+      const obj = {
+        data: {
+          content: data.slice(0, pageSize),
+          count: 100,
+          code: 0
+        }
+      }
+        resolve(obj)
+      }, 2000)
+    })
+  }
   // 得到通讯录，根据条件
   getCallBook = async() =>{
-    const {deptParams} = this.state
+    const {current: pageNum , pageSize} = this.state.pagination
+    const {keyword} = this.state.params
+    console.log(pageNum, pageSize)
     try {
-      const {data} = await findUserByDept(deptParams)
-      // const data = {
-      //   content : [...this.state.tableData, ...this.state.tableData]
-      // }
-      if(data.content.length>100) {
+      this.setState({
+        loading: true
+      })
+      // const {data} = await findCallBook({keyword, pageNum, pageSize})
+      const {data}  = await this.promiseApi({keyword, pageNum, pageSize})
+      if(data.code === 0) {
+        const pagination = { ...this.state.pagination, total: data.count };
         this.setState({
-          tableData: data.content
-        })
-      } else {
-        this.setState({
-          tableData: data.content
+          tableData:data.content,
+          pagination
         })
       }
+      this.setState({
+        loading: false
+      })
     } catch (error) {
+        this.setState({
+          loading: false
+        })
        console.log(error)
     }
   }
@@ -104,19 +141,27 @@ export class ContactCase extends Component {
     // 输入框
     handleInputVal = (e) => {
       this.setState({
-        deptParams: {
-          ...this.state.deptParams, keyword: e.target.value
+        params: {
+          ...this.state.params, keyword: e.target.value
         }
       })
     }
     clickSearch= ()=>{
-      const {deptParams} = this.state 
-      if(deptParams.keyword) {
+      const {params} = this.state 
+      if(params.keyword) {
         this.getCallBook()
       } else {
         message.error('关键字不能为空')
       }
 
+    }
+    handleTableChange = (pagination, filters, sorter) => {
+      console.log(pagination)
+      this.setState({
+        pagination
+      }, ()=>{
+        this.getCallBook()
+      })
     }
   render() {
     let {tableColumns,tableData} = this.state
@@ -129,7 +174,7 @@ export class ContactCase extends Component {
             <Button type="primary" onClick={() => this.clickSearch()}>搜索</Button>
           </div>
           <div>
-            <Table bordered columns={tableColumns} dataSource={tableData}  pagination={{ pageSize: 5 }} />
+            <Table  rowKey={record => record.userId} bordered columns={tableColumns}  loading={this.state.loading}  onChange={this.handleTableChange} pagination={this.state.pagination}  dataSource={tableData} />
           </div>
         </Contact> 
       </div>
