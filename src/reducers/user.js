@@ -5,7 +5,8 @@ const initUserState = {
   extNum: jsonUserInformation.extNum || '',
   roleList: jsonUserInformation.roleList || [],
   workno:  jsonUserInformation.workno || '',
-  deptName: jsonUserInformation.deptName || ''
+  deptName: jsonUserInformation.deptName || '',
+  mobile: jsonUserInformation.mobile || ''
 }
 const user = (state = initUserState, action) => {
   switch (action.type) {

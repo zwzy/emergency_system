@@ -113,3 +113,14 @@ export function driverBreakRuleInfo (data = {}) {
   })
 } 
 
+// 录音下载文件 
+export function downLoadSoundFile (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/getRecordFile',
+    method: 'GET',
+    params: data
+  })
+} 
+
+
