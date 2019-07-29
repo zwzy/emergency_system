@@ -166,13 +166,7 @@ export class ContactCase extends Component {
       })
     }
     clickSearch= ()=>{
-      const {params} = this.state 
-      if(params.keyword) {
-        this.getCallBook()
-      } else {
-        message.error('关键字不能为空')
-      }
-
+      this.getCallBook()
     }
     handleTableChange = (pagination, filters, sorter) => {
       console.log(pagination)
