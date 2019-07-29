@@ -14,30 +14,28 @@ function CallRecords({data, event}) {
           <Row gutter={8}>
             <Col span={2}> 工号：</Col>
             <Col span={5}>
-              <Input onChange={(e)=>event.changeInputValue(e, 'gongHao')} placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'workno')} placeholder="请输入工号" />
             </Col>
             <Col span={2} > 车型：</Col>
             <Col span={5}>
-              <Input onChange={(e)=>event.changeInputValue(e, 'cheType')} placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'model')} placeholder="请输入车型" />
             </Col>
             <Col span={2}> 司机姓名：</Col>
             <Col span={5}>
-              <Input onChange={(e)=>event.changeInputValue(e, 'dirverName')} placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'driverName')} placeholder="请输司机姓名" />
             </Col>
           </Row>
           <Row gutter={8}>
             <Col span={2}> 车号：</Col>
             <Col span={5}>     
-              <Input onChange={(e)=>event.changeInputValue(e, 'cheNum')} placeholder="Basic usage" />
+              <Input onChange={(e)=>event.changeInputValue(e, 'loco')} placeholder="请输入车号" />
             </Col>
-            <Col span={2}> 关键字：</Col>
-            <Col span={5}>
-              <Input onChange={(e)=>event.changeInputValue(e, 'keyWord')} placeholder="Basic usage" />
+            <Col span={4}>  
+              <Button type='primary' onClick={()=>{event.getCallRecords()}}>筛选</Button>
             </Col>
           </Row>
         </InputGroupSearch>
-    
-      <Table bordered columns={data.callRecordsColumns} dataSource={data.callRecordsData} 
+        <Table bordered columns={data.callRecordsColumns} onChange={event.handleTableChange} pagination={this.state.pagination} dataSource={data.callRecordsData} 
       />
     </CallRecordsBox>
   );

@@ -6,31 +6,31 @@ export const menuList = [
     subIcon: 'icon-normal',
     menus:[]
   },
-  // { 
-  //   path: 'emergency',
-  //   subId: 'emergency',
-  //   subName: '应急处置',
-  //   subIcon: 'icon-yingjichuli',
-  //   menus: [
-  //     {
-  //       id: 'emergency_telegram',
-  //       name: '来电记录',
-  //     },
-  //     {
-  //       id: 'emergency_handle',
-  //       name: '处置记录'
-  //     },
-  //     {
-  //       id: 'emergency_evaluation',
-  //       name: '分析评价'
-  //     },
-  //     {
-  //       id: 'emergency_classic',
-  //       name: '经典案例'
-  //     },
+  { 
+    path: 'emergency',
+    subId: 'emergency',
+    subName: '应急处置',
+    subIcon: 'icon-yingjichuli',
+    menus: [
+      {
+        id: 'emergency_telegram',
+        name: '来电记录',
+      },
+      // {
+      //   id: 'emergency_handle',
+      //   name: '处置记录'
+      // },
+      // {
+      //   id: 'emergency_evaluation',
+      //   name: '分析评价'
+      // },
+      // {
+      //   id: 'emergency_classic',
+      //   name: '经典案例'
+      // },
       
-  //   ]
-  // },
+    ]
+  },
   {
     subId: 'attendance',
     subName: '值班签到',

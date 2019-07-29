@@ -124,3 +124,13 @@ export function downLoadSoundFile (data = {}) {
 } 
 
 
+// 录音下载文件 
+export function getCallRecordHistory (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/callRecordHistory',
+    method: 'GET',
+    params: data
+  })
+} 
+
