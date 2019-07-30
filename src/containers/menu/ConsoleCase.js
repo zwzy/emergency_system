@@ -108,10 +108,6 @@ export class ConsoleCase extends Component {
       dirverName: '',                // 选中的司机名
       timer: '00:00:00',             // 通话时长
       historyCallByPhoneData: [
-        { key: '1', name: '张三', mobile: '178277323', callDate: '2018-09-09', callDuration: '120s', recordId: '1233' },
-        { key: '2', name: '张三', mobile: '178277323', callDate: '2018-09-09', callDuration: '120s', recordId: '1233' },
-        { key: '3', name: '张三', mobile: '178277323', callDate: '2018-09-09', callDuration: '120s', recordId: '1233' },
-
       ],    // 某个人的通话记录
       trainValueInfo: {
         driverCode: '--',

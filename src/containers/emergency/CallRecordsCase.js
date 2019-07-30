@@ -40,7 +40,7 @@ export class CallRecordsCase extends Component {
         },
         {
           title: '处置时间',
-          dataIndex: 'createDate',
+          dataIndex: 'handlerTime',
         },
         {
           title: '来电时间',
