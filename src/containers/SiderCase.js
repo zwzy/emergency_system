@@ -18,7 +18,7 @@ export class SiderCase extends Component {
   }
   componentDidMount(){
     const {userInfo} = this.props
-    console.log(this.props)
+    // console.log(this.props)
     const isHasExtNum = userInfo.roleList.findIndex((item)=>item.id == 1)
     if(isHasExtNum === -1) {
       if(menuList[0].subId === 'console') {
@@ -61,7 +61,6 @@ export class SiderCase extends Component {
     }
   }
   componentWillReceiveProps(props) {
-    console.log(8883433, props, this.props)
   }
   handleClick = (e) => {
     if(this.state.menu === e.key) return 

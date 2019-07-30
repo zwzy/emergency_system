@@ -10,3 +10,16 @@ export const resetCommationInformation = () => {
     type: 'RESEET_COMMATION_INFORMATION'
   }
 }
+
+
+export const updateTrainInformation = (trainInfo) => {
+  return {
+    type: 'UPDATE_TRAIN_INFORMATION',
+    trainInfo
+  }
+}
+export const resetTrainInformation = () => {
+  return {
+    type: 'RESEET_TRAIN_INFORMATION'
+  }
+}

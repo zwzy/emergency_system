@@ -151,9 +151,11 @@ export class ConsoleCase extends Component {
   componentWillReceiveProps(props) {
     if (props.commationInfomation.callId !== this.props.commationInfomation.callId) {
       if (props.commationInfomation.mobile !== '--') {
-        this.saveUserInfoByphoneNumber(props.commationInfomation.mobile)
         this.showHistoryCallByPhone(props.commationInfomation.mobile)
       }
+    }
+    if(props.trainInfomation.callId !== this.props.trainInfomation.callId) {
+        this.saveUserInfoByphoneNumber(props.trainInfomation)
     }
     if (props.commationInfomation.callStatus !== this.props.commationInfomation.callStatus) {
       if (props.commationInfomation.callStatus === 'CALL_ONLINE') {
@@ -210,22 +212,17 @@ export class ConsoleCase extends Component {
   componentDidMount() {
     const { mobile } = this.props.commationInfomation
     if (mobile && mobile !== '--') {
-      this.saveUserInfoByphoneNumber(mobile)
+      this.saveUserInfoByphoneNumber(this.props.trainInfomation)
     }
   }
   // 填充来的人的信息
-  saveUserInfoByphoneNumber = async (mobile) => {
-    try {
-      const { data } = await findCallUser({ mobile })
-      const trainValueInfo = data.content
-      const newTrainValueInfo = { ...trainValueInfo, model_trainCode: trainValueInfo.model + '/' + trainValueInfo.trainCode }
-      this.setState({
-        trainValueInfo: newTrainValueInfo,
-      }, () => {
-        this.getTrainUpdateInfo(trainValueInfo.trainCode, trainValueInfo.model)
-      })
-    } catch (error) {
-    }
+  saveUserInfoByphoneNumber = (trainInfomation) => {
+    const newTrainValueInfo = { ...trainInfomation, model_trainCode: trainInfomation.model + '/' + trainInfomation.trainCode }
+    this.setState({
+      trainValueInfo: newTrainValueInfo,
+    }, () => {
+      this.getTrainUpdateInfo(trainInfomation.trainCode, trainInfomation.model)
+    })
   }
 
   getTrainUpdateInfo = async (trainCode, model) => {
@@ -366,7 +363,8 @@ export class ConsoleCase extends Component {
   }
 }
 const mapStateToProps = (state) => ({                  // owProps 是这个容器组件接收的props值，因为在处理时可能要用到他
-  commationInfomation: state.commation
+  commationInfomation: state.commation,
+  trainInfomation: state.trainInfo
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
 })

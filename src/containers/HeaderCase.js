@@ -6,7 +6,7 @@ import { connect } from 'react-redux'                           // 用来连接r
 import Header from '../components/Header'
 import {Modal, message, Select} from 'antd'
 import {updateUmoEventState} from '../actions/umo'
-import {updateCommationInformation, resetCommationInformation} from '../actions/call'
+import {updateCommationInformation, resetCommationInformation, updateTrainInformation, resetTrainInformation} from '../actions/call'
 import { btnlist } from '../utils/config'
 
 import { sign } from '../api/user'
@@ -118,15 +118,38 @@ export class HeaderCase extends Component {
   saveCallHistory = async (mobile, callDate) => {
     try {
       const {data} = await findCallUser({mobile, callDate})
+      // const data = {
+      //   code: 0,
+      //   content: {
+      //     callId: '323232',
+      //     driverCode: '98888',
+      //     driverName: '张大胖',
+      //     driverMobile: '18738273823',
+      //     assisCode: '231400',
+      //     assisName: '张大屁',
+      //     assisMobile: '1258824234',
+      //     zone: '1',
+      //     frontStation: '不知',
+      //     activePosition: '上海',
+      //     outDate: '2019-03-23',
+      //     deptName: '应急',
+      //     guideGroup: '钱总',
+      //     trainNum: 'A23',
+      //     model: 'A83',
+      //     trainCode: 'A933'
+      //   }
+      // }
       if(data.code === 0) {
-        const {callId} = data.content 
-        // 每次电话来前清空电话 
+        const trainValueInfo = data.content
+        const newTrainValueInfo = { ...trainValueInfo, model_trainCode: trainValueInfo.model + '/' + trainValueInfo.trainCode }
         this.setState({
           crdId: ''
         })
-
+        this.props.updateTrainInformation({
+          ...newTrainValueInfo
+        })
         this.props.updateCommationInformation({
-          callId
+          callId: newTrainValueInfo.callId
         })
       }
     } catch (error) {
@@ -201,8 +224,6 @@ export class HeaderCase extends Component {
   }
 
   componentDidMount() {
-    console.log(11111)
-    console.log(888, window.UMO._token)
     // 防止未登录时，在登录页面登录umo
     if(window.UMO._token || !sessionStorage.getItem('isLogin') ) return
     const {userInfo} = this.props
@@ -523,7 +544,9 @@ const mapStateToProps = (state) => ({                  // owProps 是这个容�
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
   updateUmoEventState: (umoEventState)=>dispatch(updateUmoEventState(umoEventState)),
   updateCommationInformation: (commationInfo) => dispatch(updateCommationInformation(commationInfo)),
-  resetCommationInformation: ()=>dispatch(resetCommationInformation())
+  resetCommationInformation: ()=>dispatch(resetCommationInformation()),
+  updateTrainInformation: (trainInfo) => dispatch(updateTrainInformation(trainInfo)),
+  resetTrainInformation: ()=>dispatch(resetTrainInformation())
 })
 
 
