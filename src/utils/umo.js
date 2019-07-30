@@ -327,7 +327,7 @@ export function getrecordfile(recordFile)
         {
             var msg = "Get recored file ok, url=" + result.downurl;
             console.log(msg)
-            window.open(result.downurl)
+            window.open('http://10.131.192.81:8181' + result.downurl)
         }
     }, null);
 }
