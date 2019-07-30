@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import { Modal, Table, Button, message, Row, Col, Input } from 'antd'
 import styled from 'styled-components'
+import { getrecordfile } from '../../utils/umo'
 import { InputGroupSearch } from '../../utils/styled'
 
 import { downLoadSoundFile, getCallRecordHistory } from '../../api/call'
@@ -285,7 +286,7 @@ export class CallRecordsCase extends Component {
           if (data.code !== 0) {
             message.error(data.msg)
           }
-          window.open(data.content.recFile)
+          getrecordfile(data.content.recFile)
         } catch (error) {
           message.error('接口故障')
         }

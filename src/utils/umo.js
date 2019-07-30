@@ -318,3 +318,16 @@ export const getCDRId = (cbResult) => {
     }
   }, null)
 }
+
+//获取录音下载链接
+export function getrecordfile(recordFile)
+{
+    UMO.getrecordfile(recordFile, function(cmd, result){
+        if (result.errno == 0)
+        {
+            var msg = "Get recored file ok, url=" + result.downurl;
+            console.log(msg)
+            window.open(result.downurl)
+        }
+    }, null);
+}
