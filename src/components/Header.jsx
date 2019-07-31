@@ -88,6 +88,12 @@ function Header({event, data}) {
     border: 1px solid ${color.$border};
     padding: 10px;
     text-align: center;
+    .close-btn{
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      /* margin-left: -16px; */
+    }
     .title{
       text-align: center;
       font-size: 16px;
@@ -165,9 +171,11 @@ function Header({event, data}) {
         footer={null}>
         {data.callInListIsShow && <BaseCallOnLineListModal></BaseCallOnLineListModal>}
       </Modal>
+
       {
         data.callInModalIsShow && <CallInModal>
-          <div className='title'> <Icon type="phone" /> 来电信息</div>
+          <Icon className='close-btn' type="close-circle" onClick={()=>event.callInModalShowEvent()}  style={{fontSize: '32px'}} />
+          <div className='title'> <Icon type="phone"/> 来电信息</div> 
           <div className='content'>
             <div style={data.modalItemStyle}>联系： <strong>{data.callinInfo.trainPhone}</strong></div>
             <div style={data.modalItemStyle}>司机姓名： <strong>{data.callinInfo.trainDirverName}</strong></div>
@@ -179,6 +187,7 @@ function Header({event, data}) {
           </div>
         </CallInModal>
       }
+
     </div>
    );
 }

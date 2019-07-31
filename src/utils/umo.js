@@ -1,3 +1,4 @@
+import {heFeiCallArray} from './config' 
 const UMO = window.UMO
 function setEvtHandler (event){
   return {
@@ -179,7 +180,14 @@ function _umoStart(params,
 // 拨打
 export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) {
   const {phoneNumber, uud, gid} = data
-  UMO.dialout( phoneNumber, gid, uud, true, () => {
+  let dealWithPhoneNumber = ''
+  if(phoneNumber.slice(0, 7).indexOf(heFeiCallArray)>-1) {
+    dealWithPhoneNumber = '0' + phoneNumber
+  } else {
+    dealWithPhoneNumber = '00' + phoneNumber
+  }
+  console.log(dealWithPhoneNumber )
+  UMO.dialout( dealWithPhoneNumber, gid, uud, true, () => {
   }, null)
 }
 
