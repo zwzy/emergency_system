@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
@@ -29,7 +28,7 @@ export class HeaderCase extends Component {
       crdId: '',
       btnlist,
       // 来电弹窗
-      callInModalIsShow: true,
+      callInModalIsShow: false,
       // 拨出
       callOutIsShow: false,
       // 转接
@@ -48,7 +47,6 @@ export class HeaderCase extends Component {
         trainByGroup: '',
         trainNum: '',
         trainPosition: '',
-        trainBreakRuleInfo: ''
       }
     }}
     // 显示弹窗
@@ -149,10 +147,21 @@ export class HeaderCase extends Component {
         // }
         if (data.code === 0) {
           this.callInModalShowEvent()
+          
           const trainValueInfo = data.content
           const newTrainValueInfo = { ...trainValueInfo, model_trainCode: trainValueInfo.model + '/' + trainValueInfo.trainCode }
+          
+          const callinInfo = {
+            trainPhone: mobile,
+            trainDirverName: newTrainValueInfo.driverName,
+            trainDirverNames: newTrainValueInfo.driverName + ',' + newTrainValueInfo.assisName,
+            trainByGroup: newTrainValueInfo.deptName,
+            trainNum: newTrainValueInfo.model_trainCode,
+          }
+
           this.setState({
-            crdId: ''
+            crdId: '',
+            callinInfo
           })
           this.props.updateTrainInformation({
             ...newTrainValueInfo
@@ -243,7 +252,7 @@ export class HeaderCase extends Component {
         passWord: '123456'
       }
       // 如果id不为1的话。即角色不是应急人员，不显示拨打号码按钮，且不显示控制台菜单
-      const isHasExtNum = userInfo.roleList.findIndex((item) => item.id == 1)
+      const isHasExtNum = userInfo.roleList.findIndex((item) => String(item.id) === '1')
       if (isHasExtNum !== -1) {
         this.loginUmoSystem(loginUmoInfo)
       } else {
@@ -437,7 +446,7 @@ export class HeaderCase extends Component {
     handleChange = (value) => {
       console.log(`selected ${value}`);
       const activeObj = this.props.userInfo.roleList.find((item) => {
-        return item.id == value
+        return String(item.id) === String(value)
       })
       this.setState({
         signParams: { ...this.state.signParams, roleId: value, roleName: activeObj.roleName }

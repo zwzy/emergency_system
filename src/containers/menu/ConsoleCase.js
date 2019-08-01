@@ -6,7 +6,7 @@ import Console from '../../components/menu/Console'                 // 引用的
 import color from '../../utils/color'
 import { formatSeconds, getNowTime } from '../../utils/common'
 import { getrecordfile } from '../../utils/umo'
-import { findCallUser, callRecordMobile, trainUpdateInfo, driverBreakRuleInfo, downLoadSoundFile } from '../../api/call'
+import { guideGroupInfo, callRecordMobile, trainUpdateInfo, driverBreakRuleInfo, downLoadSoundFile } from '../../api/call'
 
 // 历史记录表格数据
 
@@ -18,7 +18,20 @@ for (let i = 0; i < 100; i++) {
     time: `2019-05-1${i} 10:23:${i}`,
   });
 }
-
+const guideGroupColums = [
+  {
+    title: '工号',
+    dataIndex: 'workNo',
+  },
+  {
+    title: '姓名',
+    dataIndex: 'driverName',
+  },
+  {
+    title: '电话',
+    dataIndex: 'mobile',
+  },
+] 
 // 违章记录表格数据
 const breakRuleColumns = [
   {
@@ -102,6 +115,7 @@ export class ConsoleCase extends Component {
       }
     ]
     this.state = {
+      guideGroupIsShow: false,       // 指导组是否显示
       callHistoryIsShow: false,      // 历史记录是否显示
       breakRuleIsShow: false,        // 违章记录是否显示
       trainInfoIsShow: false,        // 违章记录是否显示
@@ -126,6 +140,7 @@ export class ConsoleCase extends Component {
         trainNum: '--'
 
       },
+      guideGroupData: [],
       trainInfoData: [],
       breakRuleData: [],
       trainData: [
@@ -136,7 +151,7 @@ export class ConsoleCase extends Component {
         { name: '副司机姓名', id: 'assisName', event: 'breakRuleShowEvent' },
         { name: '联系电话', id: 'assisMobile', event: '' },
         { name: '车间', id: 'deptName', event: '' },
-        { name: '指导组', id: 'guideGroup', event: '' },
+        { name: '指导组', id: 'guideGroup', event: 'guideGroupShowEvent' },
         { name: '区段', id: 'zone', event: '' },
         { name: '机型/车号', id: 'model_trainCode', event: 'trainInfoShowEvent' },
         { name: '出勤时间', id: 'outDate', event: '' },
@@ -239,8 +254,44 @@ export class ConsoleCase extends Component {
     }
 
   }
+
+  // 得到指导组列表
+  getGuideGroupList = async (guideGroup) => {
+     try {
+      if(!guideGroup || guideGroup === '--') { 
+        message.error('暂无此指导组信息')
+        return
+      } 
+      const { data } = await guideGroupInfo({ guideGroup })
+      // const data = {
+      //   code: 0,
+      //   content: [
+      //     {workNo: '123456', driverName: '张三', mobile: '18755489161'},
+      //     {workNo: '1234567', driverName: '张3', mobile: '18755489161'},
+      //     {workNo: '1234568', driverName: '张1', mobile: '18755489161'},
+      //     {workNo: '1234569', driverName: '张2', mobile: '18755489161'},
+      //     {workNo: '1234564', driverName: '张4', mobile: '18755489161'},
+      //     {workNo: '1234563', driverName: '张5', mobile: '18755489161'},
+      //   ]
+      // }
+      
+      if(data.code === 0) {
+        if(data.content && data.content.length) {
+          this.setState({
+            guideGroupData: data.content
+          })
+        }
+      }
+     } catch (error) {
+       
+     }
+  }
   // 0 司机  1： 副司机
-  getDriverBreakRuleInfo = async (driverCode = '2121212') => {
+  getDriverBreakRuleInfo = async (driverCode = '') => {
+    if(!driverCode || driverCode === '--') {
+      message.error('暂无此司机信息')
+      return
+    }
     try {
       const { data } = await driverBreakRuleInfo({ driverNo: driverCode })
       if (data.code === 0) {
@@ -279,6 +330,17 @@ export class ConsoleCase extends Component {
       callHistoryIsShow: !callHistoryIsShow
     })
   }
+  guideGroupShowEvent = () => {
+    const { guideGroupIsShow } = this.state
+    this.setState({
+      guideGroupIsShow: !guideGroupIsShow
+    }, ()=>{
+      if(!guideGroupIsShow) {
+        const { guideGroup } = this.state.trainValueInfo
+        this.getGuideGroupList(guideGroup)
+      }
+    })
+  }
   // 显示司机违章记录弹窗
   breakRuleShowEvent = (dirverName, key) => {
     console.log(111, dirverName)
@@ -287,6 +349,7 @@ export class ConsoleCase extends Component {
       breakRuleIsShow: !breakRuleIsShow,
       dirverName: dirverName
     }, () => {
+      if(breakRuleIsShow) {return}
       const { driverCode, assisCode } = this.state.trainValueInfo
       // 司机
       if (key === 'driverCode') {
@@ -306,7 +369,7 @@ export class ConsoleCase extends Component {
   }
 
   render() {
-    const { historyCallByPhoneData, timer, trainData, dirverName, trainValueInfo, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow } = this.state
+    const { historyCallByPhoneData, timer, trainData, dirverName, trainValueInfo, guideGroupIsShow, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow } = this.state
     const { commationInfomation } = this.props
     return (
       <div>
@@ -321,8 +384,21 @@ export class ConsoleCase extends Component {
             historyShowEvent: this.historyShowEvent,
             breakRuleShowEvent: this.breakRuleShowEvent,
             trainInfoShowEvent: this.trainInfoShowEvent,
+            guideGroupShowEvent: this.guideGroupShowEvent,
           }}
         />
+        
+    {/* 司机违章信息 Modal */}
+        <Modal
+          width={900}
+          title={<div>指导组信息（<span style={{ color: color.$primary }}>{trainValueInfo.guideGroup}</span>）</div>}
+          visible={guideGroupIsShow}
+          onCancel={() => this.guideGroupShowEvent()}
+          footer={null}
+        >
+          <Table rowKey='workNo' columns={guideGroupColums} dataSource={this.state.guideGroupData} pagination={false} />
+        </Modal>
+
         {/* 通话历史 Modal*/}
         <Modal
           title={<div>通话历史（<span style={{ color: color.$primary }}>{this.props.commationInfomation.mobile}</span>）</div>}

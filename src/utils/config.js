@@ -87,29 +87,33 @@ export const menuList = [
   //     },
   //   ]
   // },
-  // {
-  //   subId: 'setting',
-  //   subName: '系统设置',
-  //   subIcon: 'icon-xitongshezhi1',
-  //   menus: [
-  //     {
-  //       id: 'setting_user',
-  //       name: '角色管理',
-  //     },
-  //     {
-  //       id: 'setting_account',
-  //       name: '账号管理',
-  //     },
-  //     {
-  //       id: 'setting_operationLog',
-  //       name: '操作日志',
-  //     },
-  //     {
-  //       id: 'setting_kanBanUpdate',
-  //       name: '看板维护',
-  //     },
-  // ]
-  // },
+  {
+    subId: 'setting',
+    subName: '系统设置',
+    subIcon: 'icon-xitongshezhi1',
+    menus: [
+      {
+        id: 'setting_bindAnoIp',
+        name: 'IP绑定'
+      },
+      // {
+      //   id: 'setting_user',
+      //   name: '角色管理',
+      // },
+      // {
+      //   id: 'setting_account',
+      //   name: '账号管理',
+      // },
+      // {
+      //   id: 'setting_operationLog',
+      //   name: '操作日志',
+      // },
+      // {
+      //   id: 'setting_kanBanUpdate',
+      //   name: '看板维护',
+      // },
+  ]
+  },
 ]
 // header btn config
 export const btnlist = [

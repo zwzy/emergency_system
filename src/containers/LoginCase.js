@@ -1,36 +1,12 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import color from '../utils/color'
+import { Component } from 'react'
 import {GetQueryString} from '../utils/common'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import {userLoginACD} from '../utils/umo'
-import {login} from '../api/user'
 import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
 import {updateUserInformation} from '../actions/user'
+import {login} from '../api/user'
 
-import { message, Form, Icon, Input, Button, Checkbox,} from 'antd' 
-const LoginPage = styled.div `
-  background: ${color.$content};
-  position: fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-const LoginBox = styled.div `
-  width: 300px;
-`
-const Desc = styled.div `
-  display: flex;
-  color: $lightText;
-  justify-content: space-between;
-`
+import { message, Form} from 'antd' 
 export class LoginCase extends Component {
-  
   static propTypes = {
   }
   constructor(props) {
@@ -50,17 +26,17 @@ export class LoginCase extends Component {
       return
     }
     try {
-      // const {data} = await login({workno, password})
-      const data = {
-        code: 0,
-        content: {
-          deptName: '上海',
-          roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
-          extNum: 1001,
-          userName: '张太胖',
-          mobile: '18755489161'
-        }
-      }
+      const {data} = await login({workno, password})
+      // const data = {
+      //   code: 0,
+      //   content: {
+      //     deptName: '上海',
+      //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+      //     extNum: 1001,
+      //     userName: '张太胖',
+      //     mobile: '18755489161'
+      //   }
+      // }
       if(data.code === 0) {
         const {roleList, extNum, userName, deptName, mobile} = data.content
         // 保存状态

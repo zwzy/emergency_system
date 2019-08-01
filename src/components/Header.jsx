@@ -84,7 +84,7 @@ function Header({event, data}) {
     right: 30px;
     width: 260px;
     overflow: auto;
-    height: 320px;
+    height: 240px;
     border: 1px solid ${color.$border};
     padding: 10px;
     text-align: center;
@@ -177,13 +177,11 @@ function Header({event, data}) {
           <Icon className='close-btn' type="close-circle" onClick={()=>event.callInModalShowEvent()}  style={{fontSize: '32px'}} />
           <div className='title'> <Icon type="phone"/> 来电信息</div> 
           <div className='content'>
-            <div style={data.modalItemStyle}>联系： <strong>{data.callinInfo.trainPhone}</strong></div>
+            <div style={data.modalItemStyle}>来电号码： <strong>{data.callinInfo.trainPhone}</strong></div>
             <div style={data.modalItemStyle}>司机姓名： <strong>{data.callinInfo.trainDirverName}</strong></div>
             <div style={data.modalItemStyle}>机班人员： <strong>{data.callinInfo.trainDirverNames}</strong></div>
             <div style={data.modalItemStyle}>车间班组： <strong>{data.callinInfo.trainByGroup}</strong></div>
             <div style={data.modalItemStyle}>机型车号： <strong>{data.callinInfo.trainNum}</strong></div>
-            <div style={data.modalItemStyle}>所在位置： <strong>{data.callinInfo.trainPosition}</strong></div>
-            <div style={data.modalItemStyle}>机车最近故障记录： <strong>{data.callinInfo.trainBreakRuleInfo}</strong></div>
           </div>
         </CallInModal>
       }

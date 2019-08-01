@@ -112,6 +112,16 @@ export function driverBreakRuleInfo (data = {}) {
     params: data
   })
 } 
+// 指导组信息
+export function guideGroupInfo (data = {}) {
+  return fetch({
+    baseURL: baseCallUrl,
+    url: '/getGuideGroupDriver',
+    method: 'GET',
+    params: data
+  })
+} 
+
 
 // 录音下载文件 
 export function downLoadSoundFile (data = {}) {

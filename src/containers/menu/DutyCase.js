@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 
 import Duty from '../../components/menu/Duty'                 // 引用的ui组件
@@ -147,7 +146,7 @@ export class DutyCase extends Component {
                     {
                       rowlist.map((item,index) => {
                         return (
-                          <span key={index}>{index == rowlist.length - 1 ? item : item + ' , '}</span>
+                          <span key={index}>{index === rowlist.length - 1 ? item : item + ' , '}</span>
                         )
                       })
                     }

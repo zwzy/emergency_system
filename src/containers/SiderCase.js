@@ -19,7 +19,7 @@ export class SiderCase extends Component {
   componentDidMount(){
     const {userInfo} = this.props
     // console.log(this.props)
-    const isHasExtNum = userInfo.roleList.findIndex((item)=>item.id == 1)
+    const isHasExtNum = userInfo.roleList.findIndex((item)=>String(item.id) === '1')
     if(isHasExtNum === -1) {
       if(menuList[0].subId === 'console') {
         menuList.splice(0,1)

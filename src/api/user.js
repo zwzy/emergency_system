@@ -36,3 +36,14 @@ export function login (data = {}) {
     params: data
   })
 } 
+
+// 获取分机绑定ip列表
+
+export function getIpBindList (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/getIpBindExtNumList',
+    method: 'GET',
+    params: data
+  })
+} 

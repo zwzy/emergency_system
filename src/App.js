@@ -31,6 +31,7 @@ import EvaluationCase from './containers/emergency/EvaluationCase'
 import HandleCase from './containers/emergency/HandleCase'
 import CallRecordsCase from './containers/emergency/CallRecordsCase'
 // 系统设置
+import BindAnoIpCase from './containers/manage/BindAnoIpCase'
 import ManageAccountCase from './containers/manage/ManageAccountCase'
 import ManagekanBanUpdateCase from './containers/manage/ManagekanBanUpdateCase'
 import ManageOperationLogCase from './containers/manage/ManageOperationLogCase'
@@ -41,10 +42,8 @@ import {ThemeContext, PowerContext} from './utils/context'
 
 import { menuList } from './utils/config'
 
-
 import './styles/App.css';
 import './styles/common.css';
-
 
 function getBreadCrumdArray (history) {
   const isLogin = sessionStorage.getItem('isLogin')
@@ -147,6 +146,7 @@ function App({history}) {
                   <Route path='/setting_account' component={ManageAccountCase}></Route>
                   <Route path='/setting_operationLog' component={ManageOperationLogCase}></Route>
                   <Route path='/setting_kanBanUpdate' component={ManagekanBanUpdateCase}></Route>
+                  <Route path='/setting_bindAnoIp' component={BindAnoIpCase}></Route>
                   <Route path='/' component={ConsoleCase}></Route>
                 </Switch>
               </Content>

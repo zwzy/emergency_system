@@ -140,7 +140,7 @@ export function userLoginACD(data = {},
   okCallback = () => {},
   noCallback = () => {}
 ) {
-  const {domain, passWord, extNum, workno} = data
+  const {domain, passWord, extNum} = data
   const params = {
     apihost: 'http://' + domain + ':8181/IPServer',  // 域名
     bizhost: null,                                 // 
@@ -287,19 +287,19 @@ export const getUmoData = () => {
     order, 10, 1,
     (cmd, result) => {
       console.log(result)
-    if ((mode == "q") && (result.errno == 0))
+    if ((mode === "q") && (result.errno === 0))
     {
-       console.log(111, result.data)
-       const data = result.data
-       const callInListData = data.slice(1)
-       const handleCallInListData = callInListData.map((item)=>{
-         return {
-          ano: item.ano,
-         }
-       })
-       this.setState({
-        callInListData
-      })
+      //  console.log(111, result.data)
+      //  const data = result.data
+      //  const callInListData = data.slice(1)
+      //  const handleCallInListData = callInListData.map((item)=>{
+      //    return {
+      //     ano: item.ano,
+      //    }
+      //  })
+      //  this.setState({
+      //   callInListData
+      // })
       //  this.timer = setTimeout(
       //    this.getUmoData()
       //  , 100000)
@@ -318,7 +318,7 @@ export const getUmoData = () => {
 
 export const getCDRId = (cbResult) => {
   UMO.getcdrid(function(cmd, result){
-    if (result.errno == 0)
+    if (result.errno === 0)
     {
         var msg = "get cdrid ok, cdrid=" + result.cdrid;
         console.log(msg)
@@ -331,7 +331,7 @@ export const getCDRId = (cbResult) => {
 export function getrecordfile(recordFile)
 {
     UMO.getrecordfile(recordFile, function(cmd, result){
-        if (result.errno == 0)
+        if (result.errno === 0)
         {
             var msg = "Get recored file ok, url=" + result.downurl;
             console.log(msg)
