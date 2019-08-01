@@ -143,7 +143,7 @@ export class BindAnoIp extends Component {
   getIpBindData = async () => {
    
     const { current: pageNum, pageSize } = this.state.pagination
-    const params = { pageNum, pageSize }
+    const params = { pageNum, pageSize, ip: '', extNum: '' }
     try {
       this.setState({
         loading: true

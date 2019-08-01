@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from 'react-redux'  
                          // 用来连接redux中reducer中全局数据的
 import { Breadcrumb } from 'antd';
@@ -46,10 +46,10 @@ import './styles/App.css';
 import './styles/common.css';
 
 function getBreadCrumdArray (history) {
-  const isLogin = sessionStorage.getItem('isLogin')
-  if(!isLogin) {
-   history.push({pathname: '/login'})
-  } 
+  // const isLogin = sessionStorage.getItem('isLogin')
+  // if(!isLogin) {
+  //  history.push({pathname: '/login'})
+  // } 
   // 1、获取当前路径
   // 如果没有父菜单： 即没有 pathname.split('_')[1] = undefined
   const pathname = history.location.pathname  // 当前路径
@@ -78,6 +78,27 @@ function getBreadCrumdArray (history) {
   }
   return breadCrumdArr
 } 
+
+function PrivateRoute({ component: Component, ...rest }) {
+  const isLogin = sessionStorage.getItem('isLogin')
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isLogin ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 function App({history}) {
   const breadCrumdArr = getBreadCrumdArray(history)
   const Section = styled.section `
@@ -130,24 +151,24 @@ function App({history}) {
                   )
                 }
                 <Switch>
-                  <Route path='/rules_group' component={RulesGroupCase}></Route>
-                  <Route path='/rules_built' component={RulesBuiltCase}></Route>
-                  <Route path='/emergency_telegram' component={CallRecordsCase}></Route>
-                  <Route path='/emergency_handle' component={HandleCase}></Route>
-                  <Route path='/emergency_evaluation' component={EvaluationCase}></Route>
-                  <Route path='/emergency_classic' component={ClassicCase}></Route>
-                  <Route path='/attendance' component={DutyCase}></Route>
-                  <Route path='/communication_group' component={GroupCase}></Route>
-                  <Route path='/communication_contact' component={ContactCase}></Route>
-                  <Route path='/count_sign' component={CountSignCase}></Route>
-                  <Route path='/count_assess' component={CountAssessCase}></Route>
-                  <Route path='/count_handle' component={CountHandleCase}></Route>
-                  <Route path='/setting_user' component={ManageUserCase}></Route>
-                  <Route path='/setting_account' component={ManageAccountCase}></Route>
-                  <Route path='/setting_operationLog' component={ManageOperationLogCase}></Route>
-                  <Route path='/setting_kanBanUpdate' component={ManagekanBanUpdateCase}></Route>
-                  <Route path='/setting_bindAnoIp' component={BindAnoIpCase}></Route>
-                  <Route path='/' component={ConsoleCase}></Route>
+                  <PrivateRoute path='/rules_group' component={RulesGroupCase}></PrivateRoute>
+                  <PrivateRoute path='/rules_built' component={RulesBuiltCase}></PrivateRoute>
+                  <PrivateRoute path='/emergency_telegram' component={CallRecordsCase}></PrivateRoute>
+                  <PrivateRoute path='/emergency_handle' component={HandleCase}></PrivateRoute>
+                  <PrivateRoute path='/emergency_evaluation' component={EvaluationCase}></PrivateRoute>
+                  <PrivateRoute path='/emergency_classic' component={ClassicCase}></PrivateRoute>
+                  <PrivateRoute path='/attendance' component={DutyCase}></PrivateRoute>
+                  <PrivateRoute path='/communication_group' component={GroupCase}></PrivateRoute>
+                  <PrivateRoute path='/communication_contact' component={ContactCase}></PrivateRoute>
+                  <PrivateRoute path='/count_sign' component={CountSignCase}></PrivateRoute>
+                  <PrivateRoute path='/count_assess' component={CountAssessCase}></PrivateRoute>
+                  <PrivateRoute path='/count_handle' component={CountHandleCase}></PrivateRoute>
+                  <PrivateRoute path='/setting_user' component={ManageUserCase}></PrivateRoute>
+                  <PrivateRoute path='/setting_account' component={ManageAccountCase}></PrivateRoute>
+                  <PrivateRoute path='/setting_operationLog' component={ManageOperationLogCase}></PrivateRoute>
+                  <PrivateRoute path='/setting_kanBanUpdate' component={ManagekanBanUpdateCase}></PrivateRoute>
+                  <PrivateRoute path='/setting_bindAnoIp' component={BindAnoIpCase}></PrivateRoute>
+                  <PrivateRoute path='/' component={ConsoleCase}></PrivateRoute>
                 </Switch>
               </Content>
           </Section>

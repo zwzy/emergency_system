@@ -1,10 +1,10 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 import {GetQueryString} from '../utils/common'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
 import {updateUmoEventState, resetUmoEventState} from '../actions/umo'
 import {updateUserInformation} from '../actions/user'
 import {login} from '../api/user'
-
+import { Redirect } from "react-router-dom";
 import { message, Form} from 'antd' 
 export class LoginCase extends Component {
   static propTypes = {
@@ -12,19 +12,22 @@ export class LoginCase extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false
+      isLogin: false
     }
   }
   componentDidMount() {
     this.handleLogin()
   }
   handleLogin = async () => {
-    const workno = GetQueryString('workno')
-    const password = GetQueryString('password')
+    const workno = GetQueryString('workno') || localStorage.getItem('workno')
+    const password = GetQueryString('password') || localStorage.getItem('password')
     if(!workno || !password) {
       message.info('url上没有带对应的参数')
       return
     }
+    localStorage.setItem('workno', workno)
+    localStorage.setItem('password', password)
+    console.log(workno, password)
     try {
       const {data} = await login({workno, password})
       // const data = {
@@ -48,24 +51,15 @@ export class LoginCase extends Component {
           workno,
           mobile
         }
-        localStorage.setItem('userInfo',JSON.stringify(userInfo))
+        sessionStorage.setItem('userInfo',JSON.stringify(userInfo))
         this.props.updateUserInformation({
          ...userInfo
         })
-        // const loginUmoInfo = {
-        //   ...userInfo,
-        //   domain: '10.131.172.82',
-        //   passWord: '123456'
-        // }
-        // const isHasExtNum = roleList.findIndex((item)=>item.id == 1)
-        // if(isHasExtNum !== -1) {
-        //   this.loginUmoSystem(loginUmoInfo)
-        // }
-        this.setState({
-          loading: false
-        })
+      
          sessionStorage.setItem('isLogin', true)
-         this.props.history.push('/')
+         this.setState({
+           isLogin: true
+         })
       } else {
       }
     } catch (error) {
@@ -74,7 +68,10 @@ export class LoginCase extends Component {
   }
 
   render() {
-      return null
+    let { from } = this.props.location.state || { from: { pathname: "/" } };
+    let { isLogin } = this.state;
+    if (isLogin) return (<Redirect to={from} />)
+    return  null
   }
 }
 
