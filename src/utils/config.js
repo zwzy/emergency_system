@@ -14,7 +14,7 @@ export const menuList = [
     menus: [
       {
         id: 'emergency_telegram',
-        name: '来电记录',
+        name: '通话记录',
       },
       // {
       //   id: 'emergency_handle',

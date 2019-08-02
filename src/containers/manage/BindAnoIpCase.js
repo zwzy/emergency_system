@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import {  Table, Button, message, Row, Col, Input } from 'antd'
+import {  Table, Modal, Button, message, Input } from 'antd'
 import styled from 'styled-components'
 
-import {getIpBindList } from '../../api/user'
+import {getIpBindList, createIpBindExtNum , updateIpBindExtNum} from '../../api/user'
 // import CallRecords from '../../components/emergency/CallRecords'                 // 引用的ui组件
 const CallRecordsBox = styled.div`
 `
@@ -31,6 +31,19 @@ export class BindAnoIp extends Component {
         {
           title: '修改时间',
           dataIndex: 'modifyTime',
+        },
+        {
+          title: '操作',
+          render: (text, record) => (
+            <span>
+              <Button type='link'  onClick={
+                () => {
+                  this.showUpdateModal(record.id, record.ip, record.extNum)
+                }
+              }
+              >修改</Button>
+            </span>
+          ),
         }
       ],
       ipBindList: [
@@ -41,6 +54,17 @@ export class BindAnoIp extends Component {
         total: 1,
       },
       loading: false,
+      isShowCreateModal: false,
+      isShowUpdateModal: false,
+      params: {
+        ip: '',
+        extNum: ''
+      },
+      updateParams: {
+        ip: '',
+        extNum: '',
+        id: ''
+      }
     }
   }
   componentDidMount() {
@@ -52,59 +76,69 @@ export class BindAnoIp extends Component {
         const data = [
           {
             ip: pageNum + 'John Brown' + 0,
+            id: pageNum + 'John Brown' + 0,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 1,
+            id: pageNum + 'John Brown' + 1,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 2,
+            id: pageNum + 'John Brown' + 2,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 3,
+            id: pageNum + 'John Brown' + 3,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 4,
+            id: pageNum + 'John Brown' + 4,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 5,
+            id: pageNum + 'John Brown' + 5,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 6,
+            id: pageNum + 'John Brown' + 6,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 7,
+            id: pageNum + 'John Brown' + 7,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           },
           {
             ip: pageNum + 'John Brown' + 8,
+            id: pageNum + 'John Brown' + 8,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
           }, {
             ip: pageNum + 'John Brown' + 9,
+            id: pageNum + 'John Brown' + 9,
             extNum: '张三',
             createTime: '2019-08-09 12:23:30',
             modifyTime: '2019-08-09 12:20:30'
@@ -177,14 +211,116 @@ export class BindAnoIp extends Component {
       this.getIpBindData()
     })
   }
+
+  showCreateBindIP = () => {
+    this.setState({
+      isShowCreateModal: !this.state.isShowCreateModal
+    })
+  }
+
+  showUpdateModal = ( id= '', ip = '', extNum = '')=>{
+    this.setState({
+      isShowUpdateModal: !this.state.isShowUpdateModal
+    }, ()=>{
+      const {isShowUpdateModal} = this.state 
+      if(isShowUpdateModal) {
+        this.setState({
+          updateParams:{
+            ...this.state.updateParams, id, ip, extNum
+          }
+        })
+      }
+    })
+  }
+
+  updateParams = ({ currentTarget: { value } }, type, isCreate = true) => {
+    if(isCreate) {
+      this.setState({
+        params: {...this.state.params, [type]: value}
+      }, ()=>{
+        console.log(this.state.params)
+      })
+    } else {
+      this.setState({
+        updateParams: {...this.state.updateParams, [type]: value}
+      }, ()=>{
+        console.log(this.state.updateParams)
+      })
+    }
+  }
+  handleSubmit= async () =>{
+    const {params} = this.state
+    try {
+      const {data} = await createIpBindExtNum(params)
+      // const data = {
+      //   code:0,
+      //   message: '插入成功'
+      // }
+      if(data.code === 0) {
+        message.success(data.message)
+        this.showCreateBindIP()
+        this.getIpBindData()
+      } else {
+        message.error(data.message)
+      }
+    } catch (error) {
+      message.error('接口故障，请重试！')
+    }
+  }
+  handleSubmitUpdateIpBind = async() => {
+    const {updateParams} = this.state
+    try {
+      const {data} = await updateIpBindExtNum(updateParams)
+      // const data = {
+      //   code:0,
+      //   message: '更新成功'
+      // }
+      if(data.code === 0) {
+        message.success(data.message)
+        this.showUpdateModal()
+        this.getIpBindData()
+      } else {
+        message.error(data.message)
+      }
+    } catch (error) {
+      message.error('接口故障，请重试！')
+    }
+  }
   render() {
     const { ipBindList, pagination, loading, callRecordsColumns } = this.state
     return (
       <div>
+        <Button type='primary' style={{marginBottom: '10px'}} onClick={()=>this.showCreateBindIP()}>新建</Button>
         <CallRecordsBox>
-          <Table rowKey={record => record.recordId} loading={loading} bordered columns={callRecordsColumns} onChange={this.handleTableChange} pagination={pagination} dataSource={ipBindList}
+          <Table rowKey={record => record.id} loading={loading} bordered columns={callRecordsColumns} onChange={this.handleTableChange} pagination={pagination} dataSource={ipBindList}
           />
         </CallRecordsBox>
+        <Modal
+          title="新增IP"
+          visible={this.state.isShowCreateModal}
+          onCancel={this.showCreateBindIP}
+          footer={[
+            <Button key="submit" type='primary' block onClick={()=>this.handleSubmit()}>
+              确定
+            </Button>,
+          ]}
+        >
+         <Input placeholder='请输入IP' style={{marginBottom: '10px'}} onChange={(e)=>{this.updateParams(e, 'ip')}}></Input>
+         <Input placeholder='请输入分机号' onChange={(e)=>{this.updateParams(e, 'extNum')}}></Input>
+        </Modal>
+        <Modal
+          title="修改IP"
+          visible={this.state.isShowUpdateModal}
+          onCancel={this.showUpdateModal}
+          footer={[
+            <Button key="submit" type='primary' block onClick={()=>this.handleSubmitUpdateIpBind()}>
+              确定
+            </Button>,
+          ]}
+        >
+         <Input placeholder='请输入IP' value={this.state.updateParams.ip} style={{marginBottom: '10px'}} onChange={(e)=>{this.updateParams(e, 'ip', false)}}></Input>
+         <Input placeholder='请输入分机号' value={this.state.updateParams.extNum} onChange={(e)=>{this.updateParams(e, 'extNum', false)}}></Input>
+        </Modal>
       </div>
     )
   }

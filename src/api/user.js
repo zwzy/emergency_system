@@ -47,3 +47,26 @@ export function getIpBindList (data = {}) {
     params: data
   })
 } 
+
+// 新建 ip绑定
+// 获取分机绑定ip列表
+// 新建ip绑定
+export function createIpBindExtNum (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/ipBindExtNum  ',
+    method: 'GET',
+    params: data
+  })
+} 
+// 更新ip绑定
+export function updateIpBindExtNum (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/updateIpBindExtNum ',
+    method: 'GET',
+    params: data
+  })
+} 
+
+

@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import locale from 'antd/lib/date-picker/locale/zh_CN';
 import { connect } from 'react-redux'                           // 用来连接redux中reducer中全局数据的
-import { Modal, Table, Button, message, Row, Col, Input } from 'antd'
+import { Modal,Select, Table, Button, message, Row, Col, Input, DatePicker } from 'antd'
 import styled from 'styled-components'
 import { getrecordfile } from '../../utils/umo'
 import { InputGroupSearch } from '../../utils/styled'
 
 import { downLoadSoundFile, getCallRecordHistory } from '../../api/call'
-// import CallRecords from '../../components/emergency/CallRecords'                 // 引用的ui组件
 const CallRecordsBox = styled.div`
 `
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 export class CallRecordsCase extends Component {
   static propTypes = {
     // prop: PropTypes
@@ -19,51 +21,72 @@ export class CallRecordsCase extends Component {
     this.state = {
       callRecordsColumns: [
         {
-          title: '名称',
-          dataIndex: 'recordName',
+          title: '来电/拨打',
+          render: (text, record) => (
+            <div className='icon'>
+              {
+               String(record.direction) === '0' ? (
+                     <span className={`icon-mobile iconfont`}></span>
+               ) : <span style={{marginRight: '24px'}}></span>
+              }
+              {record.mobile}
+            </div>
+          ),
         },
         {
-          title: '处置人',
-          dataIndex: 'handlerMan',
-        },
-        {
-          title: '处置情况',
-          dataIndex: 'handlerDesc',
-        },
-        {
-          title: '评价',
-          dataIndex: 'evaluation',
-        },
-        {
-          title: '最终处置人',
-          dataIndex: 'finalHandlerMan',
-        },
-        {
-          title: '处置时间',
-          dataIndex: 'handlerTime',
-        },
-        {
-          title: '来电时间',
-          dataIndex: 'callDate',
-        },
-        {
-          title: '录音时长',
-          dataIndex: 'callDuration',
-        },
-        {
-          title: '录音文件大小',
-          dataIndex: 'recordMax',
-        },
-        {
-          title: '录音下载',
+          title: '车次',
+          dataIndex: 'trainNum',
           render: (text, record) => (
             <span>
-              <Button type='primary' icon="cloud-download" onClick={
-                () => {
-                  this.downLoadFile(record.recordId)
+              {record.trainNum ? record.trainNum:  '--'}
+            </span>
+          ),
+        },
+        {
+          title: '用户',
+          dataIndex: 'recordName',
+          render: (text, record) => (
+            <span>
+              {record.recordName ? record.recordName:  '--'}
+            </span>
+          ),
+        },
+        {
+          title: '拨打/接听时间',
+          render: (text, record) => (
+            <span>
+              {String(record.direction) === '0' ? record.callDate ? record.callDate: '--' :  record.answerTime ? record.answerTime : '--'}
+            </span>
+          ),
+        },
+        {
+          title: '拨打/接听时长',
+          render: (text, record) => (
+            <span>
+              {record.callDuration ? record.callDuration:  '--'}
+            </span>
+          ),
+        },
+        {
+          title: '录音名称',
+          render: (text, record) => (
+            <span>
+              {record.recFileName ? record.recFileName:  '--'}
+            </span>
+          ),
+        },
+        {
+          title: '操作',
+          render: (text, record) => (
+            <span>
+             {record.recordId ? (
+                <Button type='link'  onClick={
+                  () => {
+                    this.downLoadFile(record.recordId)
+                  }
                 }
+                >录音下载</Button>) : '--'
               }
-              >下载</Button>
             </span>
           ),
         }
@@ -72,7 +95,11 @@ export class CallRecordsCase extends Component {
         model: '',
         loco: '',
         driverName: '',
-        workno: ''
+        workno: '',
+        startTime: '',
+        endTime: '',
+        mobile: '',
+        directEnum: '2'
       },
       callRecordsData: [
       ],
@@ -92,18 +119,26 @@ export class CallRecordsCase extends Component {
       setTimeout(() => {
         const data = [
           {
-            recordName: pageNum + 'John Brown' + 0,
+            direction: 0,
+            recFileName: pageNum + 'John Brown' + 0,
+            recFile: null,
+            recordName:null,
+            answerTime: null,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
             evaluation: 'New York No. 1 dsddsd Pfdfark',
-            finalHandlerMan: '王五',
-            createDate: '2019-08-09 12:23:30',
-            callDuration: '120s',
+            mobile: '1876554783' + pageNum,
+            callDuration: null,
+            recordId: 9,
             recordMax: '1200kb',
-            recordId: '12233443',
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 1,
+            mobile: '1876554783' + pageNum,
+            recFileName: pageNum + 'John Brown' + 1,
+            recFile: pageNum + 'John Brown' + 1,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 1,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -116,6 +151,11 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 1,
+            mobile: '1876554783' + pageNum + 2,
+            recFileName: pageNum + 'John Brown' + 2,
+            recFile: pageNum + 'John Brown' + 2,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 2,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -128,6 +168,12 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 0,
+            trainNum: "K7789",
+            mobile: '1876554783' + pageNum + 3,
+            recFileName: pageNum + 'John Brown' + 3,
+            recFile: pageNum + 'John Brown' + 3,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 3,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -140,6 +186,11 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 1,
+            mobile: '1876554783' + pageNum + 4,
+            recFileName: pageNum + 'John Brown' + 0,
+            recFile: pageNum + 'John Brown' + 0,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 4,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -152,6 +203,9 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 0,
+            recFileName: pageNum + 'John Brown' + 0,
+            recFile: pageNum + 'John Brown' + 0,
             recordName: pageNum + 'John Brown' + 5,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -164,6 +218,10 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 0,
+            recFileName: pageNum + 'John Brown' + 0,
+            recFile: pageNum + 'John Brown' + 0,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 6,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -176,6 +234,10 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 0,
+            recFileName: pageNum + 'John Brown' + 0,
+            recFile: pageNum + 'John Brown' + 0,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 7,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -188,6 +250,10 @@ export class CallRecordsCase extends Component {
             callDate: '2019-08-09 12:20:30'
           },
           {
+            direction: 1,
+            recFileName: pageNum + 'John Brown' + 0,
+            recFile: pageNum + 'John Brown' + 0,
+            answerTime: '2019-08-09 12:23:30',
             recordName: pageNum + 'John Brown' + 8,
             handlerMan: '张三',
             handlerDesc: 'New York No. 1 dsd Padddrk',
@@ -309,6 +375,31 @@ export class CallRecordsCase extends Component {
       this.getCallRecords()
     })
   }
+  handleChange = (val, index) => {
+    console.log(val, index)
+    const directEnum = val
+    this.setState({
+      searchParams: {
+        ...this.state.searchParams,
+        directEnum
+      }
+    })
+  }
+  onTimeChange = (date, dateString) => {
+    if(dateString.length>0) {
+      const startTime = dateString[0]
+      const endTime = dateString[1]
+      this.setState({
+        searchParams: {
+          ...this.state.searchParams,
+          startTime,
+          endTime
+        }
+      })
+    }
+
+  }
+  
   render() {
     const { callRecordsData, pagination, loading, callRecordsColumns } = this.state
     return (
@@ -316,25 +407,26 @@ export class CallRecordsCase extends Component {
         <CallRecordsBox>
           <InputGroupSearch>
             <Row gutter={8}>
-              <Col span={2}> 工号：</Col>
+              <Col span={2}> 电话：</Col>
               <Col span={5}>
-                <Input onChange={(e) => this.changeInputValue(e, 'workno')} placeholder="请输入工号" />
+                <Input onChange={(e) => this.changeInputValue(e, 'mobile')} placeholder="请输入电话关键字" />
               </Col>
-              <Col span={2} > 车型：</Col>
-              <Col span={5}>
-                <Input onChange={(e) => this.changeInputValue(e, 'model')} placeholder="请输入车型" />
-              </Col>
-              <Col span={2}> 司机姓名：</Col>
-              <Col span={5}>
-                <Input onChange={(e) => this.changeInputValue(e, 'driverName')} placeholder="请输司机姓名" />
+              <Col span={2} >时间：</Col>
+              <Col span={8} style={{textAlign: 'left'}}>
+                <RangePicker  locale={locale} onChange={this.onTimeChange} />
               </Col>
             </Row>
             <Row gutter={8}>
-              <Col span={2}> 车号：</Col>
+              <Col span={2}> 类型：</Col>
               <Col span={5}>
-                <Input onChange={(e) => this.changeInputValue(e, 'loco')} placeholder="请输入车号" />
+              <Select defaultValue="2" style={{ width:'100%' }} onChange={this.handleChange}>
+                <Option value="2">全部</Option>
+                <Option value="1">来电</Option>
+                <Option value="0">拨打</Option>
+              </Select>
               </Col>
-              <Col span={4}>
+              <Col span={2}></Col>
+              <Col span={3} style={{textAlign: 'left'}}>
                 <Button type='primary' onClick={() => { this.getCallRecords() }}>筛选</Button>
               </Col>
             </Row>

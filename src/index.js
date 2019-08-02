@@ -13,6 +13,11 @@ import LoginCase from './containers/LoginCase';
 
 import * as serviceWorker from './serviceWorker';
 import './styles/icon.css'
+
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+
 let store = createStore(rootReducer)
 
 ReactDOM.render(
