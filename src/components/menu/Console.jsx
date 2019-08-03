@@ -12,7 +12,7 @@ import config from '../../utils/config'
 
 const Search = Input.Search;
 function Console({data,event}) {
-  const {mobile,callDate,answerDate,hangupDate,callDuration } = data.commationInfomation
+  const {mobile,callDate,answerDate,hangupDate,callDuration, timer} = data.commationInfomation
   const ConsoleBox = styled.div `
     display: flex;
     .call-info{
@@ -92,7 +92,7 @@ function Console({data,event}) {
       <Card  hoverable  className='call-info'>
         <Title>当前通话概况</Title>
         <div className='phone'>{mobile}</div>
-        <div className='timer'>{data.timer}</div>
+        <div className='timer'>{timer}</div>
         <div className='call-history'><Button type="link" onClick={()=>{event.historyShowEvent()}}> <span className='text'>通话历史（{data.callHistoryLength}）</span>  点击查看</Button></div>
         <Title>来电详情</Title>
         <Timer>来电时间：{callDate}</Timer>  
@@ -111,7 +111,7 @@ function Console({data,event}) {
                   style={{color: item.event ? color.$primary : ''}} 
                   onClick={()=>{item.event && event[item.event](data.trainValueInfo[item.id], item.id)}}
                 >
-                  {item.name}: <Bold>{data.trainValueInfo[item.id]}</Bold>   
+                  {item.name}: <Bold>{data.trainValueInfo[item.id] || '--'}</Bold>   
                 </div>
               )
             })}

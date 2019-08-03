@@ -6,18 +6,11 @@ import Console from '../../components/menu/Console'                 // 引用的
 import color from '../../utils/color'
 import { formatSeconds, getNowTime } from '../../utils/common'
 import { getrecordfile } from '../../utils/umo'
+import { updateCommationInformation} from '../../actions/call'
 import { guideGroupInfo, callRecordMobile, trainUpdateInfo, driverBreakRuleInfo, downLoadSoundFile } from '../../api/call'
 
 // 历史记录表格数据
 
-const callHistoryData = [];
-for (let i = 0; i < 100; i++) {
-  callHistoryData.push({
-    key: i,
-    timeLonger: `05:23:${i}`,
-    time: `2019-05-1${i} 10:23:${i}`,
-  });
-}
 const guideGroupColums = [
   {
     title: '工号',
@@ -120,7 +113,6 @@ export class ConsoleCase extends Component {
       breakRuleIsShow: false,        // 违章记录是否显示
       trainInfoIsShow: false,        // 违章记录是否显示
       dirverName: '',                // 选中的司机名
-      timer: '00:00:00',             // 通话时长
       historyCallByPhoneData: [
       ],    // 某个人的通话记录
       trainValueInfo: {
@@ -212,10 +204,12 @@ export class ConsoleCase extends Component {
     const nowTime = getNowTime()
     const timer = nowTime - getNowTime(answerDate)
     const timerSecond = formatSeconds(timer)
-    console.log(timerSecond)
-    this.setState({
-      timer: timerSecond
+    
+    this.props.updateCommationInformation({
+      timer:  timerSecond
     })
+   
+
     this.timer = setTimeout(() => {
       this.setTimer(answerDate)
     }, 1000)
@@ -228,7 +222,10 @@ export class ConsoleCase extends Component {
   }
   // 填充来的人的信息
   saveUserInfoByphoneNumber = (trainInfomation) => {
-    const newTrainValueInfo = { ...trainInfomation, model_trainCode: trainInfomation.model + '/' + trainInfomation.trainCode }
+    let {model, trainCode} = trainInfomation
+    model = model ? model : '--'
+    trainCode = trainCode ? trainCode : '--'
+    const newTrainValueInfo = { ...trainInfomation, model_trainCode: model + '/' + trainCode }
     this.setState({
       trainValueInfo: newTrainValueInfo,
     }, () => {
@@ -369,7 +366,7 @@ export class ConsoleCase extends Component {
   }
 
   render() {
-    const { historyCallByPhoneData, timer, trainData, dirverName, trainValueInfo, guideGroupIsShow, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow } = this.state
+    const { historyCallByPhoneData, trainData, dirverName, trainValueInfo, guideGroupIsShow, callHistoryIsShow, breakRuleIsShow, trainInfoIsShow } = this.state
     const { commationInfomation } = this.props
     return (
       <div>
@@ -377,7 +374,6 @@ export class ConsoleCase extends Component {
           data={{
             commationInfomation,
             trainData, trainValueInfo,
-            timer,
             callHistoryLength: historyCallByPhoneData.length
           }}
           event={{
@@ -439,5 +435,6 @@ const mapStateToProps = (state) => ({                  // owProps 是这个容�
   trainInfomation: state.trainInfo
 })
 const mapDispatchToProps = (dispatch) => ({            // 引用全局actions中定义方法
+  updateCommationInformation: (commationInfo) => dispatch(updateCommationInformation(commationInfo)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ConsoleCase)

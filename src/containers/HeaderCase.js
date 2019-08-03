@@ -50,11 +50,17 @@ export class HeaderCase extends Component {
       }
     }}
     // 显示弹窗
-    callInModalShowEvent = () => {
-      const { callInModalIsShow } = this.state
-      this.setState({
-        callInModalIsShow: !callInModalIsShow
-      })
+    callInModalShowEvent = (val) => {
+      if(val !== undefined) {
+        this.setState({
+          callInModalIsShow: val
+        })
+      } else {
+        const { callInModalIsShow } = this.state
+        this.setState({
+          callInModalIsShow: !callInModalIsShow
+        })
+      }
     }
     // 显示拨出
     callOutShowEvent = () => {
@@ -129,16 +135,16 @@ export class HeaderCase extends Component {
         //   content: {
         //     callId: '323232',
         //     driverCode: '98888',
-        //     driverName: '张大胖',
+        //     driverName: '张三',
         //     driverMobile: '18738273823',
-        //     assisCode: '231400',
-        //     assisName: '张大屁',
+        //     assisCode: null,
+        //     assisName: '',
         //     assisMobile: '1258824234',
         //     zone: '1',
         //     frontStation: '不知',
         //     activePosition: '上海',
         //     outDate: '2019-03-23',
-        //     deptName: '应急',
+        //     deptName: null,
         //     guideGroup: '钱总',
         //     trainNum: 'A23',
         //     model: 'A83',
@@ -146,15 +152,22 @@ export class HeaderCase extends Component {
         //   }
         // }
         if (data.code === 0) {
-          this.callInModalShowEvent()
-          
+          this.callInModalShowEvent(true)
           const trainValueInfo = data.content
           const newTrainValueInfo = { ...trainValueInfo, model_trainCode: trainValueInfo.model + '/' + trainValueInfo.trainCode }
-          
+          let { driverName,assisName } = newTrainValueInfo
+          let trainDirverNames = driverName + ',' + assisName
+          if(!driverName && !assisName) {
+            trainDirverNames = '--'
+          } else if(!driverName && assisName){
+             trainDirverNames =  assisName
+          } else if(driverName && !assisName) {
+             trainDirverNames =  driverName
+          }
           const callinInfo = {
             trainPhone: mobile,
             trainDirverName: newTrainValueInfo.driverName,
-            trainDirverNames: newTrainValueInfo.driverName + ',' + newTrainValueInfo.assisName,
+            trainDirverNames,
             trainByGroup: newTrainValueInfo.deptName,
             trainNum: newTrainValueInfo.model_trainCode,
           }
@@ -226,14 +239,17 @@ export class HeaderCase extends Component {
         const nowTime = getNowTime()
         const timer = nowTime - getNowTime(answerDate)
         const timerSecond = parseInt(timer / 1000)
+        
         if (callStatus !== 'CALL_ONLINE') return
+        
         try {
           const { data } = await answerCall({ recordId: this.state.crdId, callId, callStatus: 'CALL_HANGUP', hangupDate: nowDate, callDuration: timerSecond })
           if (data.code === 0) {
-            this.callInModalShowEvent()
+            this.callInModalShowEvent(false)
             console.log('接听记录成功')
           }
         } catch (error) {
+          this.callInModalShowEvent(false)
           console.log(error)
         }
         this.props.updateCommationInformation({

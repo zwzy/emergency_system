@@ -121,7 +121,6 @@ function setEvtHandler (event){
   }
   }
 }
-
 // login
 // 用户登录ACD
 export function userLoginACD(data = {},
@@ -140,6 +139,9 @@ export function userLoginACD(data = {},
   okCallback = () => {},
   noCallback = () => {}
 ) {
+
+  // window.testEvent  = setEvtHandler(event)
+ 
   const {domain, passWord, extNum} = data
   const params = {
     apihost: 'http://' + domain + ':8181/IPServer',  // 域名

@@ -6,6 +6,7 @@ const commationInfoState = {
   answerDate: '--',     // 接听时间
   hangupDate: '--',     // 挂断时间
   callDuration: '--',   // 通话时长
+  timer: '00:00:00',    // 通话时间
   callStatus: '--'      // 通话状态
 }
 const commationInfo = (state = commationInfoState, action) => {
