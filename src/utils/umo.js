@@ -181,7 +181,7 @@ function _umoStart(params,
 export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) {
   const {phoneNumber, uud, gid} = data
   let dealWithPhoneNumber = ''
-  if(phoneNumber.slice(0, 7).indexOf(heFeiCallArray)>-1) {
+  if(heFeiCallArray.indexOf(phoneNumber.slice(0, 7)) > -1) {
     dealWithPhoneNumber = '0' + phoneNumber
   } else {
     dealWithPhoneNumber = '00' + phoneNumber
