@@ -54,8 +54,8 @@ export function getIpBindList (data = {}) {
 export function createIpBindExtNum (data = {}) {
   return fetch({
     baseURL: baseUserUrl,
-    url: '/ipBindExtNum  ',
-    method: 'GET',
+    url: '/ipBindExtNum',
+    method: 'POST',
     params: data
   })
 } 
@@ -63,10 +63,18 @@ export function createIpBindExtNum (data = {}) {
 export function updateIpBindExtNum (data = {}) {
   return fetch({
     baseURL: baseUserUrl,
-    url: '/updateIpBindExtNum ',
+    url: '/updateIpBindExtNum',
     method: 'GET',
     params: data
   })
 } 
-
+// 更新ip绑定
+export function deleteIpBindExtNum (data = {}) {
+  return fetch({
+    baseURL: baseUserUrl,
+    url: '/deleteIpBindExtNum',
+    method: 'GET',
+    params: data
+  })
+} 
 

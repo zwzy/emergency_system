@@ -4,7 +4,7 @@ import { connect } from 'react-redux'                           // 用来连接r
 import {  Table, Modal, Button, message, Input } from 'antd'
 import styled from 'styled-components'
 
-import {getIpBindList, createIpBindExtNum , updateIpBindExtNum} from '../../api/user'
+import {getIpBindList, createIpBindExtNum , updateIpBindExtNum, deleteIpBindExtNum} from '../../api/user'
 // import CallRecords from '../../components/emergency/CallRecords'                 // 引用的ui组件
 const CallRecordsBox = styled.div`
 `
@@ -42,6 +42,12 @@ export class BindAnoIp extends Component {
                 }
               }
               >修改</Button>
+               <Button type='link'  onClick={
+                () => {
+                  this.delbindIpClick(record.id)
+                }
+              }
+              >删除</Button>
             </span>
           ),
         }
@@ -217,7 +223,30 @@ export class BindAnoIp extends Component {
       isShowCreateModal: !this.state.isShowCreateModal
     })
   }
-
+  delbindIpClick = (id) => {
+    Modal.confirm({
+      title: '删除',
+      content: '确定删除该IP绑定信息？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          const {data} = await deleteIpBindExtNum({id})
+          if(data.code === 0) {
+            message.success(data.message)
+            this.getIpBindData()
+          } else {
+            message.error(data.message)
+          }
+        } catch (error) {
+          message.error('接口故障')
+        }
+      },
+      onCancel: () => {
+        message.info('你取消了此操作')
+      }
+    });
+  }
   showUpdateModal = ( id= '', ip = '', extNum = '')=>{
     this.setState({
       isShowUpdateModal: !this.state.isShowUpdateModal

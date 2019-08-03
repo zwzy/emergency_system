@@ -99,7 +99,7 @@ export class CallRecordsCase extends Component {
         startTime: '',
         endTime: '',
         mobile: '',
-        directEnum: '2'
+        directEnum: 'CALL_ALL'
       },
       callRecordsData: [
       ],
@@ -419,10 +419,10 @@ export class CallRecordsCase extends Component {
             <Row gutter={8}>
               <Col span={2}> 类型：</Col>
               <Col span={5}>
-              <Select defaultValue="2" style={{ width:'100%' }} onChange={this.handleChange}>
-                <Option value="2">全部</Option>
-                <Option value="1">来电</Option>
-                <Option value="0">拨打</Option>
+              <Select defaultValue="CALL_ALL" style={{ width:'100%' }} onChange={this.handleChange}>
+                <Option value="CALL_ALL">全部</Option>
+                <Option value="CALL_IN">来电</Option>
+                <Option value="CALL_OUT">拨打</Option>
               </Select>
               </Col>
               <Col span={2}></Col>
