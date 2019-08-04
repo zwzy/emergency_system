@@ -4,13 +4,11 @@ import { connect } from 'react-redux'                           // 用来连接r
 import { Modal, Table, Button, message } from 'antd'
 import Console from '../../components/menu/Console'                 // 引用的ui组件
 import color from '../../utils/color'
-import { formatSeconds, getNowTime } from '../../utils/common'
 import { getrecordfile } from '../../utils/umo'
 import { updateCommationInformation} from '../../actions/call'
 import { guideGroupInfo, callRecordMobile, trainUpdateInfo, driverBreakRuleInfo, downLoadSoundFile } from '../../api/call'
 
 // 历史记录表格数据
-
 const guideGroupColums = [
   {
     title: '工号',
@@ -76,7 +74,6 @@ export class ConsoleCase extends Component {
   }
   constructor(props) {
     super(props)
-    this.timer = null
     this.historyCallColumns = [
       {
         title: '来电时间',
@@ -160,15 +157,6 @@ export class ConsoleCase extends Component {
     if(props.trainInfomation.callId !== this.props.trainInfomation.callId) {
         this.saveUserInfoByphoneNumber(props.trainInfomation)
     }
-    if (props.commationInfomation.callStatus !== this.props.commationInfomation.callStatus) {
-      if (props.commationInfomation.callStatus === 'CALL_ONLINE') {
-        console.log(1111111111, props.commationInfomation)
-        this.setTimer(props.commationInfomation.answerDate)
-      }
-      if (props.commationInfomation.callStatus === 'CALL_HANGUP') {
-        clearTimeout(this.timer)
-      }
-    }
   }
   // 下载文件 
   downLoadFile = async (recordId) => {
@@ -199,21 +187,7 @@ export class ConsoleCase extends Component {
     });
     console.log("recordId", recordId)
   }
-  // 设置通话时长 1s中刷新一次
-  setTimer = (answerDate) => {
-    const nowTime = getNowTime()
-    const timer = nowTime - getNowTime(answerDate)
-    const timerSecond = formatSeconds(timer)
-    
-    this.props.updateCommationInformation({
-      timer:  timerSecond
-    })
-   
-
-    this.timer = setTimeout(() => {
-      this.setTimer(answerDate)
-    }, 1000)
-  }
+ 
   componentDidMount() {
     const { mobile } = this.props.commationInfomation
     if (mobile && mobile !== '--') {

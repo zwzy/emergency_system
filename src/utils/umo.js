@@ -180,8 +180,9 @@ function _umoStart(params,
     })
 }
 // 拨打
-export function callOutPhone(data = {uud: '', phoneNumber: '1008', gid: '@0' }) {
+export function callOutPhone(data = {uud: '', phoneNumber: '', gid: '@0' }) {
   const {phoneNumber, uud, gid} = data
+  if(!phoneNumber) return
   let dealWithPhoneNumber = ''
   if(heFeiCallArray.indexOf(phoneNumber.slice(0, 7)) > -1) {
     dealWithPhoneNumber = '0' + phoneNumber
