@@ -403,6 +403,7 @@ export class HeaderCase extends Component {
         onOk: () => {
           window.UMO.exit()
           sessionStorage.clear()
+          localStorage.clear()
           this.props.history.push('login')
         }
       });
