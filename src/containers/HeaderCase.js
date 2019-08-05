@@ -22,6 +22,7 @@ export class HeaderCase extends Component {
   }
   constructor(props) {
     super(props)
+    this.getCDRIdTimer = 0
     this.timer = null
     this.timer1 = null
     this.state = {
@@ -226,9 +227,10 @@ export class HeaderCase extends Component {
         this.setState({
           crdId
         })
-      } else {
-        setTimeout( () => {
-          this.setCrdId()
+      } else if(this.getCDRIdTimer <=5) {
+        this.getCDRIdTimer ++;
+       setTimeout(() => {
+          this.setCrrdId()
         }, 1000)
       }
     })
