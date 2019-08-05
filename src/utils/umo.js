@@ -185,9 +185,9 @@ export function callOutPhone(data = {uud: '', phoneNumber: '', gid: '@0' }) {
   if(!phoneNumber) return
   let dealWithPhoneNumber = ''
   if(heFeiCallArray.indexOf(phoneNumber.slice(0, 7)) > -1) {
-    dealWithPhoneNumber = '0' + phoneNumber
+    dealWithPhoneNumber =  phoneNumber
   } else {
-    dealWithPhoneNumber = '00' + phoneNumber
+    dealWithPhoneNumber = '0' + phoneNumber
   }
   console.log(dealWithPhoneNumber )
   UMO.dialout( dealWithPhoneNumber, gid, uud, true, () => {
@@ -338,7 +338,7 @@ export function getrecordfile(recordFile)
         {
             var msg = "Get recored file ok, url=" + result.downurl;
             console.log(msg)
-            window.open('http://10.131.192.81:8181' + result.downurl)
+            window.open('http://10.131.172.82:8181' + result.downurl)
         }
     }, null);
 }

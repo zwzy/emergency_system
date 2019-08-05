@@ -220,6 +220,19 @@ export class HeaderCase extends Component {
     })
   }
 
+  setCrdId() {
+    getCDRId((crdId) => {
+      if (crdId) {
+        this.setState({
+          crdId
+        })
+      } else {
+        setTimeout( () => {
+          this.setCrdId()
+        }, 1000)
+      }
+    })
+  }
   // 4、接听时回调
   onTalkedEvent = async () => {
     const { callId } = this.props.commationInfomation
@@ -229,13 +242,7 @@ export class HeaderCase extends Component {
       if (data.code === 0) {
         console.log('接听记录成功')
         // 保存电话对应的话单id
-        getCDRId((crdId) => {
-          if (crdId) {
-            this.setState({
-              crdId
-            })
-          }
-        })
+        this.setCrdId()
       }
     } catch (error) {
       console.log(error)
