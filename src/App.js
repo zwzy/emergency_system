@@ -61,19 +61,19 @@ function getBreadCrumdArray (history) {
   // 找到父组件菜单所在的数组  获取到他的名字  并赋到面包屑中
   if(childMenu) {
     const array = menuList.filter((item) => {
-      return item.subId === parentMenu.slice(1)
+      return item.id === parentMenu.slice(1)
     })
-    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].id})
     const childArray = array[0].menus.filter((item)=>{
       return item.id === pathname.slice(1)
     })
     breadCrumdArr.push({name: childArray[0].name, path: '/' + childArray[0].id})
   } else if(parentMenu){
     const array = menuList.filter((item) => {
-      return item.subId === parentMenu.slice(1)
+      return item.id === parentMenu.slice(1)
     })
     if(array.length) {
-      breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+      breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].id})
     }
   }
   return breadCrumdArr

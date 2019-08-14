@@ -1,20 +1,26 @@
 // menu config
 export const menuList = [
   {
-    subId: 'console',
+    id: 'console',
     subName: '控制台',
     subIcon: 'icon-normal',
     menus:[]
   },
   { 
     path: 'emergency',
-    subId: 'emergency',
+    id: 'emergency',
     subName: '应急处置',
     subIcon: 'icon-yingjichuli',
     menus: [
       {
         id: 'emergency_telegram',
         name: '通话记录',
+        menus: [
+          {
+            id: 'emergency_telegram_team',
+            name: '通话记录历史',
+          },
+        ]
       },
       // {
       //   id: 'emergency_handle',
@@ -32,13 +38,13 @@ export const menuList = [
     ]
   },
   {
-    subId: 'attendance',
+    id: 'attendance',
     subName: '值班签到',
     subIcon: 'icon-Sign',
     menus:[]
   },
   {
-    subId: 'communication',
+    id: 'communication',
     subName: '应急通讯录',
     subIcon: 'icon-tongxunlu',
     menus: [
@@ -53,7 +59,7 @@ export const menuList = [
     ]
   },
   // {
-  //   subId: 'rules',
+  //   id: 'rules',
   //   path: 'rules',
   //   subName: '规章制度',
   //   subIcon: 'icon-cz-gzzd',
@@ -69,7 +75,7 @@ export const menuList = [
   //   ]
   // },
   // {
-  //   subId: 'count',
+  //   id: 'count',
   //   subName: '统计查询',
   //   subIcon: 'icon-tongji',
   //   menus: [
@@ -88,7 +94,7 @@ export const menuList = [
   //   ]
   // },
   {
-    subId: 'setting',
+    id: 'setting',
     subName: '系统设置',
     subIcon: 'icon-xitongshezhi1',
     menus: [

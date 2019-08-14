@@ -48,17 +48,17 @@ export class LoginCase extends Component {
     localStorage.setItem('password', password)
     console.log(workno, password)
     try {
-      const {data} = await login({workno, password})
-      // const data = {
-      //   code: 0,
-      //   content: {
-      //     deptName: '上海',
-      //     roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
-      //     extNum: 1001,
-      //     userName: '张太胖',
-      //     mobile: '18755489161'
-      //   }
-      // }
+      // const {data} = await login({workno, password})
+      const data = {
+        code: 0,
+        content: {
+          deptName: '上海',
+          roleList: [{id:1,roleName:'组长'}, {id:2,roleName:'普通员工'}],
+          extNum: 1001,
+          userName: '张太胖',
+          mobile: '18755489161'
+        }
+      }
       if(data.code === 0) {
         const {roleList, extNum, userName, deptName, mobile} = data.content
         // 保存状态
