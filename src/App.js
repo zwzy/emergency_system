@@ -46,35 +46,51 @@ import './styles/App.css';
 import './styles/common.css';
 
 function getBreadCrumdArray (history) {
-  // const isLogin = sessionStorage.getItem('isLogin')
-  // if(!isLogin) {
-  //  history.push({pathname: '/login'})
-  // } 
   // 1、获取当前路径
   // 如果没有父菜单： 即没有 pathname.split('_')[1] = undefined
   const pathname = history.location.pathname  // 当前路径
   if(pathname === '/') return
-  const parentMenu =  pathname.split('_')[0]  // 父菜单名称
-  const childMenu =  pathname.split('_')[1]   // 判断是不是有父菜单
+  const pathArr =  pathname.slice(1).split('_')
+
   const breadCrumdArr = []                    // 面包屑的数据{name, path}
-  // 有父菜单逻辑
-  // 找到父组件菜单所在的数组  获取到他的名字  并赋到面包屑中
-  if(childMenu) {
+  // 根菜单
+  if(pathArr.length === 1) {
     const array = menuList.filter((item) => {
-      return item.subId === parentMenu.slice(1)
+      return item.id === pathArr[0]
     })
-    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
+    if(array.length) {
+      breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].id})
+    }
+  }
+  // 二菜单
+  if(pathArr.length === 2) {
+    const array = menuList.filter((item) => {
+      return item.id ===  pathArr[0]
+    })
+    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].id})
     const childArray = array[0].menus.filter((item)=>{
       return item.id === pathname.slice(1)
     })
     breadCrumdArr.push({name: childArray[0].name, path: '/' + childArray[0].id})
-  } else if(parentMenu){
+  }
+  // 三菜单
+  if(pathArr.length === 3) {
     const array = menuList.filter((item) => {
-      return item.subId === parentMenu.slice(1)
+      return item.id ===  pathArr[0]
     })
-    if(array.length) {
-      breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].subId})
-    }
+    breadCrumdArr.push({name: array[0].subName, path: '/' + array[0].id})
+
+    const childArray = array[0].menus.filter((item)=>{
+      const itemId = pathArr[0] + '_' +pathArr[1]
+      return item.id === itemId
+    })
+    console.log(childArray)
+    breadCrumdArr.push({name: childArray[0].name, path: '/' + childArray[0].id})
+
+    const threeArray = childArray[0].menus.filter((item)=>{
+      return item.id === pathname.slice(1)
+    })
+    breadCrumdArr.push({name: threeArray[0].name, path: '/' + threeArray[0].id})
   }
   return breadCrumdArr
 } 

@@ -1,44 +1,68 @@
 // menu config
 export const menuList = [
   {
-    subId: 'console',
+    id: 'console',
     subName: '控制台',
     subIcon: 'icon-normal',
     menus:[]
   },
   { 
     path: 'emergency',
-    subId: 'emergency',
+    id: 'emergency',
     subName: '应急处置',
     subIcon: 'icon-yingjichuli',
     menus: [
       {
         id: 'emergency_telegram',
         name: '通话记录',
+        menus: [
+          {
+            id: 'emergency_telegram_team',
+            name: '通话记录历史',
+          },
+        ]
       },
-      // {
-      //   id: 'emergency_handle',
-      //   name: '处置记录'
-      // },
-      // {
-      //   id: 'emergency_evaluation',
-      //   name: '分析评价'
-      // },
-      // {
-      //   id: 'emergency_classic',
-      //   name: '经典案例'
-      // },
+      {
+        id: 'emergency_handle',
+        name: '处置记录',
+        menus: [
+          {
+            id: 'emergency_handle_1',
+            name: '通话记录历史1',
+          },
+          {
+            id: 'emergency_handle_2',
+            name: '通话记录历史0',
+          },
+          {
+            id: 'emergency_handle_3',
+            name: '通话记录历史2',
+          },
+          {
+            id: 'emergency_handle_4',
+            name: '通话记录历史3',
+          },
+        ]
+      },
+      {
+        id: 'emergency_evaluation',
+        name: '分析评价'
+      },
+      {
+        id: 'emergency_classic',
+        name: '经典案例'
+      },
       
     ]
   },
   {
-    subId: 'attendance',
+    id: 'attendance',
     subName: '值班签到',
     subIcon: 'icon-Sign',
     menus:[]
   },
   {
-    subId: 'communication',
+    id: 'communication',
     subName: '应急通讯录',
     subIcon: 'icon-tongxunlu',
     menus: [
@@ -53,7 +77,7 @@ export const menuList = [
     ]
   },
   // {
-  //   subId: 'rules',
+  //   id: 'rules',
   //   path: 'rules',
   //   subName: '规章制度',
   //   subIcon: 'icon-cz-gzzd',
@@ -69,7 +93,7 @@ export const menuList = [
   //   ]
   // },
   // {
-  //   subId: 'count',
+  //   id: 'count',
   //   subName: '统计查询',
   //   subIcon: 'icon-tongji',
   //   menus: [
@@ -88,7 +112,7 @@ export const menuList = [
   //   ]
   // },
   {
-    subId: 'setting',
+    id: 'setting',
     subName: '系统设置',
     subIcon: 'icon-xitongshezhi1',
     menus: [
