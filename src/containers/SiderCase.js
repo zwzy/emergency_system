@@ -47,6 +47,37 @@ export class SiderCase extends Component {
         openKey: [subMenu[0], subMenu.join('_')]
       })
     }
+
+    // const activePath = this.props.location.pathname
+    // const activeMenu = activePath.slice(1)
+    // const subMenu = activeMenu.split('_')[0]
+    // // 判断路由_分开后是否相等
+    // // 相等即没有子菜单
+    // // 不相等有子菜单
+    // // 则需要把当前路由联系的SubMenu展开
+    // if (activeMenu === subMenu) {
+    //   if (activeMenu === '') {
+    //     this.setState({
+    //       menu: 'console'
+    //     })
+    //   } else {
+    //     this.setState({
+    //       menu: activeMenu
+    //     })
+    //   }
+    // } else {
+    //   console.log(999, activeMenu, subMenu)
+    //   if (activeMenu === '/') {
+    //     this.setState({
+    //       menu: 'console'
+    //     })
+    //   } else {
+    //     this.setState({
+    //       menu: activeMenu,
+    //       openKey: subMenu
+    //     })
+    //   }
+    // }
   }
   componentWillReceiveProps(props) {
   }
@@ -60,7 +91,6 @@ export class SiderCase extends Component {
     }
   }
   onOpenChange = (e) => {
-    const {openKey} = this.state
     this.setState({
       openKey: e
     })
